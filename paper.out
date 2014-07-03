@@ -1,0 +1,9 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Related Work}{}% 2
+\BOOKMARK [1][-]{section.3}{Problem Definition}{}% 3
+\BOOKMARK [1][-]{section.4}{Distribution of Grasp Parameters}{}% 4
+\BOOKMARK [2][-]{subsection.4.1}{Distribution on Contact Points}{section.4}% 5
+\BOOKMARK [2][-]{subsection.4.2}{Distribution on Surface Normals}{section.4}% 6
+\BOOKMARK [2][-]{subsection.4.3}{Distribution on Center of Mass}{section.4}% 7
+\BOOKMARK [2][-]{subsection.4.4}{Other Thoughs Not Finished}{section.4}% 8
+\BOOKMARK [1][-]{section.5}{Probabilistic Bound on Grasp Metric}{}% 9

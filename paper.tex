@@ -104,8 +104,13 @@ y_i = f(\bx_i) + \epsilon,
 \end{equation}
 where $\epsilon \sim \mN(0,\sigma^2)$ is Gaussian noise in the observations. A zero-mean Gaussian process is completely specified by a covariance function $k(\cdot,\cdot)$, also referred to as a kernel. Given the training data $\mD = \{\mX, \by\}$ and covariance function $k(\cdot,\cdot)$, the posterior density $p(f_*|\bx_*,\mD)$ at a test point $\bx_{*}$ is shown to be \cite{rasmussen2006}:
 \begin{equation}
-p(f_*|\bx_*,\mD) \sim \mN\big(k(\mX,\bx_*)^{\intercal}(K + \sigma_{\epsilon}^2I)^{-1}\by, k(\bx_*,\bx_*)-k(\mX,\bx_*)^{\intercal}(K+\sigma^2I)^{-1}k(\mX,\bx_*)\big), \label{eq:GPposterior}
+  p(f_*|\bx_*,\mD) 
+  \sim 
+  \mN\big(k(\mX,\bx_*)^{\intercal}(K + \sigma_{\epsilon}^2I)^{-1}\by,
 \end{equation}
+\[
+  k(\bx_*,\bx_*)-k(\mX,\bx_*)^{\intercal}(K+\sigma^2I)^{-1}k(\mX,\bx_*)\big), \label{eq:GPposterior}
+\]
 where $K \in \mathbb{R}^{n \times n}$ is a matrix with entries $K_{ij} = k(\bx_i,\bx_j)$ and $k(\mX,\bx_*) = [k(\bx_1,\bx_*),\ldots,k(\bx_n,\bx_*)]^{\intercal}$. 
 
 The choice of kernel is application-specific, since the function $k(\bx_i,\bx_j)$ is used as a measure of correlation between states $\bx_i$ and $\bx_j$. A common choice is the squared exponential kernel:
@@ -224,5 +229,9 @@ Since $Q(g) = max(0,q(g))$, Q is also Lipschitz continuous with the same constan
 \subsection{Our Extension}
 From our distributions $p(c_i=\gamma(t))$ and $p(n_i = x)$, we can denote the variance on the following terms as $\sigma_{c_i}$ and $\Sigma_{n_i}$. Thus, 
 
+\section{References}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
 
 \end{document}

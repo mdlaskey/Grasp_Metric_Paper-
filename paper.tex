@@ -72,7 +72,7 @@ Grasp Metric for Gaussian Proccess Implicit Surface Representation of Shape Unce
 
 \author{Michael Laskey,Zoe McCarthy, Sachin Patil, Pieter Abbeel and Ken Goldberg}% <-this % stops a space
 
-
+\newtheorem{theorem}{Theorem}
 
 \begin{document}
 
@@ -151,19 +151,19 @@ P(c_{i,det} =  P(f(\gamma(g))=0|\theta(\gamma(t)))
 From our distribution on contact points and Bayes rule we can compute the following: 
 
 \begin{equation}
-p(c_i = \gamma{g}, n_i = k) = p(n_i = k | h(\gamma{g}))*p(c_i = \gamma{g})
+p(c_i = \gamma(g), n_i = k) = p(n_i = k | h(\gamma(g)))*p(c_i = \gamma(g))
 \end{equation}
 
 Now we can marginalize out the distribution on contacts:
 
 \begin{equation}
-P(n_i = k) = \int_T  p(n_i = k | h(\gamma{g}))*p(c_i = \gamma{g}) dg
+P(n_i = k) = \int_T  p(n_i = k | h(\gamma(g)))*p(c_i = \gamma(g)) dg
 \end{equation}
 
 Which over the voxel grid turns into: 
 
 \begin{equation}
-P(n_i = k) = \sum_T  p(n_i = k | h(\gamma{g}))*p(c_i = \gamma{g}) dg
+P(n_i = k) = \sum_T  p(n_i = k | h(\gamma(g)))*p(c_i = \gamma(g)) dg
 \end{equation}
 
 
@@ -172,8 +172,8 @@ Thus, $P(n_i = k)$ is a multi-modal distributions  composed of Gaussians sum tog
 \subsection{Distribution on Center of Mass} Zoe fill out or we all die :-(
 
 
-\subsection{Other Thoughs Not Finished}
-The derivation above assumes that the robot doesn't have any noise in its movements. To accomdate noise in the position of the gripper at time $t$, $x_t$ given control input $u_{t}$ and previous states $x_{1:t-1}$, we introduce the following probability $P(x_t=k|u_t,x_{1:t-1})$. This can be computed by methods like an Extended Kalman Filter (EKF) or a particle filter. For simplicity we assume that it is a Guassian distribution. 
+\subsection{Other Thoughts (Not Finished)}
+The derivation above assumes that the robot doesn't have any noise in its movements. To accommodate noise in the position of the gripper at time $t$, $x_t$ given control input $u_{t}$ and previous states $x_{1:t-1}$, we introduce the following probability $P(x_t=k|u_t,x_{1:t-1})$. This can be computed by methods like an Extended Kalman Filter (EKF) or a particle filter. For simplicity we assume that it is a Gaussian distribution. 
 
 We know derive the following: 
 
@@ -182,5 +182,47 @@ P(c_{i}) = \int P(c_{i,det}=\gamma(g),x_t = \gamma(g)) dg
 \end{equation}
 
 \section{Probabilistic Bound on Grasp Metric}
+
+
+Following recent work on proving a Lipschitz bound on the Ferrari-Canny Metric \cite{pokorny2013classical}, we prove that an extension is possible to give a probabilistic bound on the change in grasp quality. We rewrite the results here:
+
+\subsection{Prior Work}
+
+We use the following notation $Q(g)$ refers to the exact $L^1$ grasp quality. It is denoted by the following 
+
+\begin{align}
+Q(g) &= \mbox{max}(0,q(g)) = -d(0,\mbox{Conv}(0 \cup S(g))\\
+-d(0,S) &= min_{||z|| = 1} h_{S(z)}\\
+h_{S(z)} &= \mbox{sup}_{s\in S}<s,z>\\
+\end{align}
+
+We denote the Ferrari-Canny version, which approximates the friction cone by a linearized set of wrenches\cite{ferrari1992}, as $Q^-_l(g)$.\\
+
+\begin{theorem}
+For any grasp g, we have $0 \leq Q_l^-(g) \leq Q(g)$. Furthermore, $||Q(g) - Q^-_l(g)|| \rightarrow 0$ as $l \rightarrow \infty$ when $Q_l^-(g)$ is computed using a uniform approximation of the friction cones with $l$ edges. \\
+\end{theorem}
+
+
+\begin{theorem}
+We have \\
+
+\begin{align}
+q(g) = \min_{u\in \mathbb{R}^6, ||u|| =1} h_{S(g)}(u) = \min_{u\in \mathbb{R}^6, ||u|| =1} \max_{i=1,...,m} h_{W_i(g)}(u),\\
+\end{align}
+
+where $h_{S(g)}$ is convex on $\mathbb{R}^6$. Observe that q is invariant under fixed translation of the grasp center and contact positions. Furthermore, let $\mathbb{B}(r) = \lbrace x \in \mathbb{R}^3 : ||x|| \leq r \rbrace$. Then q is Lipschitz continuous on grasps with $m$ contact points lying in the set $X = \lbrace (c_1,...,c_m,n_1,...,n_m,z) : (c_i-z) \in \mathbb{B}(r), n_i \in \mathbb{S}^2 \rbrace$ with a Lipschitz constant given by $L= (1+\mu)(1+r)$ and where the chose distance measure \\
+
+$d(g,g') = \sum_i ||(c_i-z)-(c_i'-z')|| + \sum_i ||n_i - n_i'||$\\
+
+We hence have \\
+
+$|q(g) - q(g')| \leq Ld(g,g')$ for all $g,g' \in X$. \\
+
+Since $Q(g) = max(0,q(g))$, Q is also Lipschitz continuous with the same constant L on X. 
+\end{theorem}
+
+\subsection{Our Extension}
+From our distributions $p(c_i=\gamma(t))$ and $p(n_i = x)$, we can denote the variance on the following terms as $\sigma_{c_i}$ and $\Sigma_{n_i}$. Thus, 
+
 
 \end{document}

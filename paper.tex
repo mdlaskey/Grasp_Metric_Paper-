@@ -143,7 +143,7 @@ We note though that our metric assumes a given $\mu$. \\
  $\theta(x) = \lbrace \mu(x),\Sigma(x) \rbrace$, hence $\theta(x)$ is a tuple consisting of the mean and covariance functions given by the trained GPIS.
 We further assume that the contacts on the gripper approach along a line of action: $x = \gamma(t): R \rightarrow R^d$.
 % TODO: Michael, I changed this from voxel grid because we're modeling a continuous space not a voxel grid, the voxel grid willbe an artifact of our integration/sampling strategies.
-We assume a bounded rectangular workspace.
+We assume a bounded rectangular workspace $\mathcal{R}$.
 The line segment has endpoints $a,b$ that are defined as the start of the gripper and the intersection of the line with the end of the workspace respectively, as shown in Fig.
  \ref{fig:line_of_action}.
  % TODO: Draw a box around the workspace to show that b intersects the end of the workspace and draw a gripper approaching from a.  Also make A and B lowercase in the figure.
@@ -185,7 +185,7 @@ P(c_{i,det} =  P(f(\gamma(g))=0|\theta(\gamma(t)))
 The distribution of surface normals $P(n_i = k)$ can be calculate as follows.
 First we assume that some function exists $h(x) = \lbrace \mu_{\nabla}(x), \Sigma_{\nabla}(x) \rbrace$, hence given a point $x$ it returns the parameters for a Gaussian distribution around the gradient.
 this function can be computed via learning the gradient \cite{gradient} or analytical differentiation of $f(x)$.
-We note though that both methods yields a Gaussian distribution.
+We note that both methods yield a Gaussian distribution.
 We now demonstrate how to marginalize out the contact distribution and compute $P(n_i = k)$\\
 
 From our distribution on contact points and Bayes rule we can compute the following: 
@@ -200,7 +200,7 @@ Now we can marginalize out the distribution on contacts:
 P(n_i = k) = \int_T  p(n_i = k | h(\gamma(g)))*p(c_i = \gamma(g)) dg
 \end{equation}
 
-Which over the voxel grid turns into: 
+We then discretize the curve and approximate the integral by a sum: 
 
 \begin{equation}
 P(n_i = k) = \sum_T  p(n_i = k | h(\gamma(g)))*p(c_i = \gamma(g)) dg
@@ -209,7 +209,22 @@ P(n_i = k) = \sum_T  p(n_i = k | h(\gamma(g)))*p(c_i = \gamma(g)) dg
 
 Thus, $P(n_i = k)$ is a multi-modal distributions  composed of Gaussians sum together. 
 
-\subsection{Distribution on Center of Mass} Zoe fill out or we all die :-(
+\subsection{Distribution on Center of Mass} 
+
+We define the quantity $\mathcal{D}(x) = \int_{-\infty}^{0} p(f(x) =  s \ | \ \theta(x)) ds$ and note that it is equal to the probability that x is interior to the surface under the current observations.
+We assume that the object has uniform mass density and then $\mathcal{D}(x)$ is the expected mass density at x.
+Then we can find the expected center of mass as:
+
+\begin{equation}
+  \mathcal{C} 
+  =
+  \frac
+    {\int_{\mathcal{R}}x \mathcal{D}(x) dx}
+    {\int_{\mathcal{R}}  \mathcal{D}(x) dx}
+\end{equation}
+
+which can be approximated by sampling $\mathcal{R}$ uniformly in a voxel grid and approximating the spatial integral by a sum.
+
 
 
 \subsection{Other Thoughts (Not Finished)}
@@ -244,6 +259,7 @@ h_{S(z)} &= \mbox{sup}_{s\in S}<s,z>\\
 We denote the Ferrari-Canny version, which approximates the friction cone by a linearized set of wrenches\cite{ferrari1992}, as $Q^-_l(g)$.\\
 
 \begin{theorem}
+  \cite{pokorny2013classical}
 For any grasp g, we have $0 \leq Q_l^-(g) \leq Q(g)$.
 Furthermore, $||Q(g) - Q^-_l(g)|| \rightarrow 0$ as $l \rightarrow \infty$ when $Q_l^-(g)$ is computed using a uniform approximation of the friction cones with $l$ edges. \\
 \end{theorem}

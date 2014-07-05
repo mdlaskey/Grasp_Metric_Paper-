@@ -95,31 +95,60 @@ This electronic document is a �live� template. The various components of you
 \section{Introduction}
 
 \vspace{10pt}
-\noindent{\textbf{Grasp Quality Metrics}}: A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}. We use the wrench-space Ferrari-Canny force closure quality measures \cite{ferrari1992}, which aims to maximize the disturbance that can be resisted given bounds on the contact forces. We also consider the general case where there is friction at the contact points. We follow the analysis of Schulman et al. \cite{schulman2011} in the discussion below.\\
+\noindent{\textbf{Grasp Quality Metrics}}: A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}.
+We use the wrench-space Ferrari-Canny force closure quality measures \cite{ferrari1992}, which aims to maximize the disturbance that can be resisted given bounds on the contact forces.
+We also consider the general case where there is friction at the contact points.
+We follow the analysis of Schulman et al. \cite{schulman2011} in the discussion below.\\
 
 
-\noindent{\textbf{Gaussian Process (GP) Primer}}: Gaussian processes (GPs) are widely used in machine learning as a nonparametric regression method for estimating continuous functions from sparse and noisy data \cite{rasmussen2006}. In a GP, a training set consists of input vectors $\mX = \{\bx_1, \ldots, \bx_n\}, ~\bx_i \in \mathbb{R}^d$, and corresponding observations $\by = \{y_1, \ldots, y_n\}$. The observations are assumed to be noisy measurements from the unknown target function $f$:
+\noindent{\textbf{Gaussian Process (GP) Primer}}: Gaussian processes (GPs) are widely used in machine learning as a nonparametric regression method for estimating continuous functions from sparse and noisy data \cite{rasmussen2006}.
+In a GP, a training set consists of input vectors $\mX = \{\bx_1, \ldots, \bx_n\}, ~\bx_i \in \mathbb{R}^d$, and corresponding observations $\by = \{y_1, \ldots, y_n\}$.
+The observations are assumed to be noisy measurements from the unknown target function $f$:
 \begin{equation}
 y_i = f(\bx_i) + \epsilon,
 \end{equation}
-where $\epsilon \sim \mN(0,\sigma^2)$ is Gaussian noise in the observations. A zero-mean Gaussian process is completely specified by a covariance function $k(\cdot,\cdot)$, also referred to as a kernel. Given the training data $\mD = \{\mX, \by\}$ and covariance function $k(\cdot,\cdot)$, the posterior density $p(f_*|\bx_*,\mD)$ at a test point $\bx_{*}$ is shown to be \cite{rasmussen2006}:
+where $\epsilon \sim \mN(0,\sigma^2)$ is Gaussian noise in the observations.
+A zero-mean Gaussian process is completely specified by a covariance function $k(\cdot,\cdot)$, also referred to as a kernel.
+Given the training data $\mD = \{\mX, \by\}$ and covariance function $k(\cdot,\cdot)$, the posterior density $p(f_*|\bx_*,\mD)$ at a test point $\bx_{*}$ is shown to be \cite{rasmussen2006}:
 \begin{equation}
-p(f_*|\bx_*,\mD) \sim \mN\big(k(\mX,\bx_*)^{\intercal}(K + \sigma_{\epsilon}^2I)^{-1}\by, k(\bx_*,\bx_*)-k(\mX,\bx_*)^{\intercal}(K+\sigma^2I)^{-1}k(\mX,\bx_*)\big), \label{eq:GPposterior}
+  p(f_*|\bx_*,\mD) 
+  \sim 
+  \mN\big(k(\mX,\bx_*)^{\intercal}(K + \sigma_{\epsilon}^2I)^{-1}\by,
 \end{equation}
+\[
+  k(\bx_*,\bx_*)-k(\mX,\bx_*)^{\intercal}(K+\sigma^2I)^{-1}k(\mX,\bx_*)\big), \label{eq:GPposterior}
+\]
 where $K \in \mathbb{R}^{n \times n}$ is a matrix with entries $K_{ij} = k(\bx_i,\bx_j)$ and $k(\mX,\bx_*) = [k(\bx_1,\bx_*),\ldots,k(\bx_n,\bx_*)]^{\intercal}$. 
 
-The choice of kernel is application-specific, since the function $k(\bx_i,\bx_j)$ is used as a measure of correlation between states $\bx_i$ and $\bx_j$. A common choice is the squared exponential kernel:
+The choice of kernel is application-specific, since the function $k(\bx_i,\bx_j)$ is used as a measure of correlation between states $\bx_i$ and $\bx_j$.
+A common choice is the squared exponential kernel:
 \begin{equation}
-k(\bx_i,\bx_j) = \nu^2\exp(-\frac{1}{2}(\bx_i - \bx_j)^{\intercal}\Lambda^{-1}(\bx_i - \bx_j))
+k(\bx_i,\bx_j) 
+=
+\nu^2\exp(-\frac{1}{2}(\bx_i - \bx_j)^{\intercal}\Lambda^{-1}(\bx_i - \bx_j))
 \end{equation}
-where $\Lambda= \text{diag}(\lambda_1^2,\ldots,\lambda_d^2)$ are the characteristic length scales of each dimension of $\bx$ and $\nu^2$ describes the variability of $f$. The vector of hyper-parameters $\boldsymbol{\theta} = \{\sigma,\nu,\lambda_1,\ldots,\lambda_d\}$ is chosen or optimized during the training process by minimizing the log likelihood $p(\by|\mX,\boldsymbol{\theta})$ \cite{rasmussen2006}.
+where $\Lambda= \text{diag}(\lambda_1^2,\ldots,\lambda_d^2)$ are the characteristic length scales of each dimension of $\bx$ and $\nu^2$ describes the variability of $f$.
+The vector of hyper-parameters $\boldsymbol{\theta} = \{\sigma,\nu,\lambda_1,\ldots,\lambda_d\}$ is chosen or optimized during the training process by minimizing the log likelihood $p(\by|\mX,\boldsymbol{\theta})$ \cite{rasmussen2006}.
 
 \section{Related Work}
 
 \section{Problem Definition}
-Given a grasp $G$ on an object, we can define it by the following tuple $G = \lbrace c_1,...,c_m,n_1,...,n_m,z,\mu\rbrace$. We have a set $I$ of $m$ contacts on the object where $i \in I$ contact is located at $c_i$ with surface normal $n_i$. The object has a center of mass $z$ and friction coefficient $\mu$. We demonstrate that one can efficiently compute a close form distribution for $c_i$,$n_i$ and $z$. We note though that our metric assumes a given $\mu$. \\
+Given a grasp $G$ on an object, we can define it by the following tuple $G = \lbrace c_1,...,c_m,n_1,...,n_m,z,\mu\rbrace$. We have a set $I$ of $m$ contacts on the object where $i \in I$ contact is located at $c_i$ with surface normal $n_i$.
+The object has a center of mass $z$ and friction coefficient $\mu$.
+We demonstrate that one can efficiently compute a closed form distribution for $c_i$,$n_i$ and $z$.
+We note though that our metric assumes a given $\mu$. \\
+% TODO: finish that thought
 
- For the following derivations we use the following notation. $\theta(x) = \lbrace \mu(x),\Sigma(x) \rbrace$, hence $\theta(x)$ is a tuple consisting of the mean and covariance functions given by the trained GPIS. We further assume that the contacts on the gripper approach along a line of action: $x = \gamma(t): R \rightarrow R^n$. The line segment has endpoints $a,b$ that are defined as the start of the gripper and end of the voxel grid respectively, as shown in Fig. \ref{fig:line_of_action}.We also denote the level set function as $f(x): \mathbb{R}^N \rightarrow \mathbb{R}$ 
+ For the following derivations we use the following notation.
+ $\theta(x) = \lbrace \mu(x),\Sigma(x) \rbrace$, hence $\theta(x)$ is a tuple consisting of the mean and covariance functions given by the trained GPIS.
+We further assume that the contacts on the gripper approach along a line of action: $x = \gamma(t): R \rightarrow R^d$.
+% TODO: Michael, I changed this from voxel grid because we're modeling a continuous space not a voxel grid, the voxel grid willbe an artifact of our integration/sampling strategies.
+We assume a bounded rectangular workspace $\mathcal{R}$.
+The line segment has endpoints $a,b$ that are defined as the start of the gripper and the intersection of the line with the end of the workspace respectively, as shown in Fig.
+ \ref{fig:line_of_action}.
+ % TODO: Draw a box around the workspace to show that b intersects the end of the workspace and draw a gripper approaching from a.  Also make A and B lowercase in the figure.
+ We also define the function $f(x): \mathbb{R}^d \rightarrow \mathbb{R}$ as $f(x) = \mu(x)$ and an implicit surface $\mathcal{S} = \{ x \ | \ f(x) = 0 \}$.
+% TODO: Michael, did I fill this in correctly? It was left blank initially.
 
 \begin{figure}[ht!]
 \centering
@@ -133,20 +162,31 @@ Given a grasp $G$ on an object, we can define it by the following tuple $G = \lb
 \section{Distribution of Grasp Parameters}
 
 
-\subsection{Distribution on Contact Points}: The probability along the line $\gamma(g)$ is given by the following:
+\subsection{Distribution on Contact Points} The probability along the line $\gamma(g)$ is given by the following:
 
 \begin{equation}
-P(f(\gamma(g))|\theta(\gamma(g))) = N(\mu_T,\Sigma_T)
+P(f(\gamma(g))|\theta(\gamma(g))) 
+=
+\mN(\mu_T,\Sigma_T)
 \end{equation}
 
-This gives the distributions along the entire line of action, however we want to compute the marginalization of this where at each point we simply are asking the probability $p(f(\gamma(g=k))=0)$. We can achieve this by marginalizing out the rest of the points along the line. With a Gaussian it has the closed form solution as follows: 
+% TODO: What is T?
+
+This gives the distributions along the entire line of action, however we want to compute the marginalization of this where at each point we simply are asking the probability $p(f(\gamma(g=k))=0)$.
+We can achieve this by marginalizing out the rest of the points along the line.
+With a Gaussian it has the closed form solution as follows: 
 
 \begin{equation}
 P(c_{i,det} =  P(f(\gamma(g))=0|\theta(\gamma(t)))
 \end{equation}
 
 
-\subsection{Distribution on Surface Normals} The distribution of surface normals $P(n_i = k)$ can be calculate as follows. First we assume that some function exists $h(x) = \lbrace \mu_{\nabla}(x), \Sigma_{\nabla}(x) \rbrace$, hence given a point $x$ it returns the parameters for a Gaussian distribution around the gradient. this function can be computed via learning the gradient \cite{gradient} or analytical differentiation of $f(x)$. We note though that both methods yields a Gaussian distribution. We now demonstrate how to marginalize out the contact distribution and compute $P(n_i = k)$\\
+\subsection{Distribution on Surface Normals} 
+The distribution of surface normals $P(n_i = k)$ can be calculate as follows.
+First we assume that some function exists $h(x) = \lbrace \mu_{\nabla}(x), \Sigma_{\nabla}(x) \rbrace$, hence given a point $x$ it returns the parameters for a Gaussian distribution around the gradient.
+this function can be computed via learning the gradient \cite{gradient} or analytical differentiation of $f(x)$.
+We note that both methods yield a Gaussian distribution.
+We now demonstrate how to marginalize out the contact distribution and compute $P(n_i = k)$\\
 
 From our distribution on contact points and Bayes rule we can compute the following: 
 
@@ -160,7 +200,7 @@ Now we can marginalize out the distribution on contacts:
 P(n_i = k) = \int_T  p(n_i = k | h(\gamma(g)))*p(c_i = \gamma(g)) dg
 \end{equation}
 
-Which over the voxel grid turns into: 
+We then discretize the curve and approximate the integral by a sum: 
 
 \begin{equation}
 P(n_i = k) = \sum_T  p(n_i = k | h(\gamma(g)))*p(c_i = \gamma(g)) dg
@@ -169,11 +209,29 @@ P(n_i = k) = \sum_T  p(n_i = k | h(\gamma(g)))*p(c_i = \gamma(g)) dg
 
 Thus, $P(n_i = k)$ is a multi-modal distributions  composed of Gaussians sum together. 
 
-\subsection{Distribution on Center of Mass} Zoe fill out or we all die :-(
+\subsection{Distribution on Center of Mass} 
+
+We define the quantity $\mathcal{D}(x) = \int_{-\infty}^{0} p(f(x) =  s \ | \ \theta(x)) ds$ and note that it is equal to the probability that x is interior to the surface under the current observations.
+We assume that the object has uniform mass density and then $\mathcal{D}(x)$ is the expected mass density at x.
+Then we can find the expected center of mass as:
+
+\begin{equation}
+  \mathcal{C} 
+  =
+  \frac
+    {\int_{\mathcal{R}}x \mathcal{D}(x) dx}
+    {\int_{\mathcal{R}}  \mathcal{D}(x) dx}
+\end{equation}
+
+which can be approximated by sampling $\mathcal{R}$ uniformly in a voxel grid and approximating the spatial integral by a sum.
+
 
 
 \subsection{Other Thoughts (Not Finished)}
-The derivation above assumes that the robot doesn't have any noise in its movements. To accommodate noise in the position of the gripper at time $t$, $x_t$ given control input $u_{t}$ and previous states $x_{1:t-1}$, we introduce the following probability $P(x_t=k|u_t,x_{1:t-1})$. This can be computed by methods like an Extended Kalman Filter (EKF) or a particle filter. For simplicity we assume that it is a Gaussian distribution. 
+The derivation above assumes that the robot doesn't have any noise in its movements.
+To accommodate noise in the position of the gripper at time $t$, $x_t$ given control input $u_{t}$ and previous states $x_{1:t-1}$, we introduce the following probability $P(x_t=k|u_t,x_{1:t-1})$.
+This can be computed by methods like an Extended Kalman Filter (EKF) or a particle filter.
+For simplicity we assume that it is a Gaussian distribution. 
 
 We know derive the following: 
 
@@ -184,11 +242,13 @@ P(c_{i}) = \int P(c_{i,det}=\gamma(g),x_t = \gamma(g)) dg
 \section{Probabilistic Bound on Grasp Metric}
 
 
-Following recent work on proving a Lipschitz bound on the Ferrari-Canny Metric \cite{pokorny2013classical}, we prove that an extension is possible to give a probabilistic bound on the change in grasp quality. We rewrite the results here:
+Following recent work on proving a Lipschitz bound on the Ferrari-Canny Metric \cite{pokorny2013classical}, we prove that an extension is possible to give a probabilistic bound on the change in grasp quality.
+We rewrite the results here:
 
 \subsection{Prior Work}
 
-We use the following notation $Q(g)$ refers to the exact $L^1$ grasp quality. It is denoted by the following 
+We use the following notation $Q(g)$ refers to the exact $L^1$ grasp quality.
+It is denoted by the following 
 
 \begin{align}
 Q(g) &= \mbox{max}(0,q(g)) = -d(0,\mbox{Conv}(0 \cup S(g))\\
@@ -199,7 +259,9 @@ h_{S(z)} &= \mbox{sup}_{s\in S}<s,z>\\
 We denote the Ferrari-Canny version, which approximates the friction cone by a linearized set of wrenches\cite{ferrari1992}, as $Q^-_l(g)$.\\
 
 \begin{theorem}
-For any grasp g, we have $0 \leq Q_l^-(g) \leq Q(g)$. Furthermore, $||Q(g) - Q^-_l(g)|| \rightarrow 0$ as $l \rightarrow \infty$ when $Q_l^-(g)$ is computed using a uniform approximation of the friction cones with $l$ edges. \\
+  \cite{pokorny2013classical}
+For any grasp g, we have $0 \leq Q_l^-(g) \leq Q(g)$.
+Furthermore, $||Q(g) - Q^-_l(g)|| \rightarrow 0$ as $l \rightarrow \infty$ when $Q_l^-(g)$ is computed using a uniform approximation of the friction cones with $l$ edges. \\
 \end{theorem}
 
 
@@ -210,9 +272,14 @@ We have \\
 q(g) = \min_{u\in \mathbb{R}^6, ||u|| =1} h_{S(g)}(u) = \min_{u\in \mathbb{R}^6, ||u|| =1} \max_{i=1,...,m} h_{W_i(g)}(u),\\
 \end{align}
 
-where $h_{S(g)}$ is convex on $\mathbb{R}^6$. Observe that q is invariant under fixed translation of the grasp center and contact positions. Furthermore, let $\mathbb{B}(r) = \lbrace x \in \mathbb{R}^3 : ||x|| \leq r \rbrace$. Then q is Lipschitz continuous on grasps with $m$ contact points lying in the set $X = \lbrace (c_1,...,c_m,n_1,...,n_m,z) : (c_i-z) \in \mathbb{B}(r), n_i \in \mathbb{S}^2 \rbrace$ with a Lipschitz constant given by $L= (1+\mu)(1+r)$ and where the chose distance measure \\
+where $h_{S(g)}$ is convex on $\mathbb{R}^6$.
+Observe that q is invariant under fixed translation of the grasp center and contact positions.
+Furthermore, let $\mathbb{B}(r) = \lbrace x \in \mathbb{R}^3 : ||x|| \leq r \rbrace$.
+Then q is Lipschitz continuous on grasps with $m$ contact points lying in the set $X = \lbrace (c_1, \dots, c_m,n_1, \dots,n_m,z) : (c_i-z) \in \mathbb{B}(r), n_i \in \mathbb{S}^2 \rbrace$ with a Lipschitz constant given by $L= (1+\mu)(1+r)$ and where the chose distance measure 
 
-$d(g,g') = \sum_i ||(c_i-z)-(c_i'-z')|| + \sum_i ||n_i - n_i'||$\\
+\[
+  d(g,g') = \sum_i ||(c_i-z)-(c_i'-z')|| + \sum_i ||n_i - n_i'||.
+\]
 
 We hence have \\
 
@@ -222,7 +289,12 @@ Since $Q(g) = max(0,q(g))$, Q is also Lipschitz continuous with the same constan
 \end{theorem}
 
 \subsection{Our Extension}
-From our distributions $p(c_i=\gamma(t))$ and $p(n_i = x)$, we can denote the variance on the following terms as $\sigma_{c_i}$ and $\Sigma_{n_i}$. Thus, 
+From our distributions $p(c_i=\gamma(t))$ and $p(n_i = x)$, we can denote the variance on the following terms as $\sigma_{c_i}$ and $\Sigma_{n_i}$.
+Thus, 
 
+\section{References}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
 
 \end{document}

@@ -202,6 +202,20 @@ We denote the Ferrari-Canny version, which approximates the friction cone by a l
 For any grasp g, we have $0 \leq Q_l^-(g) \leq Q(g)$. Furthermore, $||Q(g) - Q^-_l(g)|| \rightarrow 0$ as $l \rightarrow \infty$ when $Q_l^-(g)$ is computed using a uniform approximation of the friction cones with $l$ edges. \\
 \end{theorem}
 
+\begin{theorem}
+For $w \in \mathbb{R}^3$, we have, for $n \in \mathbb{S}^2$ and for friction coefficient $\mu > 0$, 
+
+\begin{align}
+\mbox{sup}_{x \in C(n)} <x,w> = <n,w> + \mu||n \times w||
+\end{align}
+
+Hence, for $u = (a,b) \in \mathbb{R}^3 \times \mathbb{R}^3 = \mathbb{R}^6$, we have 
+
+\begin{align}
+h_{W_i(g)}(a,b) = <n_i,a+b\times(c_i-z)>+\mu ||n_i \times (a+b\times(c_i-z))||
+\end{align}
+
+\end{theorem}
 
 \begin{theorem}
 We have \\

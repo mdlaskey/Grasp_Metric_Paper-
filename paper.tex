@@ -97,8 +97,7 @@ This electronic document is a �live� template. The various components of you
 \vspace{10pt}
 \noindent{\textbf{Grasp Quality Metrics}}: A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}.
 We use the wrench-space Ferrari-Canny force closure quality measures \cite{ferrari1992}, which aims to maximize the disturbance that can be resisted given bounds on the contact forces.
-We also consider the general case where there is friction at the contact points.
-\\
+We also consider the general case where there is friction at the contact points.\\
 
 
 \noindent{\textbf{Gaussian Process (GP) Primer}}: Gaussian processes (GPs) are widely used in machine learning as a nonparametric regression method for estimating continuous functions from sparse and noisy data \cite{rasmussen2006}.
@@ -133,15 +132,15 @@ The vector of hyper-parameters $\boldsymbol{\theta} = \{\sigma,\nu,\lambda_1,\ld
 \section{Related Work}
 
 \section{Problem Definition}
-Given a grasp $G$ on an object, we can define it by the following tuple $G = \lbrace c_1,...,c_m,n_1,...,n_m,z,\mu\rbrace$. We have a set $I$ of $m$ contacts on the object where $i \in I$ contact is located at $c_i$ with surface normal $n_i$.
+Given a grasp $G$ on an object, we can define it by the following tuple $G = \lbrace c_1,...,c_m,n_1,...,n_m,z,\tau\rbrace$. We have a set $I$ of $m$ contacts on the object where $i \in I$ contact is located at $c_i$ with surface normal $n_i$.
 The object has a center of mass $z$ and friction coefficient $\mu$.
 We demonstrate that one can efficiently compute a closed form distribution for $c_i$,$n_i$ and $z$.
-We note though that our metric assumes a given $\mu$. \\
-% TODO: finish that thought
+We note though that our metric assumes a known $\mu$ or friction coefficient. \\
+
 
  For the following derivations we use the following notation.
  $\theta(x) = \lbrace \mu(x),\Sigma(x) \rbrace$, hence $\theta(x)$ is a tuple consisting of the mean and covariance functions given by the trained GPIS.
-We further assume that the contacts on the gripper approach along a line of action: $x = \gamma(t): R \rightarrow R^d$.
+We further assume that the contacts on the gripper approach along a line of action: $x = \gamma(t): R \rightarrow R^d$. The set of all elements in the range $[a,b]$ will be denoted by T. 
 % TODO: Michael, I changed this from voxel grid because we're modeling a continuous space not a voxel grid, the voxel grid willbe an artifact of our integration/sampling strategies.
 We assume a bounded rectangular workspace $\mathcal{R}$.
 The line segment has endpoints $a,b$ that are defined as the start of the gripper and the intersection of the line with the end of the workspace respectively, as shown in Fig.
@@ -177,7 +176,7 @@ We can achieve this by marginalizing out the rest of the points along the line.
 With a Gaussian it has the closed form solution as follows: 
 
 \begin{equation}
-P(c_{i,det} =  P(f(\gamma(g))=0|\theta(\gamma(t)))
+P(c_{i}) =  P(f(\gamma(t))=0|\theta(\gamma(t)))
 \end{equation}
 
 
@@ -191,23 +190,23 @@ We now demonstrate how to marginalize out the contact distribution and compute $
 From our distribution on contact points and Bayes rule we can compute the following: 
 
 \begin{equation}
-p(c_i = \gamma(g), n_i = k) = p(n_i = k | h(\gamma(g)))*p(c_i = \gamma(g))
+p(c_i = \gamma(g), n_i = k) = p(n_i = k | h(\gamma(t)))*p(c_i = \gamma(t))
 \end{equation}
 
 Now we can marginalize out the distribution on contacts:
 
 \begin{equation}
-P(n_i = k) = \int_T  p(n_i = k | h(\gamma(g)))*p(c_i = \gamma(g)) dg
+P(n_i = k) = \int_T  p(n_i = k | h(\gamma(t)))*p(c_i = \gamma(t)) dg
 \end{equation}
 
 We then discretize the curve and approximate the integral by a sum: 
 
 \begin{equation}
-P(n_i = k) = \sum_T  p(n_i = k | h(\gamma(g)))*p(c_i = \gamma(g)) dg
+P(n_i = k) = \sum_T  p(n_i = k | h(\gamma(t)))*p(c_i = \gamma(t)) dg
 \end{equation}
 
 
-Thus, $P(n_i = k)$ is a multi-modal distributions  composed of Gaussians sum together. 
+Thus, $P(n_i = k)$ is a multi-modal distributions composed of Gaussians sum together. 
 
 \subsection{Distribution on Center of Mass} 
 
@@ -226,22 +225,7 @@ Then we can find the expected center of mass as:
 which can be approximated by sampling $\mathcal{R}$ uniformly in a voxel grid and approximating the spatial integral by a sum.
 
 
-
-\subsection{Other Thoughts (Not Finished)}
-The derivation above assumes that the robot doesn't have any noise in its movements.
-To accommodate noise in the position of the gripper at time $t$, $x_t$ given control input $u_{t}$ and previous states $x_{1:t-1}$, we introduce the following probability $P(x_t=k|u_t,x_{1:t-1})$.
-This can be computed by methods like an Extended Kalman Filter (EKF) or a particle filter.
-For simplicity we assume that it is a Gaussian distribution. 
-
-We know derive the following: 
-
-\begin{equation}
-P(c_{i}) = \int P(c_{i,det}=\gamma(g),x_t = \gamma(g)) dg
-\end{equation}
-
 \section{Probabilistic Bound on Grasp Metric}
-
-
 Following recent work on proving a Lipschitz bound on the Ferrari-Canny Metric \cite{pokorny2013classical}, we prove that an extension is possible to give a probabilistic bound on the change in grasp quality.
 We rewrite the results here:
 
@@ -273,7 +257,7 @@ Furthermore, $||Q(g) - Q^-_l(g)|| \rightarrow 0$ as $l \rightarrow \infty$ when 
 For $w \in \mathbb{R}^3$, we have, for $n \in \mathbb{S}^2$ and for friction coefficient $\mu > 0$, 
 
 \begin{align}
-\mbox{sup}_{x \in C(n)} \langle x,w \rangle = \langle n,w \rangle + \mu||n \times w||
+\mbox{sup}_{x \in C(n)} \langle x,w \rangle = \langle n,w \rangle + \tau||n \times w||
 \end{align}
 
 Hence, for $u = (a,b) \in \mathbb{R}^3 \times \mathbb{R}^3 = \mathbb{R}^6$, we have 
@@ -283,7 +267,7 @@ h_{W_i(g)}(a,b) =
  \langle n_i,a+b\times(c_i-z)\rangle +
 \]
 \begin{align}
- +\mu ||n_i \times (a+b\times(c_i-z))||
+ +\tau ||n_i \times (a+b\times(c_i-z))||
 \end{align}
 
 \end{theorem}
@@ -319,7 +303,44 @@ Since $Q(g) = max(0,q(g))$, $Q$ is also Lipschitz continuous with the same const
 \end{theorem}
 
 \subsection{Our Extension}
-Setting $l_{i,a,b} = h_{W_i(g)}(a,b)$, we have for $||(a,b)|| \leq 1$ that is $|l_{i,a,b}(g) - l_{i,a,b}(g')|$ is bounded by $|<n_i,a+b\times (c_i-z)> - <n_i',a+b\times(c_i'-z')>|+\mu|||n_i \times (a+b \times (c_i -z)|| - ||n_i \times (a + b \times (c_i' - z')) |||$, using Theorem \ref{lemma35}. By using the following simple facts $||a|| \leq 1$, $||b|| \leq 1$, 
+Setting $l_{i,a,b} = h_{W_i(g)}(a,b)$, we have for $||(a,b)|| \leq 1$ that is $|l_{i,a,b}(g) - l_{i,a,b}(g')|$ is bounded by $|<n_i,a+b\times (c_i-z)> - <n_i',a+b\times(c_i'-z')>|+\mu|||n_i \times (a+b \times (c_i -z)|| - ||n_i \times (a + b \times (c_i' - z')) |||$, using Theorem \ref{lemma35}. By using the following facts $||a|| \leq 1$, $||b|| \leq 1$, $||v \times w || \leq ||w||||v||$, $|<v,w>| \leq ||v||||w||$, we obtain:  
+
+\begin{align*}
+|l_{i,a,b}(g) - l_{i,a,b}(g')| &\leq ||n_i - n_i'||(1+||c_i - z||) \\
+					&+ ||c_i - z_i - c_i'-z_i'|| \\
+					&+ \mu(||n_i - n_i'||(1+||c_i - z||)\\
+					&+||c_i - z_i-c_i'-z'||
+\end{align*}
+
+We now define the concept of a probabilistic bound by functions $\sigma(p)_{n_i}$ and $\sigma(p)_{r_i}$, given a probability $p$ they denote the change in grasp parameter from the mean in the distribution. $\sigma(p)_{n_i}$ references the distribution defined by $p(n_i = k)$. $r = c_i - \bar{z}$ defines a moment arm, where $\bar{z}$ is the expected center of mass, then $\sigma(p)_{r_i}$ references the distribution $p(c_i = k)$. We now write the bound as follows: 
+
+ \begin{align*}
+|l_{i,a,b}(g) - l_{i,a,b}(g')| &\leq ||\sigma_{n_i}(p)||(1+\bar{r}|) + ||\sigma_{r_i}(p)|| \\
+                                      &+ \tau(||\sigma(p)_{n_i}||(1+||\bar{r}||)+||\sigma_{r_i}(p)||)
+\end{align*}
+
+For convenience we rewrite the bound on a given set of graps parameters as : 
+
+ \begin{align*}
+b_i(p) &= ||\sigma_{n_i}(p)||(1+\bar{r}|) + ||\sigma_{r_i}(p)|| \\
+                                      &+ \tau(||\sigma(p)_{n_i}||(1+||\bar{r}||)+||\sigma_{r_i}(p)||)
+\end{align*}
+
+To provide an upper bound overall contact parameters we introduce the following: 
+
+\begin{align}
+b(p)  = \max_{i} b_i(p)
+\end{align}
+
+To prove if  this bound is preserved on
+
+ \begin{align}
+ q(g) = \min{(a,b) \in \mathbb{R}^6, ||u||=1} \max{i=1,..,m} l_{i,a,b}(g)
+ \end{align}
+ 
+we turn to the general case. $\lambda(x) = \mbox{inf}_{\alpha \in A} f_\alpha(x)$ and $\lambda(x) = \mbox{sup}_{\alpha \in A} f_\alpha(x)$ are bounded with $b(p)$ if $f_\alpha(x)$ for all $\alpha$ is bounded with $b(p)$ and $\lambda(x)$ is bounded. Since our bound is invariant to the variables $(a,b)$ and we take the maximum set of parameters $i$. We can ensure that is true.
+
+
 
 \section{References}
 

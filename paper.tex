@@ -67,7 +67,7 @@
 
 
 \title{\LARGE \bf
-Grasp Metric for Gaussian Proccess Implicit Surface Representation of Shape Uncertainity }
+Grasp Metric for Gaussian Proccess Implicit Surface Representation of Shape Uncertainty (Not Finished Work) }
 
 
 \author{Michael Laskey*, Zoe McCarthy*, Sachin Patil, Pieter Abbeel, and Ken Goldberg}% <-this % stops a space
@@ -84,23 +84,21 @@ Grasp Metric for Gaussian Proccess Implicit Surface Representation of Shape Unce
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{abstract}
 
-This electronic document is a �live� template. The various components of your paper [title, text, heads, etc.] are already defined on the style sheet, as illustrated by the portions given in this document.
-
-\end{abstract}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
 \vspace{10pt}
-\noindent{\textbf{Grasp Quality Metrics}}: A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}.
+\subsection{Grasp Quality Metrics}
+ A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}.
 We use the wrench-space Ferrari-Canny force closure quality measures \cite{ferrari1992}, which aims to maximize the disturbance that can be resisted given bounds on the contact forces.
 We also consider the general case where there is friction at the contact points.\\
 
 
-\noindent{\textbf{Gaussian Process (GP) Primer}}: Gaussian processes (GPs) are widely used in machine learning as a nonparametric regression method for estimating continuous functions from sparse and noisy data \cite{rasmussen2006}.
+\subsection{Gaussian Process (GP) Primer}
+ Gaussian processes (GPs) are widely used in machine learning as a nonparametric regression method for estimating continuous functions from sparse and noisy data \cite{rasmussen2006}.
 In a GP, a training set consists of input vectors $\mX = \{\bx_1, \ldots, \bx_n\}, ~\bx_i \in \mathbb{R}^d$, and corresponding observations $\by = \{y_1, \ldots, y_n\}$.
 The observations are assumed to be noisy measurements from the unknown target function $f$:
 \begin{equation}

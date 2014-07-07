@@ -129,7 +129,7 @@ k(\bx_i,\bx_j)
 where $\Lambda= \text{diag}(\lambda_1^2,\ldots,\lambda_d^2)$ are the characteristic length scales of each dimension of $\bx$ and $\nu^2$ describes the variability of $f$.
 The vector of hyper-parameters $\boldsymbol{\theta} = \{\sigma,\nu,\lambda_1,\ldots,\lambda_d\}$ is chosen or optimized during the training process by minimizing the log likelihood $p(\by|\mX,\boldsymbol{\theta})$ \cite{rasmussen2006}.
 
-\section{Related Work}
+%\section{Related Work}
 
 \section{Problem Definition}
 Given a grasp $G$ on an object, we can define it by the following tuple $G = \lbrace c_1,...,c_m,n_1,...,n_m,z,\tau\rbrace$. We have a set $I$ of $m$ contacts on the object where $i \in I$ contact is located at $c_i$ with surface normal $n_i$.
@@ -215,7 +215,7 @@ We assume that the object has uniform mass density and then $\mathcal{D}(x)$ is 
 Then we can find the expected center of mass as:
 
 \begin{equation}
-  \mathcal{C} 
+  \bar{z} 
   =
   \frac
     {\int_{\mathcal{R}}x \mathcal{D}(x) dx}
@@ -231,7 +231,8 @@ We rewrite the results here:
 
 \subsection{Prior Work}
 
-We follow the notation of \cite{pokorny2013classical} and we re-state some of their central theorems for our use here.
+We follow the notation of \cite{pokorny2013classical} except that their $\mu$ is our $\tau$ since we use $\mu$ for means.  
+We re-state some of their central theorems for our use here.
 For more detail, refer there.
 $Q(g)$ refers to the exact $L^1$ grasp quality.
 It is denoted by the following 
@@ -295,24 +296,31 @@ Then $q$ is Lipschitz continuous on grasps with $m$ contact points lying in the 
   d(g,g') = \sum_i ||(c_i-z)-(c_i'-z')|| + \sum_i ||n_i - n_i'||.
 \]
 
-We hence have \\
+We hence have 
 
-$|q(g) - q(g')| \leq Ld(g,g')$ for all $g,g' \in X$. \\
+\[
+|q(g) - q(g')| \leq Ld(g,g'),\  \forall g,g' \in X.
+\]
 
-Since $Q(g) = max(0,q(g))$, $Q$ is also Lipschitz continuous with the same constant $L$ on $X$. 
+Since $Q(g) = \max(0,q(g))$, $Q$ is also Lipschitz continuous with the same constant $L$ on $X$. 
 \end{theorem}
 
-\subsection{Our Extension}
-Setting $l_{i,a,b} = h_{W_i(g)}(a,b)$, we have for $||(a,b)|| \leq 1$ that is $|l_{i,a,b}(g) - l_{i,a,b}(g')|$ is bounded by $|<n_i,a+b\times (c_i-z)> - <n_i',a+b\times(c_i'-z')>|+\mu|||n_i \times (a+b \times (c_i -z)|| - ||n_i \times (a + b \times (c_i' - z')) |||$, using Theorem \ref{lemma35}. By using the following facts $||a|| \leq 1$, $||b|| \leq 1$, $||v \times w || \leq ||w||||v||$, $|<v,w>| \leq ||v||||w||$, we obtain:  
+Setting $l_{i,a,b} = h_{W_i(g)}(a,b)$, we have for $||(a,b)|| \leq 1$ that is $|l_{i,a,b}(g) - l_{i,a,b}(g')|$ is bounded by $|\langle n_i,a+b\times (c_i-z)\rangle - \langle n_i',a+b\times(c_i'-z')\rangle|+\mu|||n_i \times (a+b \times (c_i -z))|| - ||n_i \times (a + b \times (c_i' - z')) |||$, using Theorem \ref{lemma35}.
+By using the following facts $||a|| \leq 1$, $||b|| \leq 1$, $||v \times w || \leq ||w||||v||$, $|\langle v,w\rangle | \leq ||v||||w||$, we obtain:  
 
 \begin{align*}
 |l_{i,a,b}(g) - l_{i,a,b}(g')| &\leq ||n_i - n_i'||(1+||c_i - z||) \\
-					&+ ||c_i - z_i - c_i'-z_i'|| \\
+					&+ ||(c_i - z)-(c_i'-z')|| \\
 					&+ \mu(||n_i - n_i'||(1+||c_i - z||)\\
-					&+||c_i - z_i-c_i'-z'||
+					&+||(c_i - z)-(c_i'-z')||)
 \end{align*}
 
-We now define the concept of a probabilistic bound by functions $\sigma(p)_{n_i}$ and $\sigma(p)_{r_i}$, given a probability $p$ they denote the change in grasp parameter from the mean in the distribution. $\sigma(p)_{n_i}$ references the distribution defined by $p(n_i = k)$. $r = c_i - \bar{z}$ defines a moment arm, where $\bar{z}$ is the expected center of mass, then $\sigma(p)_{r_i}$ references the distribution $p(c_i = k)$. We now write the bound as follows: 
+\subsection{Our Extension}
+
+We now define the concept of a probabilistic bound by functions $\sigma(p)_{n_i}$ and $\sigma(p)_{r_i}$, given a probability $p$ they denote the change in grasp parameter from the mean in the distribution.
+$\sigma(p)_{n_i}$ references the distribution defined by $p(n_i = k)$.
+$r = c_i - \bar{z}$ defines a moment arm, where $\bar{z}$ is the expected center of mass, then $\sigma(p)_{r_i}$ references the distribution $p(c_i = k)$.
+We now write the bound as follows: 
 
  \begin{align*}
 |l_{i,a,b}(g) - l_{i,a,b}(g')| &\leq ||\sigma_{n_i}(p)||(1+\bar{r}|) + ||\sigma_{r_i}(p)|| \\
@@ -322,7 +330,7 @@ We now define the concept of a probabilistic bound by functions $\sigma(p)_{n_i}
 For convenience we rewrite the bound on a given set of graps parameters as : 
 
  \begin{align*}
-b_i(p) &= ||\sigma_{n_i}(p)||(1+\bar{r}|) + ||\sigma_{r_i}(p)|| \\
+b_i(p) &= ||\sigma_{n_i}(p)||(1+||\bar{r}||) + ||\sigma_{r_i}(p)|| \\
                                       &+ \tau(||\sigma(p)_{n_i}||(1+||\bar{r}||)+||\sigma_{r_i}(p)||)
 \end{align*}
 
@@ -335,10 +343,13 @@ b(p)  = \max_{i} b_i(p)
 To prove if  this bound is preserved on
 
  \begin{align}
- q(g) = \min{(a,b) \in \mathbb{R}^6, ||u||=1} \max{i=1,..,m} l_{i,a,b}(g)
+ q(g) = \min_{(a,b) \in \mathbb{R}^6, ||u||=1} \max_{i=1,..,m} l_{i,a,b}(g)
  \end{align}
  
-we turn to the general case. $\lambda(x) = \mbox{inf}_{\alpha \in A} f_\alpha(x)$ and $\lambda(x) = \mbox{sup}_{\alpha \in A} f_\alpha(x)$ are bounded with $b(p)$ if $f_\alpha(x)$ for all $\alpha$ is bounded with $b(p)$ and $\lambda(x)$ is bounded. Since our bound is invariant to the variables $(a,b)$ and we take the maximum set of parameters $i$. We can ensure that is true.
+we turn to the general case.
+$\lambda(x) = \mbox{inf}_{\alpha \in A} f_\alpha(x)$ and $\lambda(x) = \mbox{sup}_{\alpha \in A} f_\alpha(x)$ are bounded with $b(p)$ if $f_\alpha(x)$ for all $\alpha$ is bounded with $b(p)$ and $\lambda(x)$ is bounded.
+Since our bound is invariant to the variables $(a,b)$ and we take the maximum set of parameters $i$.
+We can ensure that is true.
 
 
 

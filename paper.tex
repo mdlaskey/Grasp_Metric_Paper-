@@ -70,7 +70,7 @@
 Grasp Metric for Gaussian Proccess Implicit Surface Representation of Shape Uncertainity }
 
 
-\author{Michael Laskey*,Zoe McCarthy*, Sachin Patil, Pieter Abbeel and Ken Goldberg}% <-this % stops a space
+\author{Michael Laskey*, Zoe McCarthy*, Sachin Patil, Pieter Abbeel, and Ken Goldberg}% <-this % stops a space
 
 \newtheorem{theorem}{Theorem}
 
@@ -98,7 +98,7 @@ This electronic document is a �live� template. The various components of you
 \noindent{\textbf{Grasp Quality Metrics}}: A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}.
 We use the wrench-space Ferrari-Canny force closure quality measures \cite{ferrari1992}, which aims to maximize the disturbance that can be resisted given bounds on the contact forces.
 We also consider the general case where there is friction at the contact points.
-We follow the analysis of Schulman et al. \cite{schulman2011} in the discussion below.\\
+\\
 
 
 \noindent{\textbf{Gaussian Process (GP) Primer}}: Gaussian processes (GPs) are widely used in machine learning as a nonparametric regression method for estimating continuous functions from sparse and noisy data \cite{rasmussen2006}.
@@ -247,16 +247,19 @@ We rewrite the results here:
 
 \subsection{Prior Work}
 
-We use the following notation $Q(g)$ refers to the exact $L^1$ grasp quality.
+We follow the notation of \cite{pokorny2013classical} and we re-state some of their central theorems for our use here.
+For more detail, refer there.
+$Q(g)$ refers to the exact $L^1$ grasp quality.
 It is denoted by the following 
 
 \begin{align}
-Q(g) &= \mbox{max}(0,q(g)) = -d(0,\mbox{Conv}(0 \cup S(g))\\
+  Q(g) &= \mbox{max}(0,q(g)) = -d(0,\mbox{Conv}(\{0\} \cup S(g))\\
 -d(0,S) &= min_{||z|| = 1} h_{S(z)}\\
-h_{S(z)} &= \mbox{sup}_{s\in S}<s,z>\\
+h_{S(z)} &= \mbox{sup}_{s\in S}\langle s,z\rangle\\
 \end{align}
 
-We denote the Ferrari-Canny version, which approximates the friction cone by a linearized set of wrenches\cite{ferrari1992}, as $Q^-_l(g)$.\\
+We denote the Ferrari-Canny version, which approximates the friction cone by a linearized set of wrenches\cite{ferrari1992}, as $Q^-_l(g)$.
+The next theorem shows that the linearized wrench set used in Ferrari-Canny calculates a lower bound on $Q(g)$.\\
 
 \begin{theorem}
   \cite{pokorny2013classical}
@@ -266,31 +269,43 @@ Furthermore, $||Q(g) - Q^-_l(g)|| \rightarrow 0$ as $l \rightarrow \infty$ when 
 
 \begin{theorem}
 \label{lemma35}
+  \cite{pokorny2013classical}
 For $w \in \mathbb{R}^3$, we have, for $n \in \mathbb{S}^2$ and for friction coefficient $\mu > 0$, 
 
 \begin{align}
-\mbox{sup}_{x \in C(n)} <x,w> = <n,w> + \mu||n \times w||
+\mbox{sup}_{x \in C(n)} \langle x,w \rangle = \langle n,w \rangle + \mu||n \times w||
 \end{align}
 
 Hence, for $u = (a,b) \in \mathbb{R}^3 \times \mathbb{R}^3 = \mathbb{R}^6$, we have 
 
+\[
+h_{W_i(g)}(a,b) =
+ \langle n_i,a+b\times(c_i-z)\rangle +
+\]
 \begin{align}
-h_{W_i(g)}(a,b) = <n_i,a+b\times(c_i-z)>+\mu ||n_i \times (a+b\times(c_i-z))||
+ +\mu ||n_i \times (a+b\times(c_i-z))||
 \end{align}
 
 \end{theorem}
 
 \begin{theorem}
+  \cite{pokorny2013classical}
 We have \\
 
 \begin{align}
-q(g) = \min_{u\in \mathbb{R}^6, ||u|| =1} h_{S(g)}(u) = \min_{u\in \mathbb{R}^6, ||u|| =1} \max_{i=1,...,m} h_{W_i(g)}(u),\\
+q(g) 
+=
+\min_{u\in \mathbb{R}^6, ||u|| =1} h_{S(g)}(u) 
+=
 \end{align}
+\[
+\min_{u\in \mathbb{R}^6, ||u|| =1} \max_{i=1,...,m} h_{W_i(g)}(u),
+\]
 
 where $h_{S(g)}$ is convex on $\mathbb{R}^6$.
-Observe that q is invariant under fixed translation of the grasp center and contact positions.
+$q$ is invariant under fixed translation of the grasp center and contact positions.
 Furthermore, let $\mathbb{B}(r) = \lbrace x \in \mathbb{R}^3 : ||x|| \leq r \rbrace$.
-Then q is Lipschitz continuous on grasps with $m$ contact points lying in the set $X = \lbrace (c_1, \dots, c_m,n_1, \dots,n_m,z) : (c_i-z) \in \mathbb{B}(r), n_i \in \mathbb{S}^2 \rbrace$ with a Lipschitz constant given by $L= (1+\mu)(1+r)$ and where the chose distance measure 
+Then $q$ is Lipschitz continuous on grasps with $m$ contact points lying in the set $X = \lbrace (c_1, \dots, c_m,n_1, \dots,n_m,z) : (c_i-z) \in \mathbb{B}(r), n_i \in \mathbb{S}^2 \rbrace$ with a Lipschitz constant given by $L= (1+\mu)(1+r)$ and where we use distance measure 
 
 \[
   d(g,g') = \sum_i ||(c_i-z)-(c_i'-z')|| + \sum_i ||n_i - n_i'||.
@@ -300,7 +315,7 @@ We hence have \\
 
 $|q(g) - q(g')| \leq Ld(g,g')$ for all $g,g' \in X$. \\
 
-Since $Q(g) = max(0,q(g))$, Q is also Lipschitz continuous with the same constant L on X. 
+Since $Q(g) = max(0,q(g))$, $Q$ is also Lipschitz continuous with the same constant $L$ on $X$. 
 \end{theorem}
 
 \subsection{Our Extension}

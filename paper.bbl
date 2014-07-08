@@ -1,36 +1,21 @@
-\begin{thebibliography}{5}
-\providecommand{\natexlab}[1]{#1}
-\providecommand{\url}[1]{\texttt{#1}}
-\expandafter\ifx\csname urlstyle\endcsname\relax
-  \providecommand{\doi}[1]{doi: #1}\else
-  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+\begin{thebibliography}{1}
 
-\bibitem[Bicchi and Kumar(2000)]{bicchi2000}
-Antonio Bicchi and Vijay Kumar.
-\newblock Robotic grasping and contact: {A} review.
-\newblock In \emph{{Proc. {IEEE} Int. Conf. Robotics and Automation (ICRA)}},
-  pages 348--353, 2000.
+\bibitem{bicchi2000}
+A.~Bicchi and V.~Kumar, ``Robotic grasping and contact: {A} review,'' in {\em
+  {Proc. {IEEE} Int. Conf. Robotics and Automation (ICRA)}}, pp.~348--353,
+  2000.
 
-\bibitem[Ferrari and Canny(1992)]{ferrari1992}
-C.~Ferrari and J.~Canny.
-\newblock Planning optimal grasps.
-\newblock In \emph{{Proc. {IEEE} Int. Conf. Robotics and Automation (ICRA)}},
-  pages 2290--2295, 1992.
+\bibitem{ferrari1992}
+C.~Ferrari and J.~Canny, ``Planning optimal grasps,'' in {\em {Proc. {IEEE}
+  Int. Conf. Robotics and Automation (ICRA)}}, pp.~2290--2295, 1992.
 
-\bibitem[Pokorny and Kragic(2013)]{pokorny2013classical}
-Florian~T Pokorny and Danica Kragic.
-\newblock Classical grasp quality evaluation: New algorithms and theory.
-\newblock In \emph{Intelligent Robots and Systems (IROS), 2013 IEEE/RSJ
-  International Conference on}, pages 3493--3500. IEEE, 2013.
-
-\bibitem[Rasmussen and Williams(2006)]{rasmussen2006}
-C~Rasmussen and C~Williams.
-\newblock \emph{Gaussian processes for machine learning}.
+\bibitem{rasmussen2006}
+C.~Rasmussen and C.~Williams, {\em Gaussian processes for machine learning}.
 \newblock MIT Press, 2006.
 
-\bibitem[Schulman et~al.(2011)Schulman, Goldberg, and Abbeel]{schulman2011}
-John~D Schulman, Ken Goldberg, and Pieter Abbeel.
-\newblock Grasping and fixturing as submodular coverage problems.
-\newblock In \emph{Int. Symp. on Robotics Research (ISRR)}, pages 1--12, 2011.
+\bibitem{pokorny2013classical}
+F.~T. Pokorny and D.~Kragic, ``Classical grasp quality evaluation: New
+  algorithms and theory,'' in {\em Intelligent Robots and Systems (IROS), 2013
+  IEEE/RSJ International Conference on}, pp.~3493--3500, IEEE, 2013.
 
 \end{thebibliography}

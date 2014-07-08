@@ -67,7 +67,7 @@
 
 
 \title{\LARGE \bf
-Grasp Metric for Gaussian Proccess Implicit Surface Representation of Shape Uncertainty (Not Finished Work) }
+Grasp Metric for Shape Uncertainity with Gaussian Proccess Implicit Surface Representation (Not Finished Work) }
 
 
 \author{Michael Laskey*, Zoe McCarthy*, Sachin Patil, Pieter Abbeel, and Ken Goldberg}% <-this % stops a space
@@ -91,13 +91,12 @@ Grasp Metric for Gaussian Proccess Implicit Surface Representation of Shape Unce
 \section{Introduction}
 
 \vspace{10pt}
-\subsection{Grasp Quality Metrics}
- A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}.
-We use the wrench-space Ferrari-Canny force closure quality measures \cite{ferrari1992}, which aims to maximize the disturbance that can be resisted given bounds on the contact forces.
-We also consider the general case where there is friction at the contact points.\\
+ A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}. However, only recently have people started looking into a metric's robustness to uncertainty. Prior work by Zheng et al \cite{zheng2005}, looked at how to efficiently include uncertainty in friction coefficient and movement of gripper arm. However, they assumed a known surface of the object. In robotics today, where our objects are represented as noisy point clouds, shape uncertainty is a very common problem \cite{singhbigbird}. \\
+ 
+ We use Gaussian Processes \cite{rasmussen2006} to convert the discrete mesh into an implicit surface with a measurement of uncertainty about the shape. Our contribution extends wrench-space Ferrari-Canny force closure quality measures \cite{ferrari1992}, which aims to maximize the disturbance that can be resisted given bounds on the contact forces, to incorporate shape uncertainty. We use recent results on a Lipschitz  constant for the Ferrari-Canny metric \cite{pokorny2013classical}, and prove a tight probabilistic bound on the change in grasp quality under shape uncertainty. We also provide an efficient way to calculate the distributions on the grasp parameters and include a way to update them quickly with new observations. We work in the general case where friction is at the contact points. 
 
 
-\subsection{Gaussian Process (GP) Primer}
+\section{Gaussian Process Primer}
  Gaussian processes (GPs) are widely used in machine learning as a nonparametric regression method for estimating continuous functions from sparse and noisy data \cite{rasmussen2006}.
 In a GP, a training set consists of input vectors $\mX = \{\bx_1, \ldots, \bx_n\}, ~\bx_i \in \mathbb{R}^d$, and corresponding observations $\by = \{y_1, \ldots, y_n\}$.
 The observations are assumed to be noisy measurements from the unknown target function $f$:
@@ -159,24 +158,55 @@ The line segment has endpoints $a,b$ that are defined as the start of the grippe
 \section{Distribution of Grasp Parameters}
 
 
-\subsection{Distribution on Contact Points} The probability along the line $\gamma(g)$ is given by the following:
+\subsection{Distribution on Contact Points} The probability along the line $\gamma(t)$ is given by the following:
 
 \begin{equation}
-P(f(\gamma(g))|\theta(\gamma(g))) 
+P(f(\gamma(a:b))|\theta(\gamma(a:b))) 
 =
 \mN(\mu_T,\Sigma_T)
 \end{equation}
 
-% TODO: What is T?
 
-This gives the distributions along the entire line of action, however we want to compute the marginalization of this where at each point we simply are asking the probability $p(f(\gamma(g=k))=0)$.
-We can achieve this by marginalizing out the rest of the points along the line.
-With a Gaussian it has the closed form solution as follows: 
 
-\begin{equation}
-P(c_{i}) =  P(f(\gamma(t))=0|\theta(\gamma(t)))
-\end{equation}
+This gives the distributions along the entire line of action, however we want to compute the joint probability   $p(c_i=k) = p(f(\gamma(t))=0, f(\gamma(t-1:0))\neq 0)$. Hence we want to know at a point what the distribution  is that it is at the surface and no points before it on line are on the surface as well, this avoids the problem of the line of action intersecting multiple points on the surface. We now derive a way to compute an upper-bound on this distribution 
 
+\begin{align*}
+p(c_i = k) &= p(f(\gamma(t)) = 0)\\
+               &*p(f(\gamma(t-1:0)) \neq 0 | f(\gamma(t)) = 0)
+\end{align*}
+
+Using the first product in the equation can be computed easily using the marginalization of a multivariate Gaussian distribution and the second one can be rewritten by conditioning the distribution \cite{petersen2008matrix}. 
+
+\begin{align*}
+p(f(\gamma(t-1:0)) \neq 0 | f(\gamma(t)) = 0) = p_c(f(\gamma(t-1:0)))
+\end{align*}
+
+\begin{align*}
+p_c(f(\gamma(t-1:0))) &= p(f(\gamma(t-1)) \neq 0) \\
+                                  &*p(f(\gamma(t-1:0)) \neq 0 | f(\gamma(t-1) \neq 0))
+\end{align*}
+
+It is now clear that the following can be said
+
+\begin{align*}
+p_c(f(\gamma(t-1:0))) &\leq p(f(\gamma(t-1)) \neq 0)\\
+                                  &* p(f(\gamma(t-1:0)) \neq 0))
+\end{align*}
+
+We can furthermore conclude 
+
+\begin{align*}
+p_c(f(\gamma(t-1:0))) &\leq p(f(\gamma(t-1)) \neq 0) \\
+				   &*..*p(f(\gamma(0)) \neq 0))
+\end{align*}
+
+Or in other words the independence assumption provides an upper bound on the distribution, which would otherwise be intractable to calculate. We can know write the conservative approximation to the distribution as follows: 
+
+\begin{align*}
+p(c_i = \gamma(t)) &\leq p(f(\gamma(t-1)) \neq 0) \\
+				   &*..*p(f(\gamma(0)) \neq 0))
+				   &*p(f\gamma(t) = 0)
+\end{align*} 
 
 \subsection{Distribution on Surface Normals} 
 The distribution of surface normals $P(n_i = k)$ can be calculate as follows.
@@ -316,9 +346,6 @@ By using the following facts $||a|| \leq 1$, $||b|| \leq 1$, $||v \times w || \l
 \end{align*}
 
 \subsection{Our Extension}
-
-
-
 We now define the concept of a probabilistic bound by functions $\sigma_{n_i}(\zeta)$ and $\sigma_{r_i}(\zeta)$, given a probability $\zeta$ they denote the maximum change in grasp parameter from the mean in the distribution for that probability.
 Formally, this is defined as:
 
@@ -379,10 +406,7 @@ Since our bound is invariant to the variables $(a,b)$ and we take the maximum se
 We can ensure that is true.
 
 
-
-\section{References}
-
-\bibliographystyle{plainnat}
+\bibliographystyle{ieeetr}
 \bibliography{references}
 
 \end{document}

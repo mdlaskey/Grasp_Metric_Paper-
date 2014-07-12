@@ -91,12 +91,13 @@ Grasp Metric for Shape Uncertainity with Gaussian Proccess Implicit Surface Repr
 \section{Introduction}
 
 \vspace{10pt}
- A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}. However, only recently have people started looking into a metric's robustness to uncertainty. Prior work by Zheng et al \cite{zheng2005}, looked at how to efficiently include uncertainty in friction coefficient and movement of gripper arm. However, they assumed a known surface of the object. In robotics today, where our objects are represented as noisy point clouds, shape uncertainty is a very common problem \cite{singhbigbird}. \\
+ A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}. However, only recently have people started looking into a metric's robustness to uncertainty. Prior work by Zheng et al \cite{zheng2005}, looked at how to efficiently include uncertainty in friction coefficient and movement of gripper arm. However, they assumed a known surface of the object. In robotics today, where our objects are represented as noisy point clouds, shape uncertainty is a very common problem \cite{singhbigbird}. 
  
  We use Gaussian Processes \cite{rasmussen2006} to convert the discrete mesh into an implicit surface with a measurement of uncertainty about the shape. Our contribution extends wrench-space Ferrari-Canny force closure quality measures \cite{ferrari1992}, which aims to maximize the disturbance that can be resisted given bounds on the contact forces, to incorporate shape uncertainty. We use recent results on a Lipschitz  constant for the Ferrari-Canny metric \cite{pokorny2013classical}, and prove a tight probabilistic bound on the change in grasp quality under shape uncertainty. We also provide an efficient way to calculate the distributions on the grasp parameters and include a way to update them quickly with new observations. We work in the general case where friction is at the contact points. 
 
 
 \section{Gaussian Process Primer}
+\textbf{TODO:FIX THIS SECTION AND MAKE NOTATION CONSISTENT}
  Gaussian processes (GPs) are widely used in machine learning as a nonparametric regression method for estimating continuous functions from sparse and noisy data \cite{rasmussen2006}.
 In a GP, a training set consists of input vectors $\mX = \{\bx_1, \ldots, \bx_n\}, ~\bx_i \in \mathbb{R}^d$, and corresponding observations $\by = \{y_1, \ldots, y_n\}$.
 The observations are assumed to be noisy measurements from the unknown target function $f$:
@@ -129,22 +130,31 @@ The vector of hyper-parameters $\boldsymbol{\theta} = \{\sigma,\nu,\lambda_1,\ld
 %\section{Related Work}
 
 \section{Problem Definition}
-Given a grasp $G$ on an object, we can define it by the following tuple $G = \lbrace c_1,...,c_m,n_1,...,n_m,z,\tau\rbrace$. We have a set $I$ of $m$ contacts on the object where $i \in I$ contact is located at $c_i$ with surface normal $n_i$.
-The object has a center of mass $z$ and friction coefficient $\mu$.
-We demonstrate that one can efficiently compute a closed form distribution for $c_i$,$n_i$ and $z$.
-We note though that our metric assumes a known $\mu$ or friction coefficient. \\
+
+The objective of our algorithm is to provide an expected quality of grasp, $Q_l^-(\bar{g})$ \cite{ferrari1992}, and the probability $\zeta$ of not obtaining force closure. 
+
+Given a grasp $g$ on an object, we can define it by the following tuple $g = \lbrace \textbf{c}_0,...,\textbf{c}_m,\textbf{n}_0,...,\textbf{n}_m,\textbf{z},\tau\rbrace$. We have a set $I$ of $m$  point contacts and surface normal on the object where $i \in I$s is located at $c_i$ with surface normal $n_i$. The object has a center of mass $z$ and friction coefficient $\tau$.
+
+Since we have uncertainty in the shape we only have a distribution on the grasp parameters, hence $p(g) = \lbrace p(\textbf{c}_0),...,p(\textbf{c}_m),p(\textbf{n}_0),...,p(\textbf{n}_m),\bar{\textbf{z}},\tau \rbrace$. We note that $\tau$ is considered known and $\bar{z}$ is only the expected center of mass. In section \ref{sec:distgrasp}, we demonstrate how to efficiently compute this distribution. 
+
+With distribution on $p(g)$ we then use recent results on a Lipschitz constant for Ferrari-Canny Metric \cite{pokorny2013classical} to provide $\zeta$ or the probability the grasp will lose force closure and the expected quality of the grasp $Q_l^-(\bar{g})$, where $\bar(g) = \lbrace \bar{\textbf{c}}_0,...,\bar{\textbf{c}}_m),\bar{\textbf{n}}_0,...,\bar{\textbf{n}}_m,\bar{\textbf{z}},\tau \rbrace$. Details of this computation can be found in section \ref{sec:bound}.
+
+\section{Distribution of Grasp Parameters}
+\label{sec:distgrasp}
+
+ For the following derivations we introduce the following,
+ $\theta(x) = \lbrace \mu(x),\Sigma(x) \rbrace$, where $\theta(x)$ is a tuple consisting of the mean and covariance functions given by the trained GPIS model \cite{rasmussen2006} . 
+ 
+ To calculate $p(g)$, we assume a gripper contacts approaches along a line of action, or a 1-dimensional curve in the work space, defined by $\gamma(t)$. See Fig \ref{fig:line_of_action}, for a detailed illustration. Each gripper contact is defined by a line of action, so we assume the following tuple is provided $\Gamma = \lbrace \gamma_0(t),...,\gamma_m(t) \rbrace$, these approach trajectories are then used to compute a distribution on grasp parameters. 
+ 
 
 
- For the following derivations we use the following notation.
- $\theta(x) = \lbrace \mu(x),\Sigma(x) \rbrace$, hence $\theta(x)$ is a tuple consisting of the mean and covariance functions given by the trained GPIS.
-We further assume that the contacts on the gripper approach along a line of action: $x = \gamma(t): R \rightarrow R^d$. The set of all elements in the range $[a,b]$ will be denoted by T. 
-% TODO: Michael, I changed this from voxel grid because we're modeling a continuous space not a voxel grid, the voxel grid willbe an artifact of our integration/sampling strategies.
 We assume a bounded rectangular workspace $\mathcal{R}$.
-The line segment has endpoints $a,b$ that are defined as the start of the gripper and the intersection of the line with the end of the workspace respectively, as shown in Fig.
+The line segment has endpoints $a,b$ that are defined as the start of the gripper and the intersection of the line with the end of the workspace respectively, as shown in Fig. 
  \ref{fig:line_of_action}.
- % TODO: Draw a box around the workspace to show that b intersects the end of the workspace and draw a gripper approaching from a.  Also make A and B lowercase in the figure.
- We also define the function $f(x): \mathbb{R}^d \rightarrow \mathbb{R}$ as $f(x) = \mu(x)$ and an implicit surface $\mathcal{S} = \{ x \ | \ f(x) = 0 \}$.
-% TODO: Michael, did I fill this in correctly? It was left blank initially.
+
+ We also define the function level set function as $f(x): \mathbb{R}^d \rightarrow \mathbb{R}$ and an implicit surface as $\mathcal{S} = \{ x \ | \ f(x) = 0 \}$.
+
 
 \begin{figure}[ht!]
 \centering
@@ -153,90 +163,71 @@ The line segment has endpoints $a,b$ that are defined as the start of the grippe
 \vspace*{-10pt}
 \label{fig:line_of_action}
 \end{figure}
-
-
-\section{Distribution of Grasp Parameters}
-
-
-\subsection{Distribution on Contact Points} The probability along the line $\gamma(t)$ is given by the following:
+\textbf{TODO:MORE DESCRIPTIVE GRAPHIC}
+\subsection{Distribution on Contact Points} The probability distribution along the line $\gamma(t)$ is given by the following:
 
 \begin{equation}
-P(f(\gamma(a:b))|\theta(\gamma(a:b))) 
+p\big(f(\gamma(t))|\theta(\gamma(t)): \forall t \in [a,b] \big) 
 =
-\mN(\mu_T,\Sigma_T)
+\mN(\mu_{a:b},\Sigma_{a:b})
 \end{equation}
 
-
-
-This gives the distributions along the entire line of action, however we want to compute the joint probability   $p(c_i=k) = p(f(\gamma(t))=0, f(\gamma(t-1:0))\neq 0)$. Hence we want to know at a point what the distribution  is that it is at the surface and no points before it on line are on the surface as well, this avoids the problem of the line of action intersecting multiple points on the surface. We now derive a way to compute an upper-bound on this distribution 
+This gives the distributions along the entire line of action in the workspace, however we want to compute the joint distribution   $p\big(\textbf{c}_i= \gamma(t)\big) = p\big(f(\gamma(t))=0, f(\gamma(\tau))> 0: \forall \tau \in [0,t)\big)$. Hence we want to know at a point what the distribution  is that it is at the surface and the probability that all points before are before the surface. points before it on line are on the surface as well, this avoids the problem of the distribution producing multiple modes for each intersection with the surface. We now derive a way to compute an upper-bound on this distribution 
 
 \begin{align*}
-p(c_i = k) &= p(f(\gamma(t)) = 0)\\
-               &*p(f(\gamma(t-1:0)) \neq 0 | f(\gamma(t)) = 0)
+p\big(\textbf{c}_i = \gamma(t)\big) &\propto p\big(f(\gamma(t)) = 0\big)\\
+               &*P\big(f(\gamma(\tau)) > 0 | f(\gamma(t)) = 0: \forall \tau \in [0,t)\big)
 \end{align*}
 
 Using the first product in the equation can be computed easily using the marginalization of a multivariate Gaussian distribution and the second one can be rewritten by conditioning the distribution \cite{petersen2008matrix}. 
 
 \begin{align*}
-p(f(\gamma(t-1:0)) \neq 0 | f(\gamma(t)) = 0) = p_c(f(\gamma(t-1:0)))
+p_c\big(f(\gamma(\tau)): \forall \tau \in [0,t)\big) = p\big(f(\gamma(\tau))  | f(\gamma(t)) = 0\big)  
 \end{align*}
 
-\begin{align*}
-p_c(f(\gamma(t-1:0))) &= p(f(\gamma(t-1)) \neq 0) \\
-                                  &*p(f(\gamma(t-1:0)) \neq 0 | f(\gamma(t-1) \neq 0))
-\end{align*}
 
 It is now clear that the following can be said
 
 \begin{align*}
-p_c(f(\gamma(t-1:0))) &\leq p(f(\gamma(t-1)) \neq 0)\\
-                                  &* p(f(\gamma(t-1:0)) \neq 0))
-\end{align*}
-
-We can furthermore conclude 
-
-\begin{align*}
-p_c(f(\gamma(t-1:0))) &\leq p(f(\gamma(t-1)) \neq 0) \\
-				   &*..*p(f(\gamma(0)) \neq 0))
-\end{align*}
-
-Or in other words the independence assumption provides an upper bound on the distribution, which would otherwise be intractable to calculate. We can know write the conservative approximation to the distribution as follows: 
-
-\begin{align*}
-p(c_i = \gamma(t)) &\leq p(f(\gamma(t-1)) \neq 0) \\
-				   &*..*p(f(\gamma(0)) \neq 0))
-				   &*p(f\gamma(t) = 0)
+p\big(\textbf{c}_i = \gamma(t)\big) &= \frac{1}{\eta} p(f\gamma(t) = 0) \\
+				   &*P_c\big(f(\gamma(\tau)) < 0): \forall \tau \in [0,t)\big)			 
 \end{align*} 
 
+The second product term can be efficiently evaluated by looking up the cumulative distribution of a multivariate Gaussian, which is common in most software packages \cite{matlab}.
+
 \subsection{Distribution on Surface Normals} 
-The distribution of surface normals $P(n_i = k)$ can be calculate as follows.
-First we assume that some function exists $h(x) = \lbrace \mu_{\nabla}(x), \Sigma_{\nabla}(x) \rbrace$, hence given a point $x$ it returns the parameters for a Gaussian distribution around the gradient.
-this function can be computed via learning the gradient \cite{gradient} or analytical differentiation of $f(x)$.
+The distribution of surface normals $p(\textbf{n}_i = \textbf{k})$ can be calculate as follows.
+First we assume that some function exists $h(x) = \lbrace \mu_{\nabla}(x), \Sigma_{\nabla}(x) \rbrace$, hence given a point $\bf{x}$ it returns the parameters for a Gaussian distribution around the gradient.
+this function can be computed via learning the gradient \cite{solak2003derivative} or analytical differentiation of $f(x)$.
 We note that both methods yield a Gaussian distribution.
-We now demonstrate how to marginalize out the contact distribution and compute $P(n_i = k)$\\
+We now demonstrate how to marginalize out the contact distribution and compute $p(\textbf{n}_i = \textbf{k})$\\
 
 From our distribution on contact points and Bayes rule we can compute the following: 
 
 \begin{equation}
-p(c_i = \gamma(g), n_i = k) = p(n_i = k | h(\gamma(t)))*p(c_i = \gamma(t))
+p(\textbf{c}_i = \gamma(t), \textbf{n}_i = \textbf{k}) = p\big(\textbf{n}_i = \textbf{k} | h(\gamma(t))\big)*p\big(\textbf{c}_i = \gamma(t)\big)
 \end{equation}
 
 Now we can marginalize out the distribution on contacts:
 
 \begin{equation}
-P(n_i = k) = \int_T  p(n_i = k | h(\gamma(t)))*p(c_i = \gamma(t)) dg
+p(\textbf{n}_i = \textbf{k}) = \int_a^b  p \big(\textbf{n}_i = \textbf{k} | \textbf{c}_i = \gamma(t) \big)*p(\textbf{c}_i = \gamma(t)) dt
 \end{equation}
-
-We then discretize the curve and approximate the integral by a sum: 
 
 \begin{equation}
-P(n_i = k) = \sum_T  p(n_i = k | h(\gamma(t)))*p(c_i = \gamma(t)) dg
+p\big(\textbf{n}_i = \textbf{k}\big) = \int_a^b  p \big(\textbf{n}_i = \textbf{k} | h(\gamma(t))\big)*p\big(\textbf{c}_i = \gamma(t)\big) dt
+\end{equation}
+
+We approximate this by uniformly sampling the integral along the function $\gamma(t)$ and achieve the following: 
+
+\begin{equation}
+p\big( \textbf{n}_i = \textbf{k} \big) = \sum_T  p \big( \textbf{n}_i = k | h(\gamma(t)) \big) *p\big(c_i = \gamma(t)\big) dt
 \end{equation}
 
 
-Thus, $P(n_i = k)$ is a multi-modal distributions composed of Gaussians sum together. 
+Thus, $p(\textbf{n}_i = \textbf{k})$ is approximated by a Gaussian Mixture Model.
 
-\subsection{Distribution on Center of Mass} 
+\subsection{Expected Center of Mass} 
 
 We define the quantity $\mathcal{D}(x) = \int_{-\infty}^{0} p(f(x) =  s \ | \ \theta(x)) ds$ and note that it is equal to the probability that x is interior to the surface under the current observations.
 We assume that the object has uniform mass density and then $\mathcal{D}(x)$ is the expected mass density at x.
@@ -254,11 +245,13 @@ which can be approximated by sampling $\mathcal{R}$ uniformly in a voxel grid an
 
 
 \section{Probabilistic Bound on Grasp Metric}
+\label{sec:bound}
 Following recent work on proving a Lipschitz bound on the Ferrari-Canny Metric \cite{pokorny2013classical}, we prove that an extension is possible to give a probabilistic bound on the change in grasp quality.
 We rewrite the results here:
 
 \subsection{Prior Work}
 
+\textbf{TODO:WORK IN PRIOR WORK BETTER}
 We follow the notation of \cite{pokorny2013classical} except that their $\mu$ is our $\tau$ since we use $\mu$ for means.  
 We re-state some of their central theorems for our use here.
 For more detail, refer there.
@@ -346,46 +339,33 @@ By using the following facts $||a|| \leq 1$, $||b|| \leq 1$, $||v \times w || \l
 \end{align*}
 
 \subsection{Our Extension}
-We now define the concept of a probabilistic bound by functions $\sigma_{n_i}(\zeta)$ and $\sigma_{r_i}(\zeta)$, given a probability $\zeta$ they denote the maximum change in grasp parameter from the mean in the distribution for that probability.
+We now define the concept of a probabilistic bound by functions $\sigma_i(\zeta) = \lbrace\Delta \textbf{r}_{i,\zeta}, \Delta \textbf{n}_{i,\zeta}\rbrace$. Given a probability $\zeta$, $\sigma_i$ returns the tuple denoting the maximum change in grasp parameter from the mean in the distribution for that probability. $\Delta \textbf{n}_i$ is the change in surface normal and $\Delta \textbf{r}_i$ is the change in moment arm defined as $\textbf{r}_i = \textbf{c}_i - \bar{\textbf{z}}$.
 Formally, this is defined as:
 
 \[
-  \sigma_{n_i}(\zeta)
+  \sigma_i(\zeta)
   =
-  \min_{\mathbb{R}_+}d
+  \min_{\mathbb{R}_+} \textbf{d}
 \]
 
 \[
-  s.t. \ \ \left[ \int_{\mathbb{B}(\bar{n}, d)} p(n_i = k) dk \right] \geq \zeta
+  s.t. \ \ \left[ \int_{\mathbb{B}([\bar{t},\bar{\textbf{n}}], d)} p(\textbf{n}_i = \textbf{k},\textbf{c}_i=\gamma(t)) d[t,\textbf{k}] \right] \geq \zeta
 \]
 
-and 
 
 
-\[
-  \sigma_{r_i}(\zeta)
-  =
-  \min_{\mathbb{R}_+} d
-\]
-
-\[
-s.t. \ \ \left[ \int_{\mathbb{B}(\bar{r}, d)} p(r_i = k) dk \right]  \geq \zeta
-\]
-
-$\sigma_{n_i}(\zeta)$ references the distribution defined by $p(n_i = k)$.
-$r_i = c_i - \bar{z}$ defines a moment arm, where $\bar{z}$ is the expected center of mass, then $\sigma_{r_i}(\zeta)$ references the distribution $p(c_i = k)$.
-We now write the above bound as follows: 
+We now write the above bound as follows for a given $\sigma_i(\zeta)$: 
 
  \begin{align*}
-|l_{i,a,b}(g) - l_{i,a,b}(g')| &\leq ||\sigma_{n_i}(\zeta)||(1+||\bar{r}_i||) + ||\sigma_{r_i}(\zeta)|| \\
-                                      &+ \tau(||\sigma_{n_i}(\zeta)||(1+||\bar{r}_i||)+||\sigma_{r_i}(\zeta)||)
+|l_{i,a,b}(g) - l_{i,a,b}(g')| & =||\Delta \textbf{n}_{i,\zeta}||(1+||\bar{\textbf{r}}_i||) + ||\Delta{\textbf{r}_{i,\zeta}}(\zeta)|| \\
+                                      &+ \tau(||\Delta \textbf{n}_{i,\zeta}||(1+||\bar{\textbf{r}}_i||)+||\Delta \textbf{r}_{i,\zeta}||)
 \end{align*}
 
-For convenience we rewrite the bound on a given set of graps parameters as : 
+For convenience we rewrite the bound on a given set of grasp parameters as : 
 
  \begin{align*}
-b_i(\zeta) &= ||\sigma_{n_i}(\zeta)||(1+||\bar{r}_i||) + ||\sigma_{r_i}(\zeta)|| \\
-                                      &+ \tau(||\sigma_{n_i}(\zeta)||(1+||\bar{r}_i||)+||\sigma_{r_i}(\zeta)||)
+b_i(\zeta) &= ||\Delta \textbf{n}_{i,\zeta}||(1+||\bar{\textbf{r}}_i||) + ||\Delta{\textbf{r}_{i,\zeta}}(\zeta)|| \\
+                                      &+ \tau(||\Delta \textbf{n}_{i,\zeta}||(1+||\bar{\textbf{r}}_i||)+||\Delta \textbf{r}_{i,\zeta}||)
 \end{align*}
 
 To provide an upper bound overall contact parameters we introduce the following: 
@@ -405,6 +385,19 @@ $\lambda(x) = \mbox{inf}_{\alpha \in A} f_\alpha(x)$ and $\lambda(x) = \mbox{sup
 Since our bound is invariant to the variables $(a,b)$ and we take the maximum set of parameters $i$.
 We can ensure that is true.
 
+Lastly if one wants to find the probability they would lose force closure, they can simply solve the following 
+
+\[
+  \zeta
+  =
+  \argmin_{\zeta} b(\zeta)
+\]
+
+\[
+  s.t. \ \  b(\zeta) \geq q(\bar(g))
+\]
+
+This would be pretty computationally expensive, so still a work in progress. \textbf{TODO:MAKE THIS EFFICIENT}
 
 \bibliographystyle{ieeetr}
 \bibliography{references}

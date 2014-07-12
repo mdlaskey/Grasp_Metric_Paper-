@@ -4,45 +4,49 @@ The top-level auxiliary file: paper.aux
 The style file: ieeetr.bst
 Database file #1: references.bib
 Warning--I didn't find a database entry for "gradient"
-You've used 4 entries,
+Warning--empty journal in singhbigbird
+Warning--empty year in singhbigbird
+Warning--empty journal in petersen2008matrix
+Warning--empty year in petersen2008matrix
+You've used 7 entries,
             1876 wiz_defined-function locations,
-            514 strings with 4264 characters,
-and the built_in function-call counts, 1304 in all, are:
-= -- 134
-> -- 32
+            526 strings with 4589 characters,
+and the built_in function-call counts, 1949 in all, are:
+= -- 189
+> -- 61
 < -- 0
-+ -- 12
-- -- 8
-* -- 74
-:= -- 165
-add.period$ -- 5
-call.type$ -- 4
-change.case$ -- 3
++ -- 23
+- -- 16
+* -- 124
+:= -- 258
+add.period$ -- 6
+call.type$ -- 7
+change.case$ -- 6
 chr.to.int$ -- 0
-cite$ -- 4
-duplicate$ -- 76
-empty$ -- 138
-format.name$ -- 8
-if$ -- 328
+cite$ -- 11
+duplicate$ -- 111
+empty$ -- 202
+format.name$ -- 16
+if$ -- 477
 int.to.chr$ -- 0
-int.to.str$ -- 4
-missing$ -- 5
-newline$ -- 16
-num.names$ -- 4
-pop$ -- 26
+int.to.str$ -- 7
+missing$ -- 8
+newline$ -- 25
+num.names$ -- 7
+pop$ -- 41
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 56
+skip$ -- 75
 stack$ -- 0
-substring$ -- 112
-swap$ -- 32
+substring$ -- 144
+swap$ -- 41
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 0
-while$ -- 13
-width$ -- 5
-write$ -- 39
-(There was 1 warning)
+warning$ -- 4
+while$ -- 19
+width$ -- 8
+write$ -- 62
+(There were 5 warnings)

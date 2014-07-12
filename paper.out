@@ -4,7 +4,7 @@
 \BOOKMARK [1][-]{section.4}{Distribution of Grasp Parameters}{}% 4
 \BOOKMARK [2][-]{subsection.4.1}{Distribution on Contact Points}{section.4}% 5
 \BOOKMARK [2][-]{subsection.4.2}{Distribution on Surface Normals}{section.4}% 6
-\BOOKMARK [2][-]{subsection.4.3}{Distribution on Center of Mass}{section.4}% 7
+\BOOKMARK [2][-]{subsection.4.3}{Expected Center of Mass}{section.4}% 7
 \BOOKMARK [1][-]{section.5}{Probabilistic Bound on Grasp Metric}{}% 8
 \BOOKMARK [2][-]{subsection.5.1}{Prior Work}{section.5}% 9
 \BOOKMARK [2][-]{subsection.5.2}{Our Extension}{section.5}% 10

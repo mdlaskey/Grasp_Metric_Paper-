@@ -5,17 +5,29 @@ A.~Bicchi and V.~Kumar, ``Robotic grasping and contact: {A} review,'' in {\em
   {Proc. {IEEE} Int. Conf. Robotics and Automation (ICRA)}}, pp.~348--353,
   2000.
 
-\bibitem{ferrari1992}
-C.~Ferrari and J.~Canny, ``Planning optimal grasps,'' in {\em {Proc. {IEEE}
-  Int. Conf. Robotics and Automation (ICRA)}}, pp.~2290--2295, 1992.
+\bibitem{zheng2005}
+Y.~Zheng and W.-H. Qian, ``Coping with the grasping uncertainties in
+  force-closure analysis,'' {\em Int. J. Robotics Research (IJRR)}, vol.~24,
+  no.~4, pp.~311--327, 2005.
+
+\bibitem{singhbigbird}
+A.~Singh, J.~Sha, K.~S. Narayan, T.~Achim, and P.~Abbeel, ``Bigbird: A
+  large-scale 3d database of object instances,''
 
 \bibitem{rasmussen2006}
 C.~Rasmussen and C.~Williams, {\em Gaussian processes for machine learning}.
 \newblock MIT Press, 2006.
 
+\bibitem{ferrari1992}
+C.~Ferrari and J.~Canny, ``Planning optimal grasps,'' in {\em {Proc. {IEEE}
+  Int. Conf. Robotics and Automation (ICRA)}}, pp.~2290--2295, 1992.
+
 \bibitem{pokorny2013classical}
 F.~T. Pokorny and D.~Kragic, ``Classical grasp quality evaluation: New
   algorithms and theory,'' in {\em Intelligent Robots and Systems (IROS), 2013
   IEEE/RSJ International Conference on}, pp.~3493--3500, IEEE, 2013.
+
+\bibitem{petersen2008matrix}
+K.~B. Petersen, ``The matrix cookbook,''
 
 \end{thebibliography}

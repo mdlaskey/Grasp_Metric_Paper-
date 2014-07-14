@@ -91,9 +91,18 @@ Grasp Metric for Shape Uncertainity with Gaussian Proccess Implicit Surface Repr
 \section{Introduction}
 
 \vspace{10pt}
- A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}. However, only recently have people started looking into a metric's robustness to uncertainty. Prior work by Zheng et al \cite{zheng2005}, looked at how to efficiently include uncertainty in friction coefficient and movement of gripper arm. However, they assumed a known surface of the object. In robotics today, where our objects are represented as noisy point clouds, shape uncertainty is a very common problem \cite{singhbigbird}. 
+ A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}.  In robotics today, where our objects are represented as noisy point clouds, shape uncertainty is a very common problem \cite{singhbigbird}. As shown in Fig. \ref{fig:noisy data}, the noise in object shape can greatly change the surface normals and contact points, which are the parameters that most grasp metrics rely on.  However, only recently have people started looking into a metric's robustness to uncertainty. Prior work by Zheng et al \cite{zheng2005}, looked at how to efficiently include uncertainty in friction coefficient and movement of gripper arm. . However, they assumed a known surface of the object.
  
  We use Gaussian Processes \cite{rasmussen2006} to convert the discrete mesh into an implicit surface with a measurement of uncertainty about the shape. Our contribution extends wrench-space Ferrari-Canny force closure quality measures \cite{ferrari1992}, which aims to maximize the disturbance that can be resisted given bounds on the contact forces, to incorporate shape uncertainty. We use recent results on a Lipschitz  constant for the Ferrari-Canny metric \cite{pokorny2013classical}, and prove a tight probabilistic bound on the change in grasp quality under shape uncertainty. We also provide an efficient way to calculate the distributions on the grasp parameters and include a way to update them quickly with new observations. We work in the general case where friction is at the contact points. 
+
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[scale = 0.3]{figures/Slide2.jpg}
+\caption{An example of the noise from a Kinect Like Sensor}
+\vspace*{-10pt}
+\label{fig:noisy data}
+\end{figure}
 
 
 \section{Gaussian Process Primer}
@@ -153,13 +162,13 @@ We assume a bounded rectangular workspace $\mathcal{R}$.
 The line segment has endpoints $a,b$ that are defined as the start of the gripper and the intersection of the line with the end of the workspace respectively, as shown in Fig. 
  \ref{fig:line_of_action}.
 
- We also define the function level set function as $f(x): \mathbb{R}^d \rightarrow \mathbb{R}$ and an implicit surface as $\mathcal{S} = \{ x \ | \ f(x) = 0 \}$.
+ We also define the  level set function as $f(x): \mathbb{R}^d \rightarrow \mathbb{R}$ and an implicit surface as $\mathcal{S} = \{ x \ | \ f(x) = 0 \}$.
 
 
 \begin{figure}[ht!]
 \centering
 \includegraphics[scale = 0.3]{figures/Slide1.jpg}
-\caption{Parameterized Line of Action along a Object}
+\caption{Parametrized Line of Action along a Object}
 \vspace*{-10pt}
 \label{fig:line_of_action}
 \end{figure}
@@ -172,7 +181,7 @@ p\big(f(\gamma(t))|\theta(\gamma(t)): \forall t \in [a,b] \big)
 \mN(\mu_{a:b},\Sigma_{a:b})
 \end{equation}
 
-This gives the distributions along the entire line of action in the workspace, however we want to compute the joint distribution   $p\big(\textbf{c}_i= \gamma(t)\big) = p\big(f(\gamma(t))=0, f(\gamma(\tau))> 0: \forall \tau \in [0,t)\big)$. Hence we want to know at a point what the distribution  is that it is at the surface and the probability that all points before are before the surface. points before it on line are on the surface as well, this avoids the problem of the distribution producing multiple modes for each intersection with the surface. We now derive a way to compute an upper-bound on this distribution 
+This gives the distributions along the entire line of action in the workspace, however we want to compute the joint distribution   $p\big(\textbf{c}_i= \gamma(t)\big) = p\big(f(\gamma(t))=0, f(\gamma(\tau))> 0: \forall \tau \in [0,t)\big)$. Hence we want to know at a point what the distribution  is that it is at the surface and the probability that all points before are before the surface, this avoids the problem of the distribution producing multiple modes for each intersection with the surface. We now derive a  this distribution 
 
 \begin{align*}
 p\big(\textbf{c}_i = \gamma(t)\big) &\propto p\big(f(\gamma(t)) = 0\big)\\
@@ -357,7 +366,7 @@ Formally, this is defined as:
 We now write the above bound as follows for a given $\sigma_i(\zeta)$: 
 
  \begin{align*}
-|l_{i,a,b}(g) - l_{i,a,b}(g')| & =||\Delta \textbf{n}_{i,\zeta}||(1+||\bar{\textbf{r}}_i||) + ||\Delta{\textbf{r}_{i,\zeta}}(\zeta)|| \\
+|l_{i,a,b}(g) - l_{i,a,b}(g')| & \leq ||\Delta \textbf{n}_{i,\zeta}||(1+||\bar{\textbf{r}}_i||) + ||\Delta{\textbf{r}_{i,\zeta}}(\zeta)|| \\
                                       &+ \tau(||\Delta \textbf{n}_{i,\zeta}||(1+||\bar{\textbf{r}}_i||)+||\Delta \textbf{r}_{i,\zeta}||)
 \end{align*}
 

@@ -91,22 +91,32 @@ Grasp Metric for Shape Uncertainity with Gaussian Proccess Implicit Surface Repr
 \section{Introduction}
 
 \vspace{10pt}
- A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}.  In robotics today, where our objects are represented as noisy point clouds, shape uncertainty is a very common problem \cite{singhbigbird}. As shown in Fig. \ref{fig:noisy data}, the noise in object shape can greatly change the surface normals and contact points, which are the parameters that most grasp metrics rely on.  However, only recently have people started looking into a metric's robustness to uncertainty. Prior work by Zheng et al \cite{zheng2005}, looked at how to efficiently include uncertainty in friction coefficient and movement of gripper arm. . However, they assumed a known surface of the object.
+ A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}.  Many modern 3d sensors give noisy point clouds as output, so shape uncertainty is a common problem \cite{singhbigbird}. As shown in Fig. \ref{fig:noisy data}, the noise in our measurements of object shape can greatly change the surface normals and contact points, which are the parameters that most grasp metrics rely on.  However, only recently have people started looking into a metric's robustness to uncertainty. Prior work by Zheng et al \cite{zheng2005}, looked at how to efficiently include uncertainty in friction coefficient and movement of gripper arm. However, they assumed a known surface of the object.
  
- We use Gaussian Processes \cite{rasmussen2006} to convert the discrete mesh into an implicit surface with a measurement of uncertainty about the shape. Our contribution extends wrench-space Ferrari-Canny force closure quality measures \cite{ferrari1992}, which aims to maximize the disturbance that can be resisted given bounds on the contact forces, to incorporate shape uncertainty. We use recent results on a Lipschitz  constant for the Ferrari-Canny metric \cite{pokorny2013classical}, and prove a tight probabilistic bound on the change in grasp quality under shape uncertainty. We also provide an efficient way to calculate the distributions on the grasp parameters and include a way to update them quickly with new observations. We work in the general case where friction is at the contact points. 
+We use Gaussian Processes \cite{rasmussen2006} to convert the point cloud measurements into an implicit surface with uncertainty in the shape.
+We assume friction is at the contact points. 
+The wrench-space Ferrari-Canny force closure quality measure \cite{ferrari1992} calculates the maximum disturbance that can be resisted given bounds on the contact forces.
+%\section{Goals and Current Progress}
+We are working to extend this metric to incorporate shape uncertainty.
+For our grasping model, we make a simplifying assumption that each gripper approaches the object along a fixed line of action and thus the contact points lie on this line.
+We would like to analyze the induced distributions over grasp parameters and the Ferrari-Canny metric.
+Specifically, we would like to answer the following question:
+What is the probability of achieving force closure under the given grasp approach directions and implicit surface distribution?
+%We use recent results on a Lipschitz constant for the Ferrari-Canny metric \cite{pokorny2013classical}, and prove a tight probabilistic bound on the change in grasp quality under shape uncertainty.
+%We also provide an efficient way to calculate the distributions on the grasp parameters and include a way to update them quickly with new observations.
 
 
 \begin{figure}[ht!]
 \centering
 \includegraphics[scale = 0.3]{figures/Slide2.jpg}
-\caption{An example of the noise from a Kinect Like Sensor}
+\caption{An example of the noise from a Kinect-like sensor}
 \vspace*{-10pt}
 \label{fig:noisy data}
 \end{figure}
 
 
 \section{Gaussian Process Primer}
-\textbf{TODO:FIX THIS SECTION AND MAKE NOTATION CONSISTENT}
+%\textbf{TODO:FIX THIS SECTION AND MAKE NOTATION CONSISTENT}
  Gaussian processes (GPs) are widely used in machine learning as a nonparametric regression method for estimating continuous functions from sparse and noisy data \cite{rasmussen2006}.
 In a GP, a training set consists of input vectors $\mX = \{\bx_1, \ldots, \bx_n\}, ~\bx_i \in \mathbb{R}^d$, and corresponding observations $\by = \{y_1, \ldots, y_n\}$.
 The observations are assumed to be noisy measurements from the unknown target function $f$:
@@ -119,7 +129,7 @@ Given the training data $\mD = \{\mX, \by\}$ and covariance function $k(\cdot,\c
 \begin{equation}
   p(f_*|\bx_*,\mD) 
   \sim 
-  \mN\big(k(\mX,\bx_*)^{\intercal}(K + \sigma_{\epsilon}^2I)^{-1}\by,
+  \mN\big(k(\mX,\bx_*)^{\intercal}(K + \sigma^2I)^{-1}\by,
 \end{equation}
 \[
   k(\bx_*,\bx_*)-k(\mX,\bx_*)^{\intercal}(K+\sigma^2I)^{-1}k(\mX,\bx_*)\big), \label{eq:GPposterior}
@@ -142,11 +152,11 @@ The vector of hyper-parameters $\boldsymbol{\theta} = \{\sigma,\nu,\lambda_1,\ld
 
 The objective of our algorithm is to provide an expected quality of grasp, $Q_l^-(\bar{g})$ \cite{ferrari1992}, and the probability $\zeta$ of not obtaining force closure. 
 
-Given a grasp $g$ on an object, we can define it by the following tuple $g = \lbrace \textbf{c}_0,...,\textbf{c}_m,\textbf{n}_0,...,\textbf{n}_m,\textbf{z},\tau\rbrace$. We have a set $I$ of $m$  point contacts and surface normal on the object where $i \in I$s is located at $c_i$ with surface normal $n_i$. The object has a center of mass $z$ and friction coefficient $\tau$.
+Given a grasp $g$ on an object, we can define it by the following tuple $g = \lbrace \textbf{c}_1,...,\textbf{c}_m,\textbf{n}_1,...,\textbf{n}_m,\textbf{z},\tau\rbrace$. We have a set $I$ of $m$  point contacts and surface normal on the object where $i \in I$s is located at $c_i$ with surface normal $n_i$. The object has a center of mass $z$ and friction coefficient $\tau$.
 
-Since we have uncertainty in the shape we only have a distribution on the grasp parameters, hence $p(g) = \lbrace p(\textbf{c}_0),...,p(\textbf{c}_m),p(\textbf{n}_0),...,p(\textbf{n}_m),\bar{\textbf{z}},\tau \rbrace$. We note that $\tau$ is considered known and $\bar{z}$ is only the expected center of mass. In section \ref{sec:distgrasp}, we demonstrate how to efficiently compute this distribution. 
+Since we have uncertainty in the shape we only have a distribution on the grasp parameters, hence $p(g) = \lbrace p(\textbf{c}_1),...,p(\textbf{c}_m),p(\textbf{n}_1),...,p(\textbf{n}_m),\bar{\textbf{z}},\tau \rbrace$. We note that $\tau$ is considered known and $\bar{z}$ is only the expected center of mass. In section \ref{sec:distgrasp}, we demonstrate how to efficiently compute this distribution. 
 
-With distribution on $p(g)$ we then use recent results on a Lipschitz constant for Ferrari-Canny Metric \cite{pokorny2013classical} to provide $\zeta$ or the probability the grasp will lose force closure and the expected quality of the grasp $Q_l^-(\bar{g})$, where $\bar(g) = \lbrace \bar{\textbf{c}}_0,...,\bar{\textbf{c}}_m),\bar{\textbf{n}}_0,...,\bar{\textbf{n}}_m,\bar{\textbf{z}},\tau \rbrace$. Details of this computation can be found in section \ref{sec:bound}.
+With distribution on $p(g)$ we then use recent results on a Lipschitz constant for Ferrari-Canny Metric \cite{pokorny2013classical} to provide $\zeta$ or the probability the grasp will lose force closure and the expected quality of the grasp $Q_l^-(\bar{g})$, where $\bar{g} = \lbrace \bar{\textbf{c}}_1,...,\bar{\textbf{c}}_m,\bar{\textbf{n}}_1,...,\bar{\textbf{n}}_m,\bar{\textbf{z}},\tau \rbrace$. Details of this computation can be found in section \ref{sec:bound}.
 
 \section{Distribution of Grasp Parameters}
 \label{sec:distgrasp}
@@ -154,7 +164,7 @@ With distribution on $p(g)$ we then use recent results on a Lipschitz constant f
  For the following derivations we introduce the following,
  $\theta(x) = \lbrace \mu(x),\Sigma(x) \rbrace$, where $\theta(x)$ is a tuple consisting of the mean and covariance functions given by the trained GPIS model \cite{rasmussen2006} . 
  
- To calculate $p(g)$, we assume a gripper contacts approaches along a line of action, or a 1-dimensional curve in the work space, defined by $\gamma(t)$. See Fig \ref{fig:line_of_action}, for a detailed illustration. Each gripper contact is defined by a line of action, so we assume the following tuple is provided $\Gamma = \lbrace \gamma_0(t),...,\gamma_m(t) \rbrace$, these approach trajectories are then used to compute a distribution on grasp parameters. 
+ To calculate $p(g)$, we assume a gripper contacts approaches along a line of action, or a 1-dimensional curve in the work space, defined by $\gamma(t)$. See Fig \ref{fig:line_of_action}, for a detailed illustration. Each gripper contact is defined by a line of action, so we assume the following tuple is provided $\Gamma = \lbrace \gamma_1(t),...,\gamma_m(t) \rbrace$, these approach trajectories are then used to compute a distribution on grasp parameters. 
  
 
 
@@ -168,7 +178,7 @@ The line segment has endpoints $a,b$ that are defined as the start of the grippe
 \begin{figure}[ht!]
 \centering
 \includegraphics[scale = 0.3]{figures/Slide1.jpg}
-\caption{Parametrized Line of Action along a Object}
+\caption{Parametrized Line of Action along an object}
 \vspace*{-10pt}
 \label{fig:line_of_action}
 \end{figure}
@@ -261,7 +271,7 @@ We rewrite the results here:
 \subsection{Prior Work}
 
 \textbf{TODO:WORK IN PRIOR WORK BETTER}
-We follow the notation of \cite{pokorny2013classical} except that their $\mu$ is our $\tau$ since we use $\mu$ for means.  
+We follow the notation of \cite{pokorny2013classical} except that their $\mu$ is our $\tau$ since we use $\mu$ to refer to means.  
 We re-state some of their central theorems for our use here.
 For more detail, refer there.
 $Q(g)$ is the exact $L^1$ grasp quality.

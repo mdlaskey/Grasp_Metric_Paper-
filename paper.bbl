@@ -5,14 +5,14 @@ A.~Bicchi and V.~Kumar, ``Robotic grasping and contact: {A} review,'' in {\em
   {Proc. {IEEE} Int. Conf. Robotics and Automation (ICRA)}}, pp.~348--353,
   2000.
 
+\bibitem{singhbigbird}
+A.~Singh, J.~Sha, K.~S. Narayan, T.~Achim, and P.~Abbeel, ``Bigbird: A
+  large-scale 3d database of object instances,''
+
 \bibitem{zheng2005}
 Y.~Zheng and W.-H. Qian, ``Coping with the grasping uncertainties in
   force-closure analysis,'' {\em Int. J. Robotics Research (IJRR)}, vol.~24,
   no.~4, pp.~311--327, 2005.
-
-\bibitem{singhbigbird}
-A.~Singh, J.~Sha, K.~S. Narayan, T.~Achim, and P.~Abbeel, ``Bigbird: A
-  large-scale 3d database of object instances,''
 
 \bibitem{rasmussen2006}
 C.~Rasmussen and C.~Williams, {\em Gaussian processes for machine learning}.
@@ -29,5 +29,10 @@ F.~T. Pokorny and D.~Kragic, ``Classical grasp quality evaluation: New
 
 \bibitem{petersen2008matrix}
 K.~B. Petersen, ``The matrix cookbook,''
+
+\bibitem{solak2003derivative}
+E.~Solak, R.~Murray-Smith, W.~E. Leithead, D.~J. Leith, and C.~E. Rasmussen,
+  ``Derivative observations in gaussian process models of dynamic systems,''
+  2003.
 
 \end{thebibliography}

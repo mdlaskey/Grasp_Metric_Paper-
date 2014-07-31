@@ -70,7 +70,7 @@
 Grasp Metric for Shape Uncertainity with Gaussian Proccess Implicit Surface Representation (Not Finished Work) }
 
 
-\author{Michael Laskey*, Zoe McCarthy*, Sachin Patil, Pieter Abbeel, and Ken Goldberg}% <-this % stops a space
+\author{Michael Laskey*, Zoe McCarthy*, Florian T. Pokorny, Sachin Patil, Pieter Abbeel, and Ken Goldberg}% <-this % stops a space
 
 \newtheorem{theorem}{Theorem}
 
@@ -93,28 +93,10 @@ Grasp Metric for Shape Uncertainity with Gaussian Proccess Implicit Surface Repr
 \vspace{10pt}
  A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}.  Many modern 3d sensors give noisy point clouds as output, so shape uncertainty is a common problem \cite{singhbigbird}. As shown in Fig. \ref{fig:noisy data}, the noise in our measurements of object shape can greatly change the surface normals and contact points, which are the parameters that most grasp metrics rely on.  However, only recently have people started looking into a metric's robustness to uncertainty. Prior work by Zheng et al \cite{zheng2005}, looked at how to efficiently include uncertainty in friction coefficient and movement of gripper arm. However, they assumed a known surface of the object.
  
-We use Gaussian Processes \cite{rasmussen2006} to convert the point cloud measurements into an implicit surface with uncertainty in the shape.
-We assume friction is at the contact points. 
-The wrench-space Ferrari-Canny force closure quality measure \cite{ferrari1992} calculates the maximum disturbance that can be resisted given bounds on the contact forces.
-%\section{Goals and Current Progress}
-We are working to extend this metric to incorporate shape uncertainty.
-For our grasping model, we make a simplifying assumption that each gripper approaches the object along a fixed line of action and thus the contact points lie on this line.
-We would like to analyze the induced distributions over grasp parameters and the Ferrari-Canny metric.
-Specifically, we would like to answer the following question:
-What is the probability of achieving force closure under the given grasp approach directions and implicit surface distribution?
-We are also interested in the grasp quality of the expected grasp.
-So far, we have explicit formulas for the distributions of the contact points along the line of action and surface normal vectors and the expected center of mass of the object to be grasped.
-We are thoroughly investigating utilizing recent results on a Lipschitz constant for the Ferrari-Canny metric \cite{pokorny2013classical} in order to prove probabalistic bounds on the change in grasp quality under shape uncertainty.
-We are also investigating efficient ways to calculate the distributions on the grasp parameters and ways to update them quickly with new observations.
+We use Gaussian Processes \cite{rasmussen2006} to convert the point cloud measurements into an implicit surface with uncertainty in the shape.The wrench-space Ferrari-Canny force closure quality measure \cite{ferrari1992} calculates the maximum disturbance that can be resisted given bounds on the contact forces.
+We are working to extend this metric to incorporate shape uncertainty. We would like to analyze the induced distributions over grasp parameters and the Ferrari-Canny metric. We are thoroughly investigating utilizing recent results on a Lipschitz constant for the Ferrari-Canny metric \cite{pokorny2013classical} in order to prove probabilistic bounds on the change in grasp quality under shape uncertainty. We are also investigating efficient ways to calculate the distributions on the grasp parameters and ways to update them quickly with new observations.
 
 
-\begin{figure}[t!]
-\centering
-\includegraphics[scale = 0.3]{figures/Slide4.jpg}
-\caption{Left: Grasp approach direction on an uncertain surface, represented by a Gaussian Process Implicit Surface.  Right: Induced distribution on the contact point as a function of x-axis position along the approach line.}
-\vspace*{-10pt}
-\label{fig:IntroTopPic}
-\end{figure}
 
 \begin{figure}[ht!]
 \centering
@@ -123,6 +105,14 @@ We are also investigating efficient ways to calculate the distributions on the g
 \vspace*{-10pt}
 \label{fig:noisy data}
 \end{figure}
+
+
+\section{Related Work}
+
+While a variety of grasp metrics have been proposed, few explicitly looked at uncertainty in grasp parameters. Zheng et al. looked at friction and contact point uncertainty \cite{zheng2005}. He computed the maximum distance a contact point was allowed to deviate from its expected grasp, while maintaining force closure. Kehoe et al. looked at shape uncertainty for push grasps, however this was limited to parallel jaw grippers and only measured the probability of force closure \cite{kehoe2012toward}. More closely related to our approach is the work of Christopoulos and Schrater \cite{christopoulos2007handling}. They use a spline representation for uncertainty and sample from a distribution of losing force closure, their approach though is limited to two contacts. Our method looks at not only force closure, but provides a lower bound on the Ferrari-Canny metric within some user set distributions.  
+
+The choice of using a Gaussian Process Implicit Surface (GPIS) to represent our uncertainty, stems from the fact that it provides a formal way to include various sources of noise in observations. Prior work has used uncertainty representation such as independent Gaussian noise on each vertex in a Polygonal mesh \cite{kehoe2012toward}. However, this doesn't provide a continuous function one can easily compute distributions on grasp parameters with. GPIS is also becoming more prevalent in the grasping community with recent work by Dragiev et al. \cite{dragiev2011} . 
+
 
 
 \section{Gaussian Process Primer}
@@ -171,7 +161,7 @@ Right: A GPIS reconstruction from noisy samples of the left surface's TSDF.}
 
 \section{Problem Definition}
 
-The objective of our algorithm is to provide a quality of the expected grasp, $Q_l^-(\bar{g})$ \cite{ferrari1992}, and the probability $\zeta$ of obtaining force closure. 
+The objective of our algorithm is to provide a quality of the expected grasp, $Q_l^-(\bar{g})$ \cite{ferrari1992}, and a lower bound $b$ that is the expected deviation from the quality of the expected grasp. 
 
 We assume a bounded rectangular workspace $\mathcal{R}$.
 We parameterize a given grasp $g$ on an object with the following tuple $g = \lbrace \textbf{c}_1,...,\textbf{c}_m,\textbf{n}_1,...,\textbf{n}_m,\textbf{z},\tau\rbrace$.
@@ -182,13 +172,11 @@ The line segment $\gamma(\cdot)$ has endpoints $a,b$ that are defined as the sta
 
 
 Since we have uncertainty in the shape we have a distribution on the grasp parameters, hence $p(g) = \lbrace p(\textbf{c}_1),...,p(\textbf{c}_m),p(\textbf{n}_1),...,p(\textbf{n}_m),\bar{\textbf{z}},\tau \rbrace$.
-We note that $\tau$ is considered known and $\bar{z}$ is only the expected center of mass, not a full distribution.
-We would like to replace this with the distribution on the center of mass, but it is unclear how to proceed in that direction.
-In section \ref{sec:distgrasp}, we demonstrate how to efficiently compute these distributions on contact points and surface normals. 
+We note that $\tau$ is considered known and $\bar{z}$ is only the expected center of mass, not a full distribution. In section \ref{sec:distgrasp}, we demonstrate how to efficiently compute these distributions on contact points and surface normals. 
 
-With distribution on $p(g)$ we then aim to use recent results on a Lipschitz constant for Ferrari-Canny Metric \cite{pokorny2013classical} to provide $\zeta$ or the probability the grasp will attain force closure and the quality of the expected grasp $Q_l^-(\bar{g})$, where $\bar{g} = \lbrace \bar{\textbf{c}}_1,...,\bar{\textbf{c}}_m,\bar{\textbf{n}}_1,...,\bar{\textbf{n}}_m,\bar{\textbf{z}},\tau \rbrace$.
-We can compute $Q_l^-(\bar{g})$ and have a few plans of attack to be able to use the Lipschitz bound, but it is complicated to directly apply.
-We should have more progress on this front by working with Florian in the next couple of days.
+With a distribution on $p(g)$ we then aim to use recent results on a Lipschitz constant for the Ferrari-Canny Metric \cite{pokorny2013classical} to provide $b$ or a lower bound on the change in grasp quality from the expected deviation in grasp and the quality of the expected grasp $Q_l^-(\bar{g})$, where $\bar{g} = \lbrace \bar{\textbf{c}}_1,...,\bar{\textbf{c}}_m,\bar{\textbf{n}}_1,...,\bar{\textbf{n}}_m,\bar{\textbf{z}},\tau \rbrace$.
+
+
 
 \section{Distribution of Grasp Parameters}
 \label{sec:distgrasp}
@@ -294,12 +282,8 @@ p\big( \textbf{n}_i = \textbf{k} \big) = \sum_T  p \big( \textbf{n}_i = \textbf{
 \end{equation}
 
 
-Thus, $p(\textbf{n}_i = \textbf{k})$ is approximated by a Gaussian Mixture Model.
-Note that the Ferrari-Canny metric requires $\textbf{n}_i$ be normalized, or, equivalently, a member of $\mathcal{S}^{d-1}$.
-We still have to fully investigate our un-normalized normal vectors interact with the grasp metric, and possible ways to project the distribution onto the sphere.
-We are especially interested in the von Mises-Fisher distribution, and any role it might play here, since it is the analogue of the Gaussian distribution defined on the surface of a $d-1$ sphere.
-We show the theoretical distribution on $\textbf{n}_i$ calculated for a given GPIS and approach direction in Fig.
-\ref{fig:GraspSurfaceNormals}.
+The traditional grasp metrics, such as  Ferrari-Canny, requires $\textbf{n}_i$ be normalized, or, equivalently, a member of $\mathcal{S}^{d-1}$ \cite{ferrari1992}. To account for this we project the Gaussian distribution $p \big(\textbf{n}_i = \textbf{k} |\textbf{c}_i = \gamma(t) \big)$  onto $\mathcal{S}^{d-1}$. We use a stereographic projection technique developed by Olano and North \cite{olano1997normal}. In Fig.6
+\ref{fig:GraspSurfaceNormals}, we show the theoretical distribution on $\textbf{n}_i$ calculated for a given GPIS and approach direction .
 
 \begin{figure}[ht!]
 \centering
@@ -325,17 +309,25 @@ Then we can find the expected center of mass as:
     {\int_{\mathcal{R}}  \mathcal{D}(x) dx}
 \end{equation}
 
-which can be approximated by sampling $\mathcal{R}$ uniformly in a voxel grid and approximating the spatial integral by a sum.
+which can be approximated by sampling $\mathcal{R}$ uniformly in a voxel grid and approximating the spatial integral by a sum. We show the computed density and caculated expected center of mass in Fig. \ref{fig:GPIS_MASS}.
 
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[scale = 0.3]{figures/Slide6.jpg}
+\caption{Left: A surface with GPIS construction and expected center of mass (blue X)
+Right: The distribution on the density of each point assuming uniform center of mass}
+\vspace*{-10pt}
+\label{fig:GPIS_MASS}
+\end{figure}
 
 \section{Probabilistic Bound on Grasp Metric}
 \label{sec:bound}
 Following recent work on proving a Lipschitz bound on the Ferrari-Canny Metric \cite{pokorny2013classical}, we would like to prove an extension to give a probabilistic bound on the change in grasp quality.
 We restate several of their results here:
 
-\subsection{Prior Work}
+\subsection{Derivation of Lipschitz Constant }
 
-%\textbf{TODO:WORK IN PRIOR WORK BETTER}
 We follow the notation of \cite{pokorny2013classical} except that their $\mu$ is our $\tau$ since we use $\mu$ to refer to means.  
 We re-state some of their central theorems for our use here.
 For more detail, refer there.
@@ -422,83 +414,82 @@ By using the following facts $||a|| \leq 1$, $||b|| \leq 1$, $||v \times w || \l
 					&+||(c_i - z)-(c_i'-z')||)
 \end{align*}
 
-\subsection{Our Extension}
-This area is in constant flux at the moment.
-We are trying to obtain a lower bound on the probability that force closure is attained (ideally that exact probability, but a lower bound tells us something useful as well).
-The distributions on grasp parameters induce a distribution on the quality metric.
-We show a histogram of the quality metric for a two-finger grasp for two approach directions on a given GPIS surface in Fig.
-\ref{fig:HistogramMetric}.
-The 100 different samples are over samples of the surface via the GPIS and then result in contacts and normals.
+\subsection{Lower Bound on Expected Grasp Quality}
+Given a the distributions on a line of action, $p\big(\textbf{n}_i = \textbf{k}\big)$ and $p\big(\textbf{c}_i=\gamma(t) \big)$ and the expected values $\bar{\textbf{c}_i}$ and $\bar{\textbf{n}_i}$. We are interested in finding the expected deviations for the two parameters, $||\Delta n_i||$ and  $||\Delta c_i||$. Using these expected deviations we then derive a lower bound $b$ for the quality of the expected grasp. 
 
-We should be able to fill in this section more after a discussion with Florian on Thursday and Friday to sort out some details with the bound calculation.
+\[
+  ||\Delta n_i|| =  \int_{\mathbb{B}(\bar{\textbf{n}_i})} ||\textbf{k} - \bar{\textbf{n}_i}|| p(\textbf{n}_i = \textbf{k}) d\textbf{k}
+\]
 
-\begin{figure}[ht!]
-\centering
-\includegraphics[scale = 0.3]{figures/Slide6.jpg}
-\caption{Histogram of Ferrari-Canny grasp quality metric for 100 samples of a GPIS surface for the same two finger approach directions.}
-\vspace*{-10pt}
-\label{fig:HistogramMetric}
-\end{figure}
+\[
+  ||\Delta c_i|| =  \int_{\mathbb{B}(\bar{\textbf{c}_i)}} ||\gamma(t) - \bar{\textbf{c}_i}|| p(\textbf{c}_i = \textbf{k}) dt
+\]
 
-%We now define the concept of a probabilistic bound by functions $\sigma_i(\zeta) = \lbrace\Delta \textbf{r}_{i,\zeta}, \Delta \textbf{n}_{i,\zeta}\rbrace$. Given a probability $\zeta$, $\sigma_i$ returns the tuple denoting the maximum change in grasp parameter from the mean in the distribution for that probability. $\Delta \textbf{n}_i$ is the change in surface normal and $\Delta \textbf{r}_i$ is the change in moment arm defined as $\textbf{r}_i = \textbf{c}_i - \bar{\textbf{z}}$.
-%Formally, this is defined as:
-%
-%\[
-  %\sigma_i(\zeta)
-  %=
-  %\min_{\mathbb{R}_+} \textbf{d}
-%\]
-%
-%\[
-  %s.t. \ \ \left[ \int_{\mathbb{B}([\bar{t},\bar{\textbf{n}}], d)} p(\textbf{n}_i = \textbf{k},\textbf{c}_i=\gamma(t)) d[t,\textbf{k}] \right] \geq \zeta
-%\]
-%
-%
-%
-%We now write the above bound as follows for a given $\sigma_i(\zeta)$: 
-%
- %\begin{align*}
-%|l_{i,a,b}(g) - l_{i,a,b}(g')| & \leq ||\Delta \textbf{n}_{i,\zeta}||(1+||\bar{\textbf{r}}_i||) + ||\Delta{\textbf{r}_{i,\zeta}}(\zeta)|| \\
-                                      %&+ \tau(||\Delta \textbf{n}_{i,\zeta}||(1+||\bar{\textbf{r}}_i||)+||\Delta \textbf{r}_{i,\zeta}||)
-%\end{align*}
-%
-%For convenience we rewrite the bound on a given set of grasp parameters as : 
-%
- %\begin{align*}
-%b_i(\zeta) &= ||\Delta \textbf{n}_{i,\zeta}||(1+||\bar{\textbf{r}}_i||) + ||\Delta{\textbf{r}_{i,\zeta}}(\zeta)|| \\
-                                      %&+ \tau(||\Delta \textbf{n}_{i,\zeta}||(1+||\bar{\textbf{r}}_i||)+||\Delta \textbf{r}_{i,\zeta}||)
-%\end{align*}
-%
-%To provide an upper bound overall contact parameters we introduce the following: 
-%
-%\begin{align}
-%b(\zeta)  = \max_{i} b_i(\zeta)
-%\end{align}
-%
-%To prove if  this bound is preserved on
-%
- %\begin{align}
- %q(g) = \min_{(a,b) \in \mathbb{R}^6, ||u||=1} \max_{i=1,..,m} l_{i,a,b}(g)
- %\end{align}
- %
-%we turn to the general case.
-%$\lambda(x) = \mbox{inf}_{\alpha \in A} f_\alpha(x)$ and $\lambda(x) = \mbox{sup}_{\alpha \in A} f_\alpha(x)$ are bounded with $b(\zeta)$ if $f_\alpha(x)$ for all $\alpha$ is bounded with $b(\zeta)$ and $\lambda(x)$ is bounded.
-%Since our bound is invariant to the variables $(a,b)$ and we take the maximum set of parameters $i$.
-%We can ensure that is true.
-%
-%Lastly if one wants to find the probability they would lose force closure, they can simply solve the following 
-%
-%\[
-  %\zeta
-  %=
-  %\argmin_{\zeta} b(\zeta)
-%\]
-%
-%\[
-  %s.t. \ \  b(\zeta) \geq q(\bar(g))
-%\]
-%
-%This would be pretty computationally expensive, so still a work in progress. \textbf{TODO:MAKE THIS EFFICIENT}
+We now write the above bound as follows for a given line of action $i$: 
+
+ \begin{align*}
+|l_{i,a,b}(g) - l_{i,a,b}(g')| & \leq (1+\tau)||\Delta \textbf{n}_{i}||(1+||\bar{\textbf{r}}_i||) + ||\Delta{\textbf{c}_{i}}|| \\
+  \end{align*}
+
+Here $\bar{\textbf{r}}_i = \bar{\textbf{c}}_i - \bar{\textbf{z}}_i$. For convenience we rewrite the bound on a given set of grasp parameters as : 
+
+ \begin{align*}
+b_i &= (1+\tau)||\Delta \textbf{n}_{i}||(1+||\bar{\textbf{r}}_i||) + ||\Delta{\textbf{c}_{i}}|| \\
+\end{align*}
+
+To provide an upper bound overall contact parameters we introduce the following: 
+
+\begin{align}
+b(\zeta)  = \max_{i} b_i(\zeta)
+\end{align}
+
+To prove if  this bound is preserved on
+
+ \begin{align}
+ q(g) = \min_{(a,b) \in \mathbb{R}^6, ||u||=1} \max_{i=1,..,m} l_{i,a,b}(g)
+ \end{align}
+ 
+we turn to the general case.
+$\lambda(x) = \mbox{inf}_{\alpha \in A} f_\alpha(x)$ and $\lambda(x) = \mbox{sup}_{\alpha \in A} f_\alpha(x)$ are bounded with $b(\zeta)$ if $f_\alpha(x)$ for all $\alpha$ is bounded with $b(\zeta)$ and $\lambda(x)$ is bounded.
+Since our bound is invariant to the variables $(a,b)$ and we take the maximum set of parameters $i$.
+We can ensure that is true.
+
+
+\subsection{Tightening Bounds on Change in Grasp Quality}
+
+Experimentally we found the Lipschitz bound to be looser than we would like, despite the fact that it is a local bound. We are currently working on tightening the bound by using the following property: 
+
+For a $x,x_0$ in a bounded set $U$ in $\mathbb{R}^n$, for a given $f(x):\mathbb{R}^n \rightarrow \mathbb{R}$. 
+
+\[
+  f(x) = f(x_0) + <R(x),x-x_0>
+\]
+
+\[
+  R(x) = \int_0^1 \frac{d}{dx}f(x_0+t(x-x_0)) dt
+\]
+
+Then let $L = \mbox{sup}_{s \in U} |\frac{df(x)}{dx} |$, so $|R(x)| \leq L$ and 
+
+\[
+  |f(x)-f(x_0)| = |<R(x),x-x_0>| \leq L |x-x_0|
+\]
+
+
+Since we are currently working in 2D, there is no need to approximate the friction cone and the Ferrari-Canny is equal to the true grasp quality. What that means is that one could look at the analytical derivative of the active facet and use that to bound the metric. Looking at a single facet on the convex hull computed by Ferrari-Canny, one simply computes the derivative of the function $h(W,\textbf{z},\tau)$, where $h$ returns the absolute distance to the origin $d$ from the facet described by the input parameters. 
+
+While we can compute the derivative using symbolic software \cite{SymPy}, it is still on going work to quickly determine either the set $U$ that the bound is valid or supremum of the derivative in a given set.    
+
+\subsection{Approximation of True Metric}
+While we work on the tightening the bound, we will present a metric that should give an intuitive idea of what is import in our grasp metric. Our grasp metric currently returns $Q(\bar{g})$ and an upper bound $b$ on the expected change in grasp. Ideally we want to rate grasps by the highest value $Q_l = Q(\bar{g}) - b$, thus being the lowest quality given the bound. 
+
+Currently though the two values $Q(\bar{g})$ and $b$ are two different magnitudes, but both are informative. We can approximate a the effect of a tighter bound by simply projecting both $Q(\bar{g})$ and $b$ to the unit ball, then subtracting. 
+
+\section{Experiments}
+
+To provide a better understanding of our metric, we will run the approximate one on different objects with varying level of noise. Given a set of 100 randomly chosen grasps for each object, we will look at what one our metric rates highest. 
+
+
 
 \bibliographystyle{ieeetr}
 \bibliography{references}

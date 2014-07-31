@@ -1,11 +1,15 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
-\BOOKMARK [1][-]{section.2}{Gaussian Process Primer}{}% 2
-\BOOKMARK [1][-]{section.3}{Problem Definition}{}% 3
-\BOOKMARK [1][-]{section.4}{Distribution of Grasp Parameters}{}% 4
-\BOOKMARK [2][-]{subsection.4.1}{Distribution on Contact Points}{section.4}% 5
-\BOOKMARK [2][-]{subsection.4.2}{Distribution on Surface Normals}{section.4}% 6
-\BOOKMARK [2][-]{subsection.4.3}{Expected Center of Mass}{section.4}% 7
-\BOOKMARK [1][-]{section.5}{Probabilistic Bound on Grasp Metric}{}% 8
-\BOOKMARK [2][-]{subsection.5.1}{Prior Work}{section.5}% 9
-\BOOKMARK [2][-]{subsection.5.2}{Our Extension}{section.5}% 10
-\BOOKMARK [1][-]{section*.8}{References}{}% 11
+\BOOKMARK [1][-]{section.2}{Related Work}{}% 2
+\BOOKMARK [1][-]{section.3}{Gaussian Process Primer}{}% 3
+\BOOKMARK [1][-]{section.4}{Problem Definition}{}% 4
+\BOOKMARK [1][-]{section.5}{Distribution of Grasp Parameters}{}% 5
+\BOOKMARK [2][-]{subsection.5.1}{Distribution on Contact Points}{section.5}% 6
+\BOOKMARK [2][-]{subsection.5.2}{Distribution on Surface Normals}{section.5}% 7
+\BOOKMARK [2][-]{subsection.5.3}{Expected Center of Mass}{section.5}% 8
+\BOOKMARK [1][-]{section.6}{Probabilistic Bound on Grasp Metric}{}% 9
+\BOOKMARK [2][-]{subsection.6.1}{Derivation of Lipschitz Constant }{section.6}% 10
+\BOOKMARK [2][-]{subsection.6.2}{Lower Bound on Expected Grasp Quality}{section.6}% 11
+\BOOKMARK [2][-]{subsection.6.3}{Tightening Bounds on Change in Grasp Quality}{section.6}% 12
+\BOOKMARK [2][-]{subsection.6.4}{Approximation of True Metric}{section.6}% 13
+\BOOKMARK [1][-]{section.7}{Experiments}{}% 14
+\BOOKMARK [1][-]{section*.7}{References}{}% 15

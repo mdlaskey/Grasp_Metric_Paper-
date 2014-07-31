@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{bicchi2000}
 A.~Bicchi and V.~Kumar, ``Robotic grasping and contact: {A} review,'' in {\em
@@ -27,6 +27,23 @@ F.~T. Pokorny and D.~Kragic, ``Classical grasp quality evaluation: New
   algorithms and theory,'' in {\em Intelligent Robots and Systems (IROS), 2013
   IEEE/RSJ International Conference on}, pp.~3493--3500, IEEE, 2013.
 
+\bibitem{kehoe2012toward}
+B.~Kehoe, D.~Berenson, and K.~Goldberg, ``Toward cloud-based grasping with
+  uncertainty in shape: Estimating lower bounds on achieving force closure with
+  zero-slip push grasps,'' in {\em Robotics and Automation (ICRA), 2012 IEEE
+  International Conference on}, pp.~576--583, IEEE, 2012.
+
+\bibitem{christopoulos2007handling}
+V.~N. Christopoulos and P.~Schrater, ``Handling shape and contact location
+  uncertainty in grasping two-dimensional planar objects,'' in {\em Intelligent
+  Robots and Systems, 2007. IROS 2007. IEEE/RSJ International Conference on},
+  pp.~1557--1563, IEEE, 2007.
+
+\bibitem{dragiev2011}
+S.~Dragiev, M.~Toussaint, and M.~Gienger, ``Gaussian process implicit surfaces
+  for shape estimation and grasping,'' in {\em {Proc. {IEEE} Int. Conf.
+  Robotics and Automation (ICRA)}}, pp.~2845--2850, 2011.
+
 \bibitem{petersen2008matrix}
 K.~B. Petersen, ``The matrix cookbook,''
 
@@ -34,5 +51,9 @@ K.~B. Petersen, ``The matrix cookbook,''
 E.~Solak, R.~Murray-Smith, W.~E. Leithead, D.~J. Leith, and C.~E. Rasmussen,
   ``Derivative observations in gaussian process models of dynamic systems,''
   2003.
+
+\bibitem{olano1997normal}
+M.~Olano and M.~North, ``Normal distribution mapping,'' {\em Univ. of North
+  Carolina Computer Science Technical Report}, pp.~97--041, 1997.
 
 \end{thebibliography}

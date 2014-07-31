@@ -462,7 +462,7 @@ Experimentally we found the Lipschitz bound to be looser than we would like, des
 For a $x,x_0$ in a bounded set $U$ in $\mathbb{R}^n$, for a given $f(x):\mathbb{R}^n \rightarrow \mathbb{R}$. 
 
 \[
-  f(x) = f(x_0) + <R(x),x-x_0>
+  f(x) = f(x_0) + \langle R(x),x-x_0 \rangle
 \]
 
 \[
@@ -472,7 +472,7 @@ For a $x,x_0$ in a bounded set $U$ in $\mathbb{R}^n$, for a given $f(x):\mathbb{
 Then let $L = \mbox{sup}_{s \in U} |\frac{df(x)}{dx} |$, so $|R(x)| \leq L$ and 
 
 \[
-  |f(x)-f(x_0)| = |<R(x),x-x_0>| \leq L |x-x_0|
+  |f(x)-f(x_0)| = |\langle R(x),x-x_0 \rangle| \leq L |x-x_0|
 \]
 
 

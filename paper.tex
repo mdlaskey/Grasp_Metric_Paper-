@@ -100,7 +100,7 @@ We are working to extend this metric to incorporate shape uncertainty. We would 
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[scale = 0.3]{figures/Slide2.jpg}
+\includegraphics[scale = 0.3]{figures/Slide02.jpg}
 \caption{An example of the noise from a Kinect-like sensor}
 \vspace*{-10pt}
 \label{fig:noisy data}
@@ -115,43 +115,74 @@ The choice of using a Gaussian Process Implicit Surface (GPIS) to represent our 
 
 
 
-\section{Gaussian Process Primer}
-%\textbf{TODO:FIX THIS SECTION AND MAKE NOTATION CONSISTENT}
- Gaussian processes (GPs) are widely used in machine learning as a nonparametric regression method for estimating continuous functions from sparse and noisy data \cite{rasmussen2006}.
-In a GP, a training set consists of input vectors $\mX = \{\bx_1, \ldots, \bx_n\}, ~\bx_i \in \mathbb{R}^d$, and corresponding observations $\by = \{y_1, \ldots, y_n\}$.
-The observations are assumed to be noisy measurements from the unknown target function $f$:
+\section{Gaussian Process Implicit Surfaces}
+
+In this section we describe the mathematical derivation of Gaussian Process Implicit Surface representations.
+
+\subsection{Gaussian Process (GP) Background}
+
+Gaussian processes (GPs) are widely used in machine learning as a nonparametric regression method for estimating continuous functions from sparse and noisy data \cite{rasmussen2006gaussian}.
+In a GP, a training set consists of input vectors $\mX = \{\bx_1, \ldots, \bx_n\}$, $\bx_i \in \mathbb{R}^d$, and corresponding observations $\by = \{y_1, \ldots, y_n\}$. The observations are assumed to be noisy measurements from the unknown target function $f$:
 \begin{equation}
 y_i = f(\bx_i) + \epsilon,
 \end{equation}
 where $\epsilon \sim \mN(0,\sigma^2)$ is Gaussian noise in the observations.
 A zero-mean Gaussian process is completely specified by a covariance function $k(\cdot,\cdot)$, also referred to as a kernel.
-Given the training data $\mD = \{\mX, \by\}$ and covariance function $k(\cdot,\cdot)$, the posterior density $p(f_*|\bx_*,\mD)$ at a test point $\bx_{*}$ is shown to be \cite{rasmussen2006}:
-\begin{equation}
-  p(f_*|\bx_*,\mD) 
-  \sim 
-  \mN\big(k(\mX,\bx_*)^{\intercal}(K + \sigma^2I)^{-1}\by,
-\end{equation}
-\[
-  k(\bx_*,\bx_*)-k(\mX,\bx_*)^{\intercal}(K+\sigma^2I)^{-1}k(\mX,\bx_*)\big), \label{eq:GPposterior}
-\]
+Given the training data $\mD = \{\mX, \by\}$ and covariance function $k(\cdot,\cdot)$, the posterior density $p(f_*|\bx_*,\mD)$ at a test point $\bx_{*}$ is shown to be \cite{rasmussen2006gaussian}:
+\begin{align}
+	p(f_*|\bx_*,\mD) &\sim \mN\big(\mu(\bx_*), \Sigma(\bx_*)\big) \label{eq:GPposterior} \\
+	\mu(\bx_*) &= k(\mX,\bx_*)^{\intercal}(K + \sigma^2I)^{-1}\by \label{eq:GPmean} \\
+	\Sigma(\bx_*) &= k(\bx_*,\bx_*)-k(\mX,\bx_*)^{\intercal}(K+\sigma^2I)^{-1}k(\mX,\bx_*)\big) \label{eq:GPvar}
+\end{align}
 where $K \in \mathbb{R}^{n \times n}$ is a matrix with entries $K_{ij} = k(\bx_i,\bx_j)$ and $k(\mX,\bx_*) = [k(\bx_1,\bx_*),\ldots,k(\bx_n,\bx_*)]^{\intercal}$. 
+This derivation can also be used to predict the mean and variance of the function gradient by extending the kernel matrices using the identities \cite{solak2003derivative}:
 
-The choice of kernel is application-specific, since the function $k(\bx_i,\bx_j)$ is used as a measure of correlation between states $\bx_i$ and $\bx_j$.
-A common choice is the squared exponential kernel:
+\begin{align*}
+	\text{cov}\left(f(\bx_i), f(\bx_j) \right) &=  k(\bx_i, \bx_j) \\
+	\text{cov}\left(\frac{\partial f (\bx_i)}{\partial x_k}, f(\bx_j) \right) &= \frac{\partial}{\partial x_k} k(\bx_i, \bx_j) \\
+	\text{cov}\left(\frac{\partial f (\bx_i)}{\partial x_k}, \frac{\partial f (\bx_j)}{\partial x_l} \right) &= \frac{\partial^2}{\partial x_k \partial x_l} k(\bx_i, \bx_j)
+\end{align*}
+
+\subsection{Kernel Selection}
+The choice of kernel is application-specific, since the function $k(\bx_i,\bx_j)$ is used as a measure of correlation between states $\bx_i$ and $\bx_j$. A common choice is the squared exponential kernel:
 \begin{equation}
-k(\bx_i,\bx_j) 
-=
-\nu^2\exp(-\frac{1}{2}(\bx_i - \bx_j)^{\intercal}\Lambda^{-1}(\bx_i - \bx_j))
+	k(\bx_i,\bx_j) = \nu^2\exp(-\frac{1}{2}(\bx_i - \bx_j)^{\intercal}\Lambda^{-1}(\bx_i - \bx_j))
 \end{equation}
 where $\Lambda= \text{diag}(\lambda_1^2,\ldots,\lambda_d^2)$ are the characteristic length scales of each dimension of $\bx$ and $\nu^2$ describes the variability of $f$.
-The vector of hyper-parameters $\boldsymbol{\theta} = \{\sigma,\nu,\lambda_1,\ldots,\lambda_d\}$ is chosen or optimized during the training process by minimizing the log likelihood $p(\by|\mX,\boldsymbol{\theta})$ \cite{rasmussen2006}.
+Other common kernels relevant to GPIS are the thin-plate splines kernel \cite{williams2007} and the Matern kernel \cite{bjorkman2013enhancing}.
 
-We represent surfaces as a Gaussian Process trained to predict the Truncated Signed Distance Field of a surface by noisy samples from that TSDF, as indicated in Fig.
- \ref{fig:GPIS_TSDF}.
+The measurement noise parameter $\sigma$ is usually estimated based on a model of the sensor used to collect measurements
+The vector of remaining hyperparameters $\boldsymbol{\theta} = \{\nu, \lambda_1,\ldots,\lambda_d\}$ is optimized during the training process by maximizing the log-likelihood $p(\by|\mX,\boldsymbol{\theta})$, usually using gradient descent \cite{rasmussen2006gaussian}.
+The log-likelihood function is subject to local maxima, and therefore the hyperparamter search often involves a search over the maxima found from several random initializations of the hyperparamters.
+
+\subsection{Training}
+Given the hyperparameters, the training phase consists of evaluating the vector 
+\begin{equation}
+\alpha = (K + \sigma^2 I)^{-1}\by,
+\end{equation}
+which needs the inversion of a $n \times n$ matrix $(K + \sigma^2I)$. Direct computation of the inverse of the symmetric matrix requires $O(n^3)$ operations and $O(n^2)$ storage, which makes it impractical for real-world applications consisting of thousands of data points.
+
+For larger systems, it is more efficient to solve the system
+\begin{equation}
+	\tilde{K}\alpha = \by, ~\text{where} ~\tilde{K} = (K + \sigma^2I),
+\end{equation}
+using iterative methods. Since $\tilde{K}$ is symmetric and positive-definite, the conjugate gradient (CG) method or an incomplete Cholesky factorizatoin can be used to iteratively solve the equation to some error tolerance \cite{gibbs1997}.
+The computational complexity of the CG method is $O(kdn^2)$ where $d$ is the dimensionality of the data and $k$ iterations of the CG method are required for convergence.
+Fast approximate matrix-vector products using the Improved Fast Gaussian Transform (IGFT) can reduce the complexity of computing the $\alpha$ vector to $O(n)$ for the squared exponential kernel \cite{raykar2007}.
+Alternatively Fast Multipole Methods can be used to reduce the complexity of computing the kernel matrices and vectors to $O(n \log n)$ \cite{gumerov2005fast}.
+
+A large variety of methods haven been proposed for further speeding up the GP training phase including, but not limited to, training on a subset of data chosen either randomly or using an information-theoretic criterion, or local methods that only rely on neighboring data points for making predictions in a given region of space.
+The subset selection methods can be separated into two groups: subset of data (SoD) and subset of regressors (SoR) \cite{quinonero2005unifying}.
+In SoD approaches, a criterion is used to select an `active' subset of training data to be used in inference, and all other `inactive' training data is discarded.
+In SoR approaches the relation of the inactive points to the active points is retained by replacing the kernel function with the alternative function
+\begin{equation}
+	k(\textbf{x}_i,\textbf{x}_j) = k(\textbf{x}_i,\textbf{u}) K_{\textbf{u}, \textbf{u}}^{-1} k(\textbf{u},\textbf{x}_j).
+\end{equation}
+\noindent We refer the reader to \cite{chalupka2013} for an extensive comparison of these methods. In this paper we consider objects that can be represented with few enough points that computational tractability is not an issue, and we defer the question of which methods are most effective for the special case of constructing GPIS to future work.
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[scale = 0.3]{figures/Slide3.jpg}
+\includegraphics[scale = 0.3]{figures/Slide03.jpg}
 \caption{Left: A surface represented as a Truncated Signed Distance Field (TSDF).
 Right: A GPIS reconstruction from noisy samples of the left surface's TSDF.}
 \vspace*{-10pt}
@@ -194,7 +225,7 @@ With a distribution on $p(g)$ we then aim to use recent results on a Lipschitz c
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[scale = 0.3]{figures/Slide1.jpg}
+\includegraphics[scale = 0.3]{figures/Slide01.jpg}
 \caption{Parameterized Line of Action along an object}
 \vspace*{-10pt}
 \label{fig:line_of_action}
@@ -246,7 +277,7 @@ We show again the theoretical distribution on $\textbf{c}_i$ calculated for a gi
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[scale = 0.3]{figures/Slide4.jpg}
+\includegraphics[scale = 0.3]{figures/Slide04.jpg}
 \caption{Left: Grasp approach direction on an uncertain surface, represented by a Gaussian Process Implicit Surface.  Right: Induced distribution on the contact point as a function of x-axis position along the approach line.}
 \vspace*{-10pt}
 \label{fig:GraspContactPt}
@@ -287,7 +318,7 @@ The traditional grasp metrics, such as  Ferrari-Canny, requires $\textbf{n}_i$ b
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[scale = 0.3]{figures/Slide5.jpg}
+\includegraphics[scale = 0.3]{figures/Slide05.jpg}
 \caption{Left: Grasp approach direction on an uncertain surface, represented by a Gaussian Process Implicit Surface.
 Right: Induced distribution on the surface normals.}
 \vspace*{-10pt}
@@ -314,7 +345,7 @@ which can be approximated by sampling $\mathcal{R}$ uniformly in a voxel grid an
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[scale = 0.3]{figures/Slide6.jpg}
+\includegraphics[scale = 0.3]{figures/Slide06.jpg}
 \caption{Left: A surface with GPIS construction and expected center of mass (blue X)
 Right: The distribution on the density of each point assuming uniform center of mass}
 \vspace*{-10pt}
@@ -487,9 +518,75 @@ Currently though the two values $Q(\bar{g})$ and $b$ are two different magnitude
 
 \section{Experiments}
 
-To provide a better understanding of our metric, we will run the approximate one on different objects with varying level of noise. Given a set of 100 randomly chosen grasps for each object, we will look at what one our metric rates highest. 
+To validate our theoretical caculations, we compared them to empirical distributions found via Monte-Carlo Sampling. The qualitative results for surface normals and contacts can be found in Figures \ref{fig:Contact_Dist} and \ref{fig:Normal_Dist} respectively. We present the numerical comparison with KL-Divergence in Table 1, as you can see the distributions are very closely related. 
+
+\begin{table}[ht!]
+        \begin{tabular}{ l | c c c}
+         Distribution & \bf Marker & \bf Tape & \bf Loofa \\ 
+        \hline \\
+         p($\textbf{c}_i$) & 0.14 & 0.08 & 0.02 \\
+        \hline \\
+        p($\textbf{n}_i$ )& 0.35 & 0.12 & 0.16 \\
+        \hline 
+        \end{tabular}
+        \caption{The KL-Divergence for different distributions on the contact points and surface normals}
+		
+\vspace*{-20pt}
+\end{table}
 
 
+\begin{figure}[ht!]
+\centering
+\includegraphics[scale = 0.3]{figures/Slide07.jpg}
+\caption{Top: A surface with GPIS construction and line of action with the start pointed denoted by green x.
+Middle: Theoretical distribution computed on contact point
+Bottom: Empirically sampled distribution}
+\vspace*{-10pt}
+\label{fig:Contact_Dist}
+\end{figure}
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[scale = 0.3]{figures/Slide08.jpg}
+\caption{Top: A surface with GPIS construction and line of action with the start pointed denoted by green x.
+Middle: Theoretical distribution computed for surface normals
+Bottom: Empirically sampled distribution}
+\vspace*{-10pt}
+\label{fig:Normal_Dist}
+\end{figure}
+
+To better understand the quality of grasp that our proposed metric will find, we present results on a variety of grasps as shown in Fig. \ref{fig:Grasps}. The numerical values in terms are presented in Table 2. 
+
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[scale = 0.3]{figures/Slide09.jpg} \includegraphics[scale = 0.3]{figures/Slide10.jpg}
+\caption{Example grasps on the provided dataset with the histrograms of grasp quality given the uncertainity}
+\vspace*{-10pt}
+\label{fig:Grasps}
+\end{figure}
+
+
+
+\begin{table}[ht!]
+        \begin{tabular}{ l | c c c c}
+         Distribution & \bf Marker & \bf Tape & \bf Loofa & \bf Stapler \\ 
+        \hline \\
+         $\bar{Q(g)}$ & -0.003 & 0.022 & 0.000 &  0.018\\
+        \hline \\
+        var $Q(g)$ & 0.025 & 0.016 & 0.017 &  0.054\\
+        \hline 
+        $Q(\bar{g})$ & 0.030 & 0.024 & -0.012 & 0.014\\
+        \hline 
+        $b$ & 1.634 & 0.540 & 2.220 & 2.600 \\
+        \hline 
+        $h$ & 0.025 & 0.016 & 0.017 & 0.097 \\
+        \hline 
+        \end{tabular}
+        \caption{A comparison of all the different values that characterize a grasp.}
+		
+\vspace*{-20pt}
+\end{table}
 
 \bibliographystyle{ieeetr}
 \bibliography{references}

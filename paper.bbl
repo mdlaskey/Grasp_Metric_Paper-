@@ -1,18 +1,13 @@
 \begin{thebibliography}{10}
 
-\bibitem{bicchi2000}
-A.~Bicchi and V.~Kumar, ``Robotic grasping and contact: {A} review,'' in {\em
-  {Proc. {IEEE} Int. Conf. Robotics and Automation (ICRA)}}, pp.~348--353,
-  2000.
-
 \bibitem{singhbigbird}
 A.~Singh, J.~Sha, K.~S. Narayan, T.~Achim, and P.~Abbeel, ``Bigbird: A
   large-scale 3d database of object instances,''
 
-\bibitem{zheng2005}
-Y.~Zheng and W.-H. Qian, ``Coping with the grasping uncertainties in
-  force-closure analysis,'' {\em Int. J. Robotics Research (IJRR)}, vol.~24,
-  no.~4, pp.~311--327, 2005.
+\bibitem{bicchi2000}
+A.~Bicchi and V.~Kumar, ``Robotic grasping and contact: {A} review,'' in {\em
+  {Proc. {IEEE} Int. Conf. Robotics and Automation (ICRA)}}, pp.~348--353,
+  2000.
 
 \bibitem{rasmussen2006}
 C.~Rasmussen and C.~Williams, {\em Gaussian processes for machine learning}.
@@ -26,6 +21,11 @@ C.~Ferrari and J.~Canny, ``Planning optimal grasps,'' in {\em {Proc. {IEEE}
 F.~T. Pokorny and D.~Kragic, ``Classical grasp quality evaluation: New
   algorithms and theory,'' in {\em Intelligent Robots and Systems (IROS), 2013
   IEEE/RSJ International Conference on}, pp.~3493--3500, IEEE, 2013.
+
+\bibitem{zheng2005}
+Y.~Zheng and W.-H. Qian, ``Coping with the grasping uncertainties in
+  force-closure analysis,'' {\em Int. J. Robotics Research (IJRR)}, vol.~24,
+  no.~4, pp.~311--327, 2005.
 
 \bibitem{kehoe2012toward}
 B.~Kehoe, D.~Berenson, and K.~Goldberg, ``Toward cloud-based grasping with
@@ -44,13 +44,28 @@ S.~Dragiev, M.~Toussaint, and M.~Gienger, ``Gaussian process implicit surfaces
   for shape estimation and grasping,'' in {\em {Proc. {IEEE} Int. Conf.
   Robotics and Automation (ICRA)}}, pp.~2845--2850, 2011.
 
-\bibitem{petersen2008matrix}
-K.~B. Petersen, ``The matrix cookbook,''
+\bibitem{rasmussen2010gaussian}
+C.~E. Rasmussen and H.~Nickisch, ``Gaussian processes for machine learning
+  (gpml) toolbox,'' {\em The Journal of Machine Learning Research}, vol.~9999,
+  pp.~3011--3015, 2010.
 
 \bibitem{solak2003derivative}
 E.~Solak, R.~Murray-Smith, W.~E. Leithead, D.~J. Leith, and C.~E. Rasmussen,
   ``Derivative observations in gaussian process models of dynamic systems,''
   2003.
+
+\bibitem{williams2007}
+O.~Williams and A.~Fitzgibbon, ``Gaussian process implicit surfaces,'' {\em
+  Gaussian Proc. in Practice}, 2007.
+
+\bibitem{bjorkman2013enhancing}
+M.~Bjorkman, Y.~Bekiroglu, V.~Hogman, and D.~Kragic, ``Enhancing visual
+  perception of shape through tactile glances,'' in {\em Intelligent Robots and
+  Systems (IROS), 2013 IEEE/RSJ International Conference on}, pp.~3180--3186,
+  IEEE, 2013.
+
+\bibitem{petersen2008matrix}
+K.~B. Petersen, ``The matrix cookbook,''
 
 \bibitem{olano1997normal}
 M.~Olano and M.~North, ``Normal distribution mapping,'' {\em Univ. of North

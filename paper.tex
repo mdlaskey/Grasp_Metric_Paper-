@@ -91,7 +91,7 @@ Grasp Distributions and a Metric for Shape Uncertainty with Gaussian Process Imp
 \section{Introduction}
 
 \vspace{10pt}
- A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}.  Many modern 3d sensors give noisy point clouds as output, so shape uncertainty is a common problem \cite{singhbigbird}. As shown in Fig. \ref{fig:noisy data}, the noise in our measurements of object shape can greatly change the surface normals and contact points, which are the parameters that most grasp metrics rely on.  However, only recently have people started looking into a metric's robustness to uncertainty. Prior work by Zheng et al \cite{zheng2005}, looked at how to efficiently include uncertainty in friction coefficient and movement of gripper arm. However, they assumed a known surface of the object.
+Many modern 3d sensors give noisy point clouds as output, so shape uncertainty is a common problem \cite{singhbigbird}. As shown in Fig. \ref{fig:noisy data}, the noise in our measurements of object shape can greatly change the surface normals and contact points, which are the parameters that most grasp metrics rely on.  A number of metrics have been proposed to evaluate form and force closure with scalar quality measures for grasping \cite{bicchi2000}.   However, only recently have people started looking into a metric's robustness to uncertainty. 
  
 We use Gaussian Processes \cite{rasmussen2006} to convert the point cloud measurements into an implicit surface with uncertainty in the shape.The wrench-space Ferrari-Canny force closure quality measure \cite{ferrari1992} calculates the maximum disturbance that can be resisted given bounds on the contact forces.
 We are working to extend this metric to incorporate shape uncertainty, and to do that we analyze the resulting distributions over grasp parameters induced by the shape uncertainty. 
@@ -114,13 +114,13 @@ We empirically validate our calculated distributions by measuring their KL-diver
 We show ongoing work in adapting the Ferari-Canny grasp metric to this setting.
 We present an algorithm to compute an upper bound on the expected deviation in grasp quality from the metric evaluated at a single grasp using a recent result that Ferrari-Canny is Lipschitz continuous \cite{pokorny2013classical}.
 In order to improve the tightness of these bounds and thus improve our algorithm, we show initial investigations into calculating gradients for Ferrari-Canny in order to find very tight locally Lipschitz bounds.
-We present a heuristic algorithm based off of the previous algorithm that normalizes the 
+We present a heuristic algorithm based off of the previous algorithm that normalizes the looser bound and quality of expected values and ranks by the difference between them. 
 
 \section{Related Work}
 
-While a variety of grasp metrics have been proposed, few explicitly looked at uncertainty in grasp parameters. Zheng et al. looked at friction and contact point uncertainty \cite{zheng2005}. He computed the maximum distance a contact point was allowed to deviate from its expected grasp, while maintaining force closure. Kehoe et al. looked at shape uncertainty for push grasps, however this was limited to parallel jaw grippers and only measured the probability of force closure \cite{kehoe2012toward}. More closely related to our approach is the work of Christopoulos and Schrater \cite{christopoulos2007handling}. They use a spline representation for uncertainty and sample from a distribution of losing force closure, their approach though is limited to two contacts. Our method looks at not only force closure, but provides a lower bound on the Ferrari-Canny metric within some user set distributions.  
+While a variety of grasp metrics have been proposed, few explicitly looked at uncertainty in grasp parameters. Zheng et al. looked at friction and contact point uncertainty \cite{zheng2005}. He computed the maximum distance a contact point was allowed to deviate from its expected grasp, while maintaining force closure. Kehoe et al. looked at shape uncertainty for push grasps, however this was limited to parallel jaw grippers and only measured the probability of force closure \cite{kehoe2012toward}. More closely related to our approach is the work of Christopoulos and Schrater \cite{christopoulos2007handling}. They use a spline representation for uncertainty and measure the probability of losing force closure, their approach though is limited to two contacts. Our method looks at not only force closure, but provides the quality of the expected grasp and an upper bound on the expexted change from that quality. 
 
-The choice of using a Gaussian Process Implicit Surface to represent our uncertainty, stems from the fact that it provides a formal way to include various sources of noise in observations. Prior work has used uncertainty representation such as independent Gaussian noise on each vertex in a Polygonal mesh \cite{kehoe2012toward}. However, this doesn't provide a continuous function one can easily compute distributions on grasp parameters with. GPIS is also becoming more prevalent in the grasping community with recent work by Dragiev et al. \cite{dragiev2011} . 
+The choice of using a Gaussian Process Implicit Surface to represent our uncertainty, stems from the fact that it provides a formal way to include various sources of noise in observations. Prior work has used uncertainty representation such as independent Gaussian noise on each vertex in a Polygonal mesh \cite{kehoe2012toward}. However, this doesn't provide a continuous function one can easily compute distributions on grasp parameters with. GPIS is also becoming more prevalent in the grasping community with recent work by Dragiev et al. \cite{dragiev2011} . The utilization of uncertainity around an implicit surface allows us to compute explicit distributions on contacts and surface normals, which to our knowledge has not been done formally. 
 
 
 
@@ -130,14 +130,14 @@ In this section we describe the mathematical derivation of Gaussian Process Impl
 
 \subsection{Gaussian Process (GP) Background}
 
-Gaussian processes (GPs) are widely used in machine learning as a nonparametric regression method for estimating continuous functions from sparse and noisy data \cite{rasmussen2006gaussian}.
+Gaussian processes (GPs) are widely used in machine learning as a nonparametric regression method for estimating continuous functions from sparse and noisy data \cite{rasmussen2010gaussian}.
 In a GP, a training set consists of input vectors $\mX = \{\bx_1, \ldots, \bx_n\}$, $\bx_i \in \mathbb{R}^d$, and corresponding observations $\by = \{y_1, \ldots, y_n\}$. The observations are assumed to be noisy measurements from the unknown target function $f$:
 \begin{equation}
 y_i = f(\bx_i) + \epsilon,
 \end{equation}
 where $\epsilon \sim \mN(0,\sigma^2)$ is Gaussian noise in the observations.
 A zero-mean Gaussian process is completely specified by a covariance function $k(\cdot,\cdot)$, also referred to as a kernel.
-Given the training data $\mD = \{\mX, \by\}$ and covariance function $k(\cdot,\cdot)$, the posterior density $p(f_*|\bx_*,\mD)$ at a test point $\bx_{*}$ is shown to be \cite{rasmussen2006gaussian}:
+Given the training data $\mD = \{\mX, \by\}$ and covariance function $k(\cdot,\cdot)$, the posterior density $p(f_*|\bx_*,\mD)$ at a test point $\bx_{*}$ is shown to be \cite{rasmussen2010gaussian}:
 \begin{align}
 	p(f_*|\bx_*,\mD) &\sim \mN\big(\mu(\bx_*), \Sigma(\bx_*)\big) \label{eq:GPposterior} \\
 	\mu(\bx_*) &= k(\mX,\bx_*)^{\intercal}(K + \sigma^2I)^{-1}\by \label{eq:GPmean} \\
@@ -161,33 +161,10 @@ where $\Lambda= \text{diag}(\lambda_1^2,\ldots,\lambda_d^2)$ are the characteris
 Other common kernels relevant to GPIS are the thin-plate splines kernel \cite{williams2007} and the Matern kernel \cite{bjorkman2013enhancing}.
 
 The measurement noise parameter $\sigma$ is usually estimated based on a model of the sensor used to collect measurements
-The vector of remaining hyperparameters $\boldsymbol{\theta} = \{\nu, \lambda_1,\ldots,\lambda_d\}$ is optimized during the training process by maximizing the log-likelihood $p(\by|\mX,\boldsymbol{\theta})$, usually using gradient descent \cite{rasmussen2006gaussian}.
+The vector of remaining hyperparameters $\boldsymbol{\theta} = \{\nu, \lambda_1,\ldots,\lambda_d\}$ is optimized during the training process by maximizing the log-likelihood $p(\by|\mX,\boldsymbol{\theta})$, usually using gradient descent \cite{rasmussen2010gaussian}.
 The log-likelihood function is subject to local maxima, and therefore the hyperparamter search often involves a search over the maxima found from several random initializations of the hyperparamters.
 
-\subsection{Training}
-Given the hyperparameters, the training phase consists of evaluating the vector 
-\begin{equation}
-\alpha = (K + \sigma^2 I)^{-1}\by,
-\end{equation}
-which needs the inversion of a $n \times n$ matrix $(K + \sigma^2I)$. Direct computation of the inverse of the symmetric matrix requires $O(n^3)$ operations and $O(n^2)$ storage, which makes it impractical for real-world applications consisting of thousands of data points.
 
-For larger systems, it is more efficient to solve the system
-\begin{equation}
-	\tilde{K}\alpha = \by, ~\text{where} ~\tilde{K} = (K + \sigma^2I),
-\end{equation}
-using iterative methods. Since $\tilde{K}$ is symmetric and positive-definite, the conjugate gradient (CG) method or an incomplete Cholesky factorizatoin can be used to iteratively solve the equation to some error tolerance \cite{gibbs1997}.
-The computational complexity of the CG method is $O(kdn^2)$ where $d$ is the dimensionality of the data and $k$ iterations of the CG method are required for convergence.
-Fast approximate matrix-vector products using the Improved Fast Gaussian Transform (IGFT) can reduce the complexity of computing the $\alpha$ vector to $O(n)$ for the squared exponential kernel \cite{raykar2007}.
-Alternatively Fast Multipole Methods can be used to reduce the complexity of computing the kernel matrices and vectors to $O(n \log n)$ \cite{gumerov2005fast}.
-
-A large variety of methods haven been proposed for further speeding up the GP training phase including, but not limited to, training on a subset of data chosen either randomly or using an information-theoretic criterion, or local methods that only rely on neighboring data points for making predictions in a given region of space.
-The subset selection methods can be separated into two groups: subset of data (SoD) and subset of regressors (SoR) \cite{quinonero2005unifying}.
-In SoD approaches, a criterion is used to select an `active' subset of training data to be used in inference, and all other `inactive' training data is discarded.
-In SoR approaches the relation of the inactive points to the active points is retained by replacing the kernel function with the alternative function
-\begin{equation}
-	k(\textbf{x}_i,\textbf{x}_j) = k(\textbf{x}_i,\textbf{u}) K_{\textbf{u}, \textbf{u}}^{-1} k(\textbf{u},\textbf{x}_j).
-\end{equation}
-\noindent We refer the reader to \cite{chalupka2013} for an extensive comparison of these methods. In this paper we consider objects that can be represented with few enough points that computational tractability is not an issue, and we defer the question of which methods are most effective for the special case of constructing GPIS to future work.
 
 \begin{figure}[ht!]
 \centering
@@ -529,7 +506,11 @@ While we can compute the derivative using the computer algebra system sympy \cit
 \subsection{Approximation of True Metric}
 While we work on the tightening the bound, we will present a metric that should give an intuitive idea of what is import in our grasp metric. Our grasp metric currently returns $Q(\bar{g})$ and an upper bound $b$ on the expected change in grasp quality. Ideally we want to rate grasps by the highest value $Q_l = Q(\bar{g}) - b$, thus being the lowest quality given the bound. 
 
-Currently though the two values $Q(\bar{g})$ and $b$ are two different magnitudes, but both are informative. We can heuristically approximate a the effect of a tighter bound by simply projecting both $Q(\bar{g})$ and $b$ to the unit ball, then performing the subtraction. 
+Currently though the two values $Q(\bar{g})$ and $b$ are two different magnitudes, but both are informative. We can heuristically approximate a the effect of a tighter bound by simply projecting both $Q(\bar{g})$ and $b$ to the unit ball, then performing the subtraction. Thus we define the following: 
+
+\begin{align*}
+Q_h = \frac{Q(\bar{g})}{||Q(\bar{g})||} - \frac{b}{||b||}
+\end{align*}
 
 \section{Experiments}
 
@@ -595,7 +576,7 @@ To better understand the quality of grasp that our proposed metric will find, we
         \hline 
         $b$ & 1.634 & 0.540 & 2.220 & 2.600 \\
         \hline 
-        $h$ & 0.025 & 0.016 & 0.017 & 0.097 \\
+        $Q_h$ & -0.031 & 0.451 & -0.530 & -0.640 \\
         \hline 
         \end{tabular}
         \caption{A comparison of all the different values that characterize a grasp.}

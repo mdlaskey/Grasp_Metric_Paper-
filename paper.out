@@ -1,17 +1,22 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
 \BOOKMARK [1][-]{section.2}{Related Work}{}% 2
-\BOOKMARK [1][-]{section.3}{Gaussian Process Implicit Surfaces}{}% 3
+\BOOKMARK [1][-]{section.3}{Preliminaries and Problem Statement}{}% 3
 \BOOKMARK [2][-]{subsection.3.1}{Gaussian Process \(GP\) Background}{section.3}% 4
-\BOOKMARK [2][-]{subsection.3.2}{Kernel Selection}{section.3}% 5
-\BOOKMARK [1][-]{section.4}{Problem Definition}{}% 6
-\BOOKMARK [1][-]{section.5}{Distribution of Grasp Parameters}{}% 7
-\BOOKMARK [2][-]{subsection.5.1}{Distribution on Contact Points}{section.5}% 8
-\BOOKMARK [2][-]{subsection.5.2}{Distribution on Surface Normals}{section.5}% 9
-\BOOKMARK [2][-]{subsection.5.3}{Expected Center of Mass}{section.5}% 10
-\BOOKMARK [1][-]{section.6}{Sampling from a GPIS}{}% 11
-\BOOKMARK [1][-]{section.7}{Adaptive Sampling for Grasp Selection}{}% 12
-\BOOKMARK [1][-]{section.8}{Experiments}{}% 13
-\BOOKMARK [2][-]{subsection.8.1}{Validation of Grasp Distributions}{section.8}% 14
-\BOOKMARK [2][-]{subsection.8.2}{Sampling from Grasps Vs. Shape}{section.8}% 15
-\BOOKMARK [2][-]{subsection.8.3}{Adaptive Sampling Technique}{section.8}% 16
-\BOOKMARK [1][-]{section*.14}{References}{}% 17
+\BOOKMARK [2][-]{subsection.3.2}{Line of Action}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.3}{Problem Definition}{section.3}% 6
+\BOOKMARK [1][-]{section.4}{Evaluating a Grasp}{}% 7
+\BOOKMARK [2][-]{subsection.4.1}{Grasp Metric}{section.4}% 8
+\BOOKMARK [2][-]{subsection.4.2}{Calculating the Expected Grasp Quality}{section.4}% 9
+\BOOKMARK [1][-]{section.5}{Distribution of Grasp Parameters}{}% 10
+\BOOKMARK [2][-]{subsection.5.1}{Distribution on Contact Points}{section.5}% 11
+\BOOKMARK [2][-]{subsection.5.2}{Distribution on Surface Normals}{section.5}% 12
+\BOOKMARK [2][-]{subsection.5.3}{Expected Center of Mass}{section.5}% 13
+\BOOKMARK [2][-]{subsection.5.4}{Complexity Analysis on Sampling From Grasps Distributions}{section.5}% 14
+\BOOKMARK [1][-]{section.6}{Adaptive Sampling for Grasp Selection}{}% 15
+\BOOKMARK [2][-]{subsection.6.1}{Preliminaries}{section.6}% 16
+\BOOKMARK [2][-]{subsection.6.2}{Our Implementation}{section.6}% 17
+\BOOKMARK [1][-]{section.7}{Experiments}{}% 18
+\BOOKMARK [2][-]{subsection.7.1}{Sampling from Grasps Vs. Shape}{section.7}% 19
+\BOOKMARK [2][-]{subsection.7.2}{Adaptive Sampling Technique}{section.7}% 20
+\BOOKMARK [1][-]{section.8}{Limitations and Future Work}{}% 21
+\BOOKMARK [1][-]{section*.10}{References}{}% 22

@@ -16,16 +16,20 @@
 \gdef\HyperFirstAtBeginDocument#1{#1}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
-\citation{grasp_it}
+\citation{kehoe2012estimating}
+\citation{kehoe2012estimating}
+\citation{christopoulos2007handling}
+\citation{zheng2005}
+\citation{kehoe2012estimating}
 \citation{newcombe2011kinectfusion}
-\citation{jeff_paper}
-\citation{van2014computer}
+\citation{curless1996volumetric}
+\citation{dragiev2011}
+\citation{jeffs}
+\citation{hollinger2013}
+\citation{kehoe2012estimating}
 \citation{kehoe2012toward}
-\citation{curless1996volumetric}
-\citation{newcombe2011kinectfusion}
-\citation{hornung2013octomap}
-\citation{curless1996volumetric}
-\citation{ferrari1992}
+\citation{christopoulos2007handling}
+\citation{pokorny2013classical}
 \citation{goldberg1990bayesian}
 \citation{goldberg1990stochastic}
 \citation{stulp2011learning}
@@ -36,89 +40,128 @@
 \citation{kehoe2012toward}
 \citation{kehoe2012estimating}
 \@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{section.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces An example of the noise from a Kinect-like sensor\relax }}{1}{figure.caption.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \relax \fontsize  {8}{9pt}\selectfont  Left: HD image of a common measuring cup from in a household environment. Right: Image taken from PR2's Primesense Carmine sensor, large parts of the measuring cup are not detected by the depth sensor and are not visible in the RGB image.\relax }}{1}{figure.caption.1}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:noisy data}{{1}{1}{An example of the noise from a Kinect-like sensor\relax }{figure.caption.1}{}}
+\newlabel{fig:noisy data}{{1}{1}{\footnotesize Left: HD image of a common measuring cup from in a household environment. Right: Image taken from PR2's Primesense Carmine sensor, large parts of the measuring cup are not detected by the depth sensor and are not visible in the RGB image.\relax }{figure.caption.1}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{1}{section.2}}
-\citation{kehoe2012toward}
+\citation{curless1996volumetric}
+\citation{newcombe2011kinectfusion}
+\citation{hornung2013octomap}
+\citation{hollinger2013}
 \citation{dragiev2011}
-\citation{rasmussen2010gaussian}
-\citation{rasmussen2010gaussian}
-\citation{solak2003derivative}
-\citation{williams2007}
-\citation{bjorkman2013enhancing}
-\citation{rasmussen2010gaussian}
-\@writefile{toc}{\contentsline {section}{\numberline {III}Gaussian Process Implicit Surfaces}{2}{section.3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {III-A}Gaussian Process (GP) Background}{2}{subsection.3.1}}
-\newlabel{eq:GPposterior}{{2}{2}{Gaussian Process (GP) Background}{equation.3.2}{}}
-\newlabel{eq:GPmean}{{3}{2}{Gaussian Process (GP) Background}{equation.3.3}{}}
-\newlabel{eq:GPvar}{{4}{2}{Gaussian Process (GP) Background}{equation.3.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {III-B}Kernel Selection}{2}{subsection.3.2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Left: A surface represented as a Truncated Signed Distance Field (TSDF). Right: A GPIS reconstruction from noisy samples of the left surface's TSDF.\relax }}{2}{figure.caption.2}}
-\newlabel{fig:GPIS_TSDF}{{2}{2}{Left: A surface represented as a Truncated Signed Distance Field (TSDF). Right: A GPIS reconstruction from noisy samples of the left surface's TSDF.\relax }{figure.caption.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {IV}Problem Definition}{2}{section.4}}
-\citation{rasmussen2006}
-\citation{petersen2008matrix}
-\citation{solak2003derivative}
-\@writefile{toc}{\contentsline {section}{\numberline {V}Distribution of Grasp Parameters}{3}{section.5}}
-\newlabel{sec:distgrasp}{{V}{3}{Distribution of Grasp Parameters}{section.5}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Parameterized Line of Action along an object\relax }}{3}{figure.caption.3}}
-\newlabel{fig:line_of_action}{{3}{3}{Parameterized Line of Action along an object\relax }{figure.caption.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {V-A}Distribution on Contact Points}{3}{subsection.5.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Left: Grasp approach direction on an uncertain surface, represented by a Gaussian Process Implicit Surface. Right: Induced distribution on the contact point as a function of x-axis position along the approach line.\relax }}{3}{figure.caption.4}}
-\newlabel{fig:GraspContactPt}{{4}{3}{Left: Grasp approach direction on an uncertain surface, represented by a Gaussian Process Implicit Surface. Right: Induced distribution on the contact point as a function of x-axis position along the approach line.\relax }{figure.caption.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {V-B}Distribution on Surface Normals}{3}{subsection.5.2}}
-\citation{ferrari1992}
-\citation{olano1997normal}
+\citation{jeff}
+\citation{kehoe2012estimating}
 \citation{kehoe2012toward}
-\citation{ferrari1992}
+\citation{christopoulos2007handling}
+\citation{caflisch1998monte}
+\citation{christopoulos2007handling}
+\citation{zheng2005}
 \citation{barto1998reinforcement}
-\citation{mc}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Left: Grasp approach direction on an uncertain surface, represented by a Gaussian Process Implicit Surface. Right: Induced distribution on the surface normals.\relax }}{4}{figure.caption.5}}
-\newlabel{fig:GraspSurfaceNormals}{{5}{4}{Left: Grasp approach direction on an uncertain surface, represented by a Gaussian Process Implicit Surface. Right: Induced distribution on the surface normals.\relax }{figure.caption.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {V-C}Expected Center of Mass}{4}{subsection.5.3}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Left: A surface with GPIS construction and expected center of mass (blue X) Right: The distribution on the density of each point assuming uniform center of mass\relax }}{4}{figure.caption.6}}
-\newlabel{fig:GPIS_MASS}{{6}{4}{Left: A surface with GPIS construction and expected center of mass (blue X) Right: The distribution on the density of each point assuming uniform center of mass\relax }{figure.caption.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {VI}Sampling from a GPIS}{4}{section.6}}
-\@writefile{toc}{\contentsline {section}{\numberline {VII}Adaptive Sampling for Grasp Selection}{4}{section.7}}
-\@writefile{toc}{\contentsline {section}{\numberline {VIII}Experiments}{5}{section.8}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {VIII-A}Validation of Grasp Distributions}{5}{subsection.8.1}}
-\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces The KL-Divergence for different distributions on the contact points and surface normals\relax }}{5}{table.caption.7}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Top: A surface with GPIS construction and line of action with the start pointed denoted by green x. Middle: Theoretical distribution computed on contact point Bottom: Empirically sampled distribution\relax }}{5}{figure.caption.8}}
-\newlabel{fig:Contact_Dist}{{7}{5}{Top: A surface with GPIS construction and line of action with the start pointed denoted by green x. Middle: Theoretical distribution computed on contact point Bottom: Empirically sampled distribution\relax }{figure.caption.8}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {VIII-B}Sampling from Grasps Vs. Shape}{5}{subsection.8.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {VIII-C}Adaptive Sampling Technique}{5}{subsection.8.3}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Top: A surface with GPIS construction and line of action with the start pointed denoted by green x. Middle: Theoretical distribution computed for surface normals Bottom: Empirically sampled distribution\relax }}{5}{figure.caption.9}}
-\newlabel{fig:Normal_Dist}{{8}{5}{Top: A surface with GPIS construction and line of action with the start pointed denoted by green x. Middle: Theoretical distribution computed for surface normals Bottom: Empirically sampled distribution\relax }{figure.caption.9}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Left: Sampling from grasp distributions Right: Sampling from distribution on shape\relax }}{5}{figure.caption.10}}
-\newlabel{fig:sampling_convergence}{{9}{5}{Left: Sampling from grasp distributions Right: Sampling from distribution on shape\relax }{figure.caption.10}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Comparison of the computational complexity of the two methods with respect to the work space dimensions\relax }}{5}{figure.caption.11}}
-\newlabel{fig:speed_dif}{{10}{5}{Comparison of the computational complexity of the two methods with respect to the work space dimensions\relax }{figure.caption.11}{}}
+\citation{kehoe2012toward}
+\citation{madani2004budgeted}
+\citation{caflisch1998monte}
+\citation{rasmussen2010gaussian}
+\citation{rasmussen2010gaussian}
+\citation{solak2003derivative}
+\citation{jeffs}
+\citation{jeffs}
+\citation{williams2007}
+\citation{christopoulos2007handling}
+\@writefile{toc}{\contentsline {section}{\numberline {III}Preliminaries and Problem Statement}{2}{section.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-A}Gaussian Process (GP) Background}{2}{subsection.3.1}}
+\newlabel{eq:mean_gradient}{{3}{2}{Gaussian Process (GP) Background}{equation.3.3}{}}
+\newlabel{eq:cov_gradient}{{4}{2}{Gaussian Process (GP) Background}{equation.3.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-B}Line of Action}{2}{subsection.3.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-C}Problem Definition}{2}{subsection.3.3}}
+\newlabel{eq:problem_def}{{5}{2}{Problem Definition}{equation.3.5}{}}
+\citation{ferrari1992}
+\citation{miller2004graspit}
+\citation{73}
+\citation{vahrenkamp2010simo}
+\citation{christopoulos2007handling}
+\citation{li1988task}
+\citation{kehoe2012estimating}
+\citation{kehoe2012toward}
+\citation{christopoulos2007handling}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \relax \fontsize  {8}{9pt}\selectfont  Six example objects illustrating transparency, specularity, sensor noise that illustrate the need for shape uncertainty: (from top to bottom) tape, squirt bottle, stapler, loofa, marker, water bottle. Displayed from right to left are the HD color image, a point cloud observation from a Primesense Carmine, GPIS visualization technique from \cite  {jeffs}, the nominal shape on a $25 \times 25$ grid. \relax }}{3}{figure.caption.2}}
+\newlabel{fig:GPIS_TSDF}{{2}{3}{\footnotesize Six example objects illustrating transparency, specularity, sensor noise that illustrate the need for shape uncertainty: (from top to bottom) tape, squirt bottle, stapler, loofa, marker, water bottle. Displayed from right to left are the HD color image, a point cloud observation from a Primesense Carmine, GPIS visualization technique from \cite {jeffs}, the nominal shape on a $25 \times 25$ grid. \relax }{figure.caption.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Illustration of a grasp plan $\Gamma $ composed of two lines of action, $\gamma _1(t)$ and $\gamma _2(t)$\relax }}{3}{figure.caption.3}}
+\newlabel{fig:line_of_action}{{3}{3}{Illustration of a grasp plan $\Gamma $ composed of two lines of action, $\gamma _1(t)$ and $\gamma _2(t)$\relax }{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Evaluating a Grasp}{3}{section.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {IV-A}Grasp Metric}{3}{subsection.4.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {IV-B}Calculating the Expected Grasp Quality}{3}{subsection.4.2}}
+\newlabel{eq:shape_sampling}{{6}{3}{Calculating the Expected Grasp Quality}{equation.4.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Shape samples drawn from Eq. \ref  {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }}{3}{figure.caption.4}}
+\newlabel{fig:shape_samples}{{4}{3}{Shape samples drawn from Eq. \ref {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }{figure.caption.4}{}}
+\citation{petersen2008matrix}
+\citation{petersen2008matrix}
+\citation{ferrari1992}
+\newlabel{eq:joint_shape}{{7}{4}{Calculating the Expected Grasp Quality}{equation.4.7}{}}
+\newlabel{eq:joint_on_shape}{{8}{4}{Calculating the Expected Grasp Quality}{equation.4.8}{}}
+\newlabel{eq:independence}{{9}{4}{Calculating the Expected Grasp Quality}{equation.4.9}{}}
+\newlabel{eq:grasp_sampling}{{10}{4}{Calculating the Expected Grasp Quality}{equation.4.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Distribution of Grasp Parameters}{4}{section.5}}
+\newlabel{sec:distgrasp}{{V}{4}{Distribution of Grasp Parameters}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {V-A}Distribution on Contact Points}{4}{subsection.5.1}}
+\newlabel{eq:line_of_act_dist}{{11}{4}{Distribution on Contact Points}{equation.5.11}{}}
+\newlabel{eq:contact_theory}{{12}{4}{Distribution on Contact Points}{equation.5.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {V-B}Distribution on Surface Normals}{4}{subsection.5.2}}
+\citation{ferrari1992}
+\citation{madani2004budgeted}
+\citation{bubeck2009pure}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma (t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma (t)$ described by equation \ref  {eq:normal_dist}. \relax }}{5}{figure.caption.5}}
+\newlabel{fig:GraspDist}{{5}{5}{\footnotesize (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma (t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma (t)$ described by equation \ref {eq:normal_dist}. \relax }{figure.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {V-C}Expected Center of Mass}{5}{subsection.5.3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Left: A surface with GPIS construction and expected center of mass (black X) Right: The distribution on the density of each point assuming uniform density\relax }}{5}{figure.caption.6}}
+\newlabel{fig:GPIS_MASS}{{6}{5}{\footnotesize Left: A surface with GPIS construction and expected center of mass (black X) Right: The distribution on the density of each point assuming uniform density\relax }{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {V-D}Complexity Analysis on Sampling From Grasps Distributions}{5}{subsection.5.4}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Adaptive Sampling for Grasp Selection}{5}{section.6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {VI-A}Preliminaries}{5}{subsection.6.1}}
+\citation{bubeck2009pure}
+\citation{caflisch1998monte}
+\citation{jeffs}
+\citation{jeffs}
+\citation{panahi2014bounding}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Convergence of expected grasp quality, $E(Q(g))$, for a typical grasp. You can see it can take hundreds of evaluations to correctly estimate the expected grasp quality, thus it is important to intelligently allocate sampling resources\relax }}{6}{figure.caption.7}}
+\newlabel{fig:sampling_convergence}{{7}{6}{\footnotesize Convergence of expected grasp quality, $E(Q(g))$, for a typical grasp. You can see it can take hundreds of evaluations to correctly estimate the expected grasp quality, thus it is important to intelligently allocate sampling resources\relax }{figure.caption.7}{}}
+\newlabel{eq:simple_regret}{{17}{6}{Preliminaries}{equation.6.17}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {VI-B}Our Implementation}{6}{subsection.6.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {VII}Experiments}{6}{section.7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {VII-A}Sampling from Grasps Vs. Shape}{6}{subsection.7.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {VII-B}Adaptive Sampling Technique}{6}{subsection.7.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {VIII}Limitations and Future Work}{6}{section.8}}
 \bibstyle{ieeetr}
 \bibdata{references}
 \bibcite{newcombe2011kinectfusion}{1}
-\bibcite{van2014computer}{2}
-\bibcite{kehoe2012toward}{3}
-\bibcite{curless1996volumetric}{4}
-\bibcite{hornung2013octomap}{5}
-\bibcite{ferrari1992}{6}
-\bibcite{goldberg1990bayesian}{7}
-\bibcite{stulp2011learning}{8}
-\bibcite{christopoulos2007handling}{9}
-\bibcite{felip2009robust}{10}
-\bibcite{zheng2005}{11}
+\bibcite{curless1996volumetric}{2}
+\bibcite{dragiev2011}{3}
+\bibcite{pokorny2013classical}{4}
+\bibcite{barto1998reinforcement}{5}
+\bibcite{goldberg1990bayesian}{6}
+\bibcite{stulp2011learning}{7}
+\bibcite{christopoulos2007handling}{8}
+\bibcite{felip2009robust}{9}
+\bibcite{zheng2005}{10}
+\bibcite{kehoe2012toward}{11}
 \bibcite{kehoe2012estimating}{12}
-\bibcite{dragiev2011}{13}
-\bibcite{rasmussen2010gaussian}{14}
-\bibcite{solak2003derivative}{15}
-\bibcite{williams2007}{16}
-\bibcite{bjorkman2013enhancing}{17}
-\bibcite{rasmussen2006}{18}
-\bibcite{petersen2008matrix}{19}
-\bibcite{olano1997normal}{20}
-\bibcite{barto1998reinforcement}{21}
-\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Left: $\epsilon $-greedy policy for sampling (Top 10 grasps plotted) Right: Monte-Carlo Sampling for 1000 iterations (Top 10 grasps plotted)\relax }}{6}{figure.caption.12}}
-\newlabel{fig:marker_bandit}{{11}{6}{Left: $\epsilon $-greedy policy for sampling (Top 10 grasps plotted) Right: Monte-Carlo Sampling for 1000 iterations (Top 10 grasps plotted)\relax }{figure.caption.12}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Left: $\epsilon $-greedy policy for sampling (Top 10 grasps plotted) Right: Monte-Carlo Sampling for 1000 iterations (Top 10 grasps plotted)\relax }}{6}{figure.caption.13}}
-\newlabel{fig:tape_bandit}{{12}{6}{Left: $\epsilon $-greedy policy for sampling (Top 10 grasps plotted) Right: Monte-Carlo Sampling for 1000 iterations (Top 10 grasps plotted)\relax }{figure.caption.13}{}}
-\@writefile{toc}{\contentsline {section}{References}{6}{section*.14}}
+\bibcite{van2014computer}{13}
+\bibcite{hornung2013octomap}{14}
+\bibcite{hollinger2013}{15}
+\bibcite{caflisch1998monte}{16}
+\bibcite{madani2004budgeted}{17}
+\bibcite{rasmussen2010gaussian}{18}
+\bibcite{solak2003derivative}{19}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal  {R}))$ or shapes and Green is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }}{7}{figure.caption.8}}
+\newlabel{fig:speed_dif}{{8}{7}{\footnotesize Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal {R}))$ or shapes and Green is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }{figure.caption.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Comparison of two sampling methods. Green is the adaptive bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret Eq. \ref  {eq:simple_regret} averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. As you can see our method converges much faster with an average of evaluation of 4 samples per grasp. We start the process though by deterministically evaluating every grasp 2 times to achieve a baseline, which explains the first part of the graph.\relax }}{7}{figure.caption.9}}
+\newlabel{fig:simple_regret}{{9}{7}{\footnotesize Comparison of two sampling methods. Green is the adaptive bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret Eq. \ref {eq:simple_regret} averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. As you can see our method converges much faster with an average of evaluation of 4 samples per grasp. We start the process though by deterministically evaluating every grasp 2 times to achieve a baseline, which explains the first part of the graph.\relax }{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{References}{7}{section*.10}}
+\bibcite{williams2007}{20}
+\bibcite{ferrari1992}{21}
+\bibcite{miller2004graspit}{22}
+\bibcite{73}{23}
+\bibcite{vahrenkamp2010simo}{24}
+\bibcite{li1988task}{25}
+\bibcite{petersen2008matrix}{26}
+\bibcite{olano1997normal}{27}
+\bibcite{bubeck2009pure}{28}

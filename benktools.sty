@@ -1,0 +1,70 @@
+\ProvidesPackage{benktools}
+
+\def\@benktoolsversion{1}
+
+\newcommand{\benkhide}[0]{\def \@benkhide{}}
+
+\newcommand{\benkdisplaychangesince}[1]{\def \@benkchangeversion{} \def \benkchangeversionnumber{#1}}
+
+\newcommand{\benkhidable}[1]{\@ifundefined{@benkhide}{#1}{}}
+
+%{
+%	\@ifundefined
+%	{
+%		\@benkchangeversion
+%	}
+%	{
+%		\benkhidable{#2}
+%	}
+%	{
+%		\ifgreater
+%		{#1}
+%		{\@benkchangeversion}
+%		{#2}
+%		{}
+%	}
+%}
+
+% Usage:
+% \version{3} produces "v3 [2011-07-09 15:29]", using the current date and time.
+\usepackage{datetime}
+\newdateformat{dashdate}{\THEYEAR-\twodigit{\THEMONTH}-\twodigit{\THEDAY}}
+\newcommand{\version}[1]{\def\benkversion{#1}\benkhidable{v#1~[\dashdate{\today{}}~\xxivtime]}}
+\newcommand{\versionline}[1]{\def\benkversion{#1}\benkhidable{\\v#1~[\dashdate{\today{}}~\xxivtime]}}
+
+% Usage:
+% \todo{something}
+% \figtodo{describe a figure you need to put in}
+% \note{just a note}, \noteby{name}{just a note}
+% \changed{something}
+\usepackage{color}
+\newcommand{\todo}[1]{\benkhidable{{\normalsize \color{red} \textsc{\MakeLowercase{[todo:~#1]}}}}}
+\newcommand{\figtodo}[1]{\benkhidable{{\large \color{blue} \textsc{\MakeLowercase{[figure:~#1]}}}}}
+\newcommand{\note}[1]{\benkhidable{{\large \color{Orange} \textsc{\MakeLowercase{[note~ #1]}}}}}
+\newcommand{\noteby}[2]{\benkhidable{{\large \color{Orange} \textsc{\MakeLowercase{[#1:~#2]}}}}}
+
+\newcommand{\changed}[1]{\@ifundefined{@benkhide}{{\color{red} [#1]}}{#1}}
+
+\newcommand{\changedvhelper}[2]{\@ifundefined{@benkhide}{{\color{red} [v#1 #2]}}{#2}}
+\newcommand{\changedv}[2]{\@ifundefined{@benkchangeversion}{\changedvhelper{#1}{#2}}{\ifnum#1<\benkchangeversionnumber#2\else\changedvhelpter{#1}{#2}\fi}}
+
+% Usage:
+% \figlabel{myfigure} creates \label{fig:myfigure}
+% \figref{myfigure} references it
+\newcommand{\figlabel}[1]{\label{fig:#1}}
+\newcommand{\figref}[1]{Fig.~\ref{fig:#1}}
+
+% Usage:
+% \seclabel{mysection} creates \label{sec:mysection}
+% \secref{mysection} references it
+\newcommand{\seclabel}[1]{\label{sec:#1}}
+\newcommand{\secref}[1]{Section~\ref{sec:#1}}
+
+% Usage:
+% \tablabel{mytable} creates \label{tab:mytable}
+% \tabref{mytable} references it
+\newcommand{\tablabel}[1]{\label{tab:#1}}
+\newcommand{\tabref}[1]{Table~\ref{tab:#1}}
+
+% \vectornorm{x} creates ||x||, properly formatted
+\newcommand{\vectornorm}[1]{\left|\left|#1\right|\right|}

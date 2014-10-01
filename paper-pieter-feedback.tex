@@ -105,14 +105,14 @@ We furthermore introduce the idea of adaptive sampling in this context by formul
 \vspace{10pt}
 
 %%PA: this citation type-setting is a bit funny to me, I am much more used to [12, 8, 10] or [12], [8], [10] rather than the current paper's typesetting as [12] [8] [10].  If you have seen it in a reputable place and it's the style you guys prefer then I am fine with it, of course
-%%ZM: will fix as going through
+%%ZM: fixed
 
 \todo{Get High res GPIS visualizations, Incorporate next round of feedback}
 Consider a robot packing boxes in a shipping warehouse environment. The robot will frequently encounter objects that it has not seen before. The robot will have to plan stable grasps without any prior information other than its sensor data. As seen in Fig. \ref{fig:noisy data}, with today's RGB and depth sensors, surface properties, such as specularity and transparency, can greatly effect the returned observations. Grasp planners based on deterministic algorithms are not designed to handle such noise and could fail. To plan grasps in a partially observed world, recent research has focused on incorporating uncertainity%%PA: --> spelling
- in the shape of the object \cite{kehoe2012estimating}, \cite{christopoulos2007handling}, \cite{zheng2005}. %%PA: why two dots? %%PA: and same paper is cited twice... %% ZM fixed
+ in the shape of the object \cite{kehoe2012estimating}, \cite{christopoulos2007handling}, \cite{zheng2005}. %%PA: why two dots? %%PA: and same paper is cited twice... %%ZM: fixed
 
-While past work has encoded uncertainty in a polygonal mesh representation \cite{kehoe2012estimating}, an alternative is to work with the signed distance fields (SDFs), a continuous valued function that is an implicit surface: zero-valued at the surface of the object, positive value outside the surface and negative valued inside the surface. This representation is growing in popularity in the robotics field for its ability to integrate range data in real time \cite{newcombe2011kinectfusion}\cite{curless1996volumetric}. To incorporate uncertainty one can use a Gaussian Process Implicit Surface (GPIS), a Gaussian process over signed distance field. Not only does GPIS present a straightforward and formal way to incorporate measurements from visual, laser and tactile sensors, they  also allow for a continuous differentiable function on shape, 
-%%PA: continuous and differentiable (which I believe would be a redundant statement as differentiable implies continuous), or continuously differentiable?
+While past work has encoded uncertainty in a polygonal mesh representation \cite{kehoe2012estimating}, an alternative is to work with the signed distance fields (SDFs), a continuous real-valued function that is an implicit surface: zero-valued at the surface of the object, positive value outside the surface and negative valued inside the surface. This representation is growing in popularity in the robotics field for its ability to integrate range data in real time \cite{newcombe2011kinectfusion}, \cite{curless1996volumetric}. To incorporate uncertainty one can use a Gaussian Process Implicit Surface (GPIS), a Gaussian process over signed distance field. Not only does GPIS present a straightforward and formal way to incorporate measurements from visual, laser and tactile sensors, they also allow for a differentiable function as a shape representation, 
+%%PA: continuous and differentiable (which I believe would be a redundant statement as differentiable implies continuous), or continuously differentiable? %%ZM: fixed
 which can be used for a feedback grasp controller, finding locally optimal grasps and active exploration  \cite{dragiev2011}, \cite{jeffs}, \cite{hollinger2013}. 
  
 \begin{figure}[ht!]

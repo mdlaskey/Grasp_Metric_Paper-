@@ -1,5 +1,22 @@
 \begin{thebibliography}{10}
 
+\bibitem{kehoe2012estimating}
+B.~Kehoe, D.~Berenson, and K.~Goldberg, ``Estimating part tolerance bounds
+  based on adaptive cloud-based grasp planning with slip,'' in {\em Automation
+  Science and Engineering (CASE), 2012 IEEE International Conference on},
+  pp.~1106--1113, IEEE, 2012.
+
+\bibitem{christopoulos2007handling}
+V.~N. Christopoulos and P.~Schrater, ``Handling shape and contact location
+  uncertainty in grasping two-dimensional planar objects,'' in {\em Intelligent
+  Robots and Systems, 2007. IROS 2007. IEEE/RSJ International Conference on},
+  pp.~1557--1563, IEEE, 2007.
+
+\bibitem{zheng2005}
+Y.~Zheng and W.-H. Qian, ``Coping with the grasping uncertainties in
+  force-closure analysis,'' {\em Int. J. Robotics Research (IJRR)}, vol.~24,
+  no.~4, pp.~311--327, 2005.
+
 \bibitem{newcombe2011kinectfusion}
 R.~A. Newcombe, A.~J. Davison, S.~Izadi, P.~Kohli, O.~Hilliges, J.~Shotton,
   D.~Molyneaux, S.~Hodges, D.~Kim, and A.~Fitzgibbon, ``Kinectfusion: Real-time
@@ -17,14 +34,21 @@ S.~Dragiev, M.~Toussaint, and M.~Gienger, ``Gaussian process implicit surfaces
   for shape estimation and grasping,'' in {\em {Proc. {IEEE} Int. Conf.
   Robotics and Automation (ICRA)}}, pp.~2845--2850, 2011.
 
+\bibitem{hollinger2013}
+G.~A. Hollinger, B.~Englot, F.~S. Hover, U.~Mitra, and G.~S. Sukhatme, ``Active
+  planning for underwater inspection and the benefit of adaptivity,'' {\em Int.
+  J. Robotics Research (IJRR)}, vol.~32, no.~1, pp.~3--18, 2013.
+
+\bibitem{kehoe2012toward}
+B.~Kehoe, D.~Berenson, and K.~Goldberg, ``Toward cloud-based grasping with
+  uncertainty in shape: Estimating lower bounds on achieving force closure with
+  zero-slip push grasps,'' in {\em Robotics and Automation (ICRA), 2012 IEEE
+  International Conference on}, pp.~576--583, IEEE, 2012.
+
 \bibitem{pokorny2013classical}
 F.~T. Pokorny and D.~Kragic, ``Classical grasp quality evaluation: New
   algorithms and theory,'' in {\em Intelligent Robots and Systems (IROS), 2013
   IEEE/RSJ International Conference on}, pp.~3493--3500, IEEE, 2013.
-
-\bibitem{barto1998reinforcement}
-A.~G. Barto, {\em Reinforcement learning: An introduction}.
-\newblock MIT press, 1998.
 
 \bibitem{goldberg1990bayesian}
 K.~Y. Goldberg and M.~T. Mason, ``Bayesian grasping,'' in {\em Robotics and
@@ -36,51 +60,23 @@ F.~Stulp, E.~Theodorou, J.~Buchli, and S.~Schaal, ``Learning to grasp under
   uncertainty,'' in {\em Robotics and Automation (ICRA), 2011 IEEE
   International Conference on}, pp.~5703--5708, IEEE, 2011.
 
-\bibitem{christopoulos2007handling}
-V.~N. Christopoulos and P.~Schrater, ``Handling shape and contact location
-  uncertainty in grasping two-dimensional planar objects,'' in {\em Intelligent
-  Robots and Systems, 2007. IROS 2007. IEEE/RSJ International Conference on},
-  pp.~1557--1563, IEEE, 2007.
-
 \bibitem{felip2009robust}
 J.~Felip and A.~Morales, ``Robust sensor-based grasp primitive for a
   three-finger robot hand,'' in {\em Intelligent Robots and Systems, 2009. IROS
   2009. IEEE/RSJ International Conference on}, pp.~1811--1816, IEEE, 2009.
-
-\bibitem{zheng2005}
-Y.~Zheng and W.-H. Qian, ``Coping with the grasping uncertainties in
-  force-closure analysis,'' {\em Int. J. Robotics Research (IJRR)}, vol.~24,
-  no.~4, pp.~311--327, 2005.
-
-\bibitem{kehoe2012toward}
-B.~Kehoe, D.~Berenson, and K.~Goldberg, ``Toward cloud-based grasping with
-  uncertainty in shape: Estimating lower bounds on achieving force closure with
-  zero-slip push grasps,'' in {\em Robotics and Automation (ICRA), 2012 IEEE
-  International Conference on}, pp.~576--583, IEEE, 2012.
-
-\bibitem{kehoe2012estimating}
-B.~Kehoe, D.~Berenson, and K.~Goldberg, ``Estimating part tolerance bounds
-  based on adaptive cloud-based grasp planning with slip,'' in {\em Automation
-  Science and Engineering (CASE), 2012 IEEE International Conference on},
-  pp.~1106--1113, IEEE, 2012.
-
-\bibitem{van2014computer}
-A.~Van~Dam and S.~K. Feiner, {\em Computer graphics: principles and practice}.
-\newblock Pearson Education, 2014.
 
 \bibitem{hornung2013octomap}
 A.~Hornung, K.~M. Wurm, M.~Bennewitz, C.~Stachniss, and W.~Burgard, ``Octomap:
   An efficient probabilistic 3d mapping framework based on octrees,'' {\em
   Autonomous Robots}, vol.~34, no.~3, pp.~189--206, 2013.
 
-\bibitem{hollinger2013}
-G.~A. Hollinger, B.~Englot, F.~S. Hover, U.~Mitra, and G.~S. Sukhatme, ``Active
-  planning for underwater inspection and the benefit of adaptivity,'' {\em Int.
-  J. Robotics Research (IJRR)}, vol.~32, no.~1, pp.~3--18, 2013.
-
 \bibitem{caflisch1998monte}
 R.~E. Caflisch, ``Monte carlo and quasi-monte carlo methods,'' {\em Acta
   numerica}, vol.~7, pp.~1--49, 1998.
+
+\bibitem{barto1998reinforcement}
+A.~G. Barto, {\em Reinforcement learning: An introduction}.
+\newblock MIT press, 1998.
 
 \bibitem{madani2004budgeted}
 O.~Madani, D.~J. Lizotte, and R.~Greiner, ``The budgeted multi-armed bandit
@@ -128,12 +124,13 @@ Z.~Li and S.~S. Sastry, ``Task-oriented optimal grasping by multifingered robot
 \bibitem{petersen2008matrix}
 K.~B. Petersen, ``The matrix cookbook,''
 
-\bibitem{olano1997normal}
-M.~Olano and M.~North, ``Normal distribution mapping,'' {\em Univ. of North
-  Carolina Computer Science Technical Report}, pp.~97--041, 1997.
-
 \bibitem{bubeck2009pure}
 S.~Bubeck, R.~Munos, and G.~Stoltz, ``Pure exploration in multi-armed bandits
   problems,'' in {\em Algorithmic Learning Theory}, pp.~23--37, Springer, 2009.
+
+\bibitem{panahi2014bounding}
+F.~Panahi and A.~F. van~der Stappen, ``Bounding the locus of the center of mass
+  for a part with shape variation,'' {\em Computational Geometry}, vol.~47,
+  no.~8, pp.~847--855, 2014.
 
 \end{thebibliography}

@@ -266,9 +266,26 @@ We will now show how these distributions can be computed and how the complexity 
 \section{Distribution of Grasp Parameters}
 \label{sec:distgrasp}
  
- To sample from $p(g)$, we need to compute the distributions associated with a line of action $p(n_i|c_i)p(c_i|\gamma_i(t),\mu(x),\Sigma(x))$ on each of the parameters: contact points $c_i$, surface normals $n_i$  and expected center of mass $\bar{z}$. 
+ To sample from $p(g)$, we need to sample from the distributions associated with a line of action $p(\textbf{n}_i,\textbf{c}_i|\gamma_i(t),\mu(x),\Sigma(x))$. Using Bayes rule we can rewrite this as 
+ 
+ \vspace{-2ex}
+ \begin{align*}
+ &p(\textbf{n}_i,\textbf{c}_i|\gamma_i(t),\mu(x),\Sigma(x))=\\
+ &p(\textbf{n}_i|\textbf{c}_i,\gamma_i(t),\mu(x),\Sigma(x))p(c_i|\gamma_i(t),\mu(x),\Sigma(x))
+ \end{align*}
+ 
+ In section \ref{sec:contact}, we look at how to sample from $p(\textbf{c}_i|\gamma_i(t),\mu(x),\Sigma(x))$. Then in section \ref{sec:normals}, we look at how to sample from $p(\textbf{n}_i|\textbf{c}_i,\gamma_i(t),\mu(x),\Sigma(x))$ and present a novel visualization technique for the distribution on surface normals. Lastly in section \ref{sec:mass}, we show a way to calculate the expected center of mass assuming a uniform mass distribution. 
  .
-\subsection{Distribution on Contact Points} 
+\subsection{Distribution on Contact Points}\label{sec:contact} 
+We would like to find the distribution on contact point $\textbf{c}_i$. A contact point in terms of the GPIS and line of action model can be defined as the point, $t$, when the signed distance function is zero and no points before said point along the line have touched the surface. We express this as the following conditions \\
+
+\begin{enumerate}
+	\item $sd(\gamma(t)) = 0$
+	\item $sd(\gamma(\tau)) > 0$ $\forall \tau \in [a,t)$
+\end{enumerate}
+
+We now formally derive the distribution on contact point $p(\textbf{c}_i)$ using these conditions.  
+. 
 The probability distribution along the line $\gamma(t)$ is given by:
 
 \vspace{-2ex}
@@ -276,7 +293,7 @@ The probability distribution along the line $\gamma(t)$ is given by:
 p\big(sd(\gamma(t)) ; \mu(t),\Sigma(t)\big) \ \forall t \in [a,b] 
 \end{equation}
 
-This gives the signed distance function distributions along the entire line of action in the workspace as a multivariate Gaussian. One could think of this as a marginalization of all other points in signed distance field except the line of action. We would like to find the distribution on the first contact point, which we can define as when the signed distance function $sd(\gamma(t))$ is $0$ and all previous times $\tau$ we have $sd(\gamma(\tau)) > 0$ for all $\tau$ such that $0 \leq \tau < t$.We thus compute this as the joint distribution $p\big( \textbf{c}_i= \gamma(t)\big) = p\big(sd(\gamma(t))=0, sd(\gamma(\tau))> 0 \big)$ $  \forall \tau \in [0,t)$.
+This gives the signed distance function distributions along the entire line of action in the workspace as a multivariate Gaussian. One could think of this as a marginalization of all other points in signed distance field except the line of action. We would like to find the distribution on contact point $\textbf{c}_i$, which we can define as when the signed distance function $sd(\gamma(t))$ is $0$ and all previous times $\tau$ we have $sd(\gamma(\tau)) > 0$ for all $\tau$ such that $0 \leq \tau < t$.We thus compute this as the joint distribution $p\big( \textbf{c}_i= \gamma(t)\big) = p\big(sd(\gamma(t))=0, sd(\gamma(\tau))> 0 \big)$ $  \forall \tau \in [0,t)$.
 
 We now derive this distribution: 
 
@@ -302,7 +319,7 @@ Where $\eta$ is a proportionality constant. The first product in the equation ca
 In practice Eq. \ref{eq:contact_theory} is not efficient to compute because it requires computation of the cumulative distribution function of a large multivariate Gaussian, so instead we sample from Eq. \ref{eq:line_of_act_dist} and find the first positive to negative zero-crossing of the sample along the line. 
 
 
-\subsection{Distribution on Surface Normals} 
+\subsection{Distribution on Surface Normals}\label{sec:normals} 
 Using Eq. \ref{eq:mean_gradient} and Eq. \ref{eq:cov_gradient}, we can compute the mean of the gradient $ \mu_{\nabla}(x)$ and the covariance of the gradient $\Sigma_{\nabla}(x)$ respectively. Thus we can compute the distribution around the surface normal for a given point in $\mathcal{W}$. We can now write 
 
 \vspace{-2ex}
@@ -320,7 +337,7 @@ p(\textbf{n}_i ) = \int_a^b   p\big(\textbf{n}_i = \textbf{v} | \textbf{c}_i = \
 Grasp metrics such as  Ferrari-Canny require $\textbf{n}_i$ be normalized, or, equivalently, a member of the sphere $\mathcal{S}^{d-1}$ \cite{ferrari1992}. To account for this we densely sample from the  distribution $p \big(\textbf{n}_i ) \big)$  and project onto $\mathcal{S}^{d-1}$.  In Fig.\ref{fig:GraspDIst}, we visualize the theoretical distribution on $\textbf{n}_i$ calculated for a given GPIS and approach line of action.
 
 
-\subsection{Expected Center of Mass} 
+\subsection{Expected Center of Mass}\label{sec:mass} 
 
 We recall the quantity $P(sd(x) < 0) = \int_{-\infty}^{0} p(sd(x) =  s \ | \ \mu(x),\Sigma(x)) ds$ is equal to the probability that $x$ is interior to the surface under the current observations.
 We assume that the object has uniform mass density and then $P(sd(x) < 0)$ is the expected mass density at $x$.

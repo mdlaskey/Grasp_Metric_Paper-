@@ -95,7 +95,6 @@
 \newlabel{fig:shape_samples}{{4}{3}{Shape samples drawn from Eq. \ref {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }{figure.caption.4}{}}
 \citation{petersen2008matrix}
 \citation{petersen2008matrix}
-\citation{ferrari1992}
 \newlabel{eq:joint_shape}{{7}{4}{Calculating the Expected Grasp Quality}{equation.4.7}{}}
 \newlabel{eq:joint_on_shape}{{8}{4}{Calculating the Expected Grasp Quality}{equation.4.8}{}}
 \newlabel{eq:independence}{{9}{4}{Calculating the Expected Grasp Quality}{equation.4.9}{}}
@@ -103,25 +102,27 @@
 \@writefile{toc}{\contentsline {section}{\numberline {V}Distribution of Grasp Parameters}{4}{section.5}}
 \newlabel{sec:distgrasp}{{V}{4}{Distribution of Grasp Parameters}{section.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {V-A}Distribution on Contact Points}{4}{subsection.5.1}}
+\newlabel{sec:contact}{{V-A}{4}{Distribution on Contact Points}{subsection.5.1}{}}
 \newlabel{eq:line_of_act_dist}{{11}{4}{Distribution on Contact Points}{equation.5.11}{}}
 \newlabel{eq:contact_theory}{{12}{4}{Distribution on Contact Points}{equation.5.12}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {V-B}Distribution on Surface Normals}{4}{subsection.5.2}}
+\newlabel{sec:normals}{{V-B}{4}{Distribution on Surface Normals}{subsection.5.2}{}}
+\citation{ferrari1992}
 \citation{ferrari1992}
 \citation{madani2004budgeted}
-\citation{bubeck2009pure}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma (t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma (t)$ described by equation \ref  {eq:normal_dist}. \relax }}{5}{figure.caption.5}}
 \newlabel{fig:GraspDist}{{5}{5}{\footnotesize (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma (t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma (t)$ described by equation \ref {eq:normal_dist}. \relax }{figure.caption.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {V-C}Expected Center of Mass}{5}{subsection.5.3}}
+\newlabel{sec:mass}{{V-C}{5}{Expected Center of Mass}{subsection.5.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {V-D}Complexity Analysis on Sampling From Grasps Distributions}{5}{subsection.5.4}}
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Left: A surface with GPIS construction and expected center of mass (black X) Right: The distribution on the density of each point assuming uniform density\relax }}{5}{figure.caption.6}}
 \newlabel{fig:GPIS_MASS}{{6}{5}{\footnotesize Left: A surface with GPIS construction and expected center of mass (black X) Right: The distribution on the density of each point assuming uniform density\relax }{figure.caption.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {V-D}Complexity Analysis on Sampling From Grasps Distributions}{5}{subsection.5.4}}
 \@writefile{toc}{\contentsline {section}{\numberline {VI}Adaptive Sampling for Grasp Selection}{5}{section.6}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {VI-A}Preliminaries}{5}{subsection.6.1}}
 \citation{bubeck2009pure}
+\citation{bubeck2009pure}
 \citation{caflisch1998monte}
 \citation{jeffs}
-\citation{jeffs}
-\citation{panahi2014bounding}
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Convergence of expected grasp quality, $E(Q(g))$, for a typical grasp. You can see it can take hundreds of evaluations to correctly estimate the expected grasp quality, thus it is important to intelligently allocate sampling resources\relax }}{6}{figure.caption.7}}
 \newlabel{fig:sampling_convergence}{{7}{6}{\footnotesize Convergence of expected grasp quality, $E(Q(g))$, for a typical grasp. You can see it can take hundreds of evaluations to correctly estimate the expected grasp quality, thus it is important to intelligently allocate sampling resources\relax }{figure.caption.7}{}}
 \newlabel{eq:simple_regret}{{17}{6}{Preliminaries}{equation.6.17}{}}
@@ -129,7 +130,8 @@
 \@writefile{toc}{\contentsline {section}{\numberline {VII}Experiments}{6}{section.7}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {VII-A}Sampling from Grasps Vs. Shape}{6}{subsection.7.1}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {VII-B}Adaptive Sampling Technique}{6}{subsection.7.2}}
-\@writefile{toc}{\contentsline {section}{\numberline {VIII}Limitations and Future Work}{6}{section.8}}
+\citation{jeffs}
+\citation{panahi2014bounding}
 \bibstyle{ieeetr}
 \bibdata{references}
 \bibcite{newcombe2011kinectfusion}{1}
@@ -144,6 +146,12 @@
 \bibcite{zheng2005}{10}
 \bibcite{kehoe2012toward}{11}
 \bibcite{kehoe2012estimating}{12}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal  {R}))$ or shapes and Green is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }}{7}{figure.caption.8}}
+\newlabel{fig:speed_dif}{{8}{7}{\footnotesize Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal {R}))$ or shapes and Green is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }{figure.caption.8}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VIII}Limitations and Future Work}{7}{section.8}}
+\@writefile{toc}{\contentsline {section}{References}{7}{section*.10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Comparison of two sampling methods. Green is the adaptive bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret Eq. \ref  {eq:simple_regret} averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. As you can see our method converges much faster with an average of evaluation of 4 samples per grasp. We start the process though by deterministically evaluating every grasp 2 times to achieve a baseline, which explains the first part of the graph.\relax }}{7}{figure.caption.9}}
+\newlabel{fig:simple_regret}{{9}{7}{\footnotesize Comparison of two sampling methods. Green is the adaptive bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret Eq. \ref {eq:simple_regret} averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. As you can see our method converges much faster with an average of evaluation of 4 samples per grasp. We start the process though by deterministically evaluating every grasp 2 times to achieve a baseline, which explains the first part of the graph.\relax }{figure.caption.9}{}}
 \bibcite{van2014computer}{13}
 \bibcite{hornung2013octomap}{14}
 \bibcite{hollinger2013}{15}
@@ -151,11 +159,6 @@
 \bibcite{madani2004budgeted}{17}
 \bibcite{rasmussen2010gaussian}{18}
 \bibcite{solak2003derivative}{19}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal  {R}))$ or shapes and Green is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }}{7}{figure.caption.8}}
-\newlabel{fig:speed_dif}{{8}{7}{\footnotesize Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal {R}))$ or shapes and Green is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }{figure.caption.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Comparison of two sampling methods. Green is the adaptive bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret Eq. \ref  {eq:simple_regret} averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. As you can see our method converges much faster with an average of evaluation of 4 samples per grasp. We start the process though by deterministically evaluating every grasp 2 times to achieve a baseline, which explains the first part of the graph.\relax }}{7}{figure.caption.9}}
-\newlabel{fig:simple_regret}{{9}{7}{\footnotesize Comparison of two sampling methods. Green is the adaptive bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret Eq. \ref {eq:simple_regret} averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. As you can see our method converges much faster with an average of evaluation of 4 samples per grasp. We start the process though by deterministically evaluating every grasp 2 times to achieve a baseline, which explains the first part of the graph.\relax }{figure.caption.9}{}}
-\@writefile{toc}{\contentsline {section}{References}{7}{section*.10}}
 \bibcite{williams2007}{20}
 \bibcite{ferrari1992}{21}
 \bibcite{miller2004graspit}{22}

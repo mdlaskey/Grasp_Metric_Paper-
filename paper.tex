@@ -294,10 +294,9 @@ The probability distribution along the line $\gamma(t)$ is given by:
 p\big(sd(\gamma(t)) ; \mu(t),\Sigma(t)\big) \ \forall t \in [a,b] 
 \end{equation}
 
-This gives the signed distance function distributions along the entire line of action in the workspace as a multivariate Gaussian. One could think of this as a marginalization of all other points in signed distance field except the line of action. To sample contact points, one can simply draw samples from Eq. \ref{fig:line_of_action} and iterate from $a$ to $b$ until they reach a point that satisfies conditions \ref{list:contact_cond}. 
+This gives the signed distance function distributions along the entire line of action in the workspace as a multivariate Gaussian. One could think of this as a marginalization of all other points in signed distance field except the line of action. To sample contact points, one can simply draw samples from Eq. \ref{fig:line_of_action} and iterate from $a$ to $b$ until they reach a point that satisfies  Eq. \ref{eq:density_cond} and Eq. \ref{eq:cdf_cond}. 
 
-
-We would like to find the distribution on contact point $\textbf{c}_i$, which we can define as when the signed distance function $sd(\gamma(t))$ is $0$ and all previous times $\tau$ we have $sd(\gamma(\tau)) > 0$ for all $\tau$ such that $0 \leq \tau < t$.We thus compute this as the joint distribution $p\big( \textbf{c}_i= \gamma(t)\big) = p\big(sd(\gamma(t))=0, sd(\gamma(\tau))> 0 \big)$ $  \forall \tau \in [0,t)$.
+We also derive what the actual distribution $p(c_i|\gamma_i(t),\mu(x),\Sigma(x))$ in case the reader wanted the actual distribution and not samples. Using the conditions described above for a contact point( Eq. \ref{eq:density_cond} and Eq. \ref{eq:cdf_cond}).  We write the joint distribution $p\big( \textbf{c}_i= \gamma(t)\big) = p\big(sd(\gamma(t))=0, sd(\gamma(\tau))> 0 \big)$ $  \forall \tau \in [0,t)$.
 
 We now derive this distribution: 
 
@@ -309,8 +308,8 @@ We now derive this distribution:
 \end{align}
 
 
-Where $\eta$ is a proportionality constant. The first product in the equation can be computed easily using the marginalization of a multivariate Gaussian distribution and the second term can be solved by first conditioning on the joint $p(sd(\gamma(t))|sd(\gamma(t)) = 0)$ and then computing the cumulative distribution function  \cite{petersen2008matrix}.  We show the theoretical distribution on $\textbf{c}_i$ calculated for a given GPIS and line of action in Fig.
-\ref{fig:GraspDist}.
+Where $\eta$ is a proportionality constant. The first product in the equation can be computed easily using the marginalization of a multivariate Gaussian distribution and the second term can be solved by first conditioning on the joint $p(sd(\gamma(t))|sd(\gamma(t)) = 0)$ and then computing the cumulative distribution function  \cite{petersen2008matrix}.  We show the theoretical distribution on $\textbf{c}_i$ calculated for a given GPIS and line of action in Fig \ref{fig:GraspDist}. As mentioned earlier, Eq. \ref{eq:contact_theory} is not efficeint to compute due to cumulative distribution function of a large multi-variate Gaussian, however GPIS's ability to give a distribution on contact points is still interesting. 
+
 
 \begin{figure*}[ht!]
 \centering
@@ -320,7 +319,6 @@ Where $\eta$ is a proportionality constant. The first product in the equation ca
 \label{fig:GraspDist}
 \end{figure*}
 
-In practice Eq. \ref{eq:contact_theory} is not efficient to compute because it requires computation of the cumulative distribution function of a large multivariate Gaussian, so instead we sample from Eq. \ref{eq:line_of_act_dist} and find the first positive to negative zero-crossing of the sample along the line. 
 
 
 \subsection{Distribution on Surface Normals}\label{sec:normals} 

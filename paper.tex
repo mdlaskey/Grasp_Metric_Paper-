@@ -92,7 +92,6 @@ Multi-Armed Bandit Models for Sample-Based Grasp Planning in the Presence of Unc
 \begin{abstract}
 In unknown or changing environments such as warehouses for consumer goods, robots may need to quickly plan grasps on previously unknown objects.
 Due to sensor noise, occlusions, and surface properties such as transparency and specularity, it may be difficult to plan successful grasps.
-Dealing with this uncertainty can be computationally demanding
 Planning grasps in the presence of uncertainty can be computationally demanding because fully evaluating the expected quality of even a single grasp may require a large number of samples.
 In this paper, we show that framing grasp planning as a multi-armed bandit problem, a standard framework for making sequential descisions, provides a principled way to quickly select a grasp from a set of candidates on an uncertain shape.
 We demonstrate this method for planning grasps in the presence of shape uncertainty encoded by a Gaussian process implicit surface (GPIS), which can be especially computationally demanding.
@@ -117,7 +116,7 @@ To select a grasp with high quality this evaluation is often performed for a lar
 However, when ranking a set of grasps we may be able to determine the relative quality between grasps with only a few samples and throw away grasps that are likely to be suboptimal \cite{kehoe2012estimating}.
 Thus, we can adaptively concentrate grasp evaluation on the grasps that are most likely to have the highest quality based on the evaluation done so far.
 
-The multi-armed bandit (MAB) problem, a framework for sequential decision making problems, provide a principled way to reason about selecting the next grasp to evaluate and the grasps to discard from consideration~\cite{barto1998reinforcement, lai1985asymptotically, robbins1985some}.
+The multi-armed bandit (MAB) problem, a framework for sequential decision making problems, provide a principled way to reason about selecting the next grasp to evaluate and the grasps to discard from consideration~\cite{barto1998reinforcement, lai1985asymptotically, robbins1952some}.
 The goal in MAB problems is to make a sequence of decisions over a set of possible options such that a measure of the expected value of such decisions is maximized.
 Solutions to the MAB problem are particularly useful in applications where it is too expensive to fully evaluate a set of options; for example, in optimal design of clinical trials~\cite{simon1989optimal}, market pricing~\cite{rothschild1974two}, and choosing strategies for games~\cite{st2012online}.
 
@@ -125,6 +124,7 @@ Solutions to the MAB problem are particularly useful in applications where it is
 
 Our main contribution in this paper is formulating the problem of planning grasps with a high expected quality in the presence of uncertainty as a multi-armed bandit problem.
 We use this formulation to rank a set of potential grasps by expected Ferrari-Canny quality under shape uncertainty represented as a Gaussian process implicit surface (GPIS), a Bayesian representation of shape uncertainty that seen recent use in various robotic applications~\cite{dragiev2011, hollinger2013} but has been limited by its computational complexity~\cite{rasmussen2006, williams2007}.
+We also show how to estimate distributions on the contact points, surface normals, and center of mass using a GPIS shape representation.
 Our experiments demonstrate that using the MAB sampling method improves the time to rank a set of N grasps by T over other grasp evaluation methods.
 
 
@@ -139,41 +139,37 @@ Convergance in regret of the bandit sampling method (red), compared to the tradi
  
 \section{Related Work}
 
-The multi-armed bandit problem~\cite{barto1998reinforcement, lai1985asymptotically, robbins1985some} is to maximize the total expected reward over a sequence of possible choices over a set of competing options, each of which has a probabilistic reward function.
-The optimal sequence of choices if the rewards are known is to always pick the option with the maximum expected reward over the set of possible options.
-However, to discover which choice is optimal requires a balance between exploration, or choosing options that are not well known, and exploitation, or choosing the current `best' option~\cite{barto1998reinforcement}.
+The multi-armed bandit (MAB) problem~\cite{barto1998reinforcement, lai1985asymptotically, robbins1952some} considers maximize the total expected reward over a sequence of possible choices over a set of competing options, each of which has a probabilistic reward function.
 Solutions to this problem, called {\it policies}, include choosing the next option based on Thompson sampling~\cite{agrawal2011analysis}, the Gittins index policy~\cite{weber1992gittins}, and by using an upper confidence bound (UCB) for the expected reward of each option~\cite{auer2002finite}.
 The UCB can be computed from the sample mean~\cite{agrawal1995sample}, Kullback-Leibler divergence~\cite{cappe2013kullback}, or a prior on the rewards~\cite{kaufmann2012bayesian}.
-Solutions to the multi-armed bandit problem are well suited to applications for which it is expensive to exhaustively evaluate all possible options, and therefore these methods have been applied to optimal design of clinical trials~\cite{simon1989optimal}, market pricing~\cite{rothschild1974two}, and choosing strategies for games~\cite{st2012online}.
+Solutions to the multi-armed bandit problem have been used in applications for which evaluating all possible options is expeinsive or impossible, such as the optimal design of clinical trials~\cite{simon1989optimal}, market pricing~\cite{rothschild1974two}, and choosing strategies for games~\cite{st2012online}.
 In this paper we consider the "budgeted multi-arm bandit" problem, where exploration and exploitation are decoupled and the agent can only explore for a finite time before deciding which arm to exploit~\cite{madani2004budgeted}.
 
-Past work on grasping under uncertainty has considered state uncertainty \cite{goldberg1990bayesian, stulp2011learning},  uncertainty in object pose \cite{christopoulos2007handling, weisz2012pose, kim2012physically}, or uncertainty in contact locations with an object \cite{zheng2005}.
-The effect of uncertainty in object geometry on grasp selectiong has been studied for spline representations of objects~\cite{christopoulos2007handling}, extruded polygonal mesh models~\cite{kehoe2012estimating, kehoe2012toward}, and point clouds~\cite{hsiao2011bayesian}.
+Past work on grasping under uncertainty has considered state uncertainty \cite{goldberg1990bayesian, stulp2011learning}, uncertainty in contact locations with an object \cite{zheng2005}, uncertainty in object pose \cite{christopoulos2007handling, weisz2012pose, kim2012physically}.
+The effect of uncertainty in object geometry on grasp selection has been studied for spline representations of objects~\cite{christopoulos2007handling}, extruded polygonal mesh models~\cite{kehoe2012estimating, kehoe2012toward}, and point clouds~\cite{hsiao2011bayesian}.
 
-Currently, the most common method of evaluating grasp quality under shape and pose uncertainty is to rank a set of random grasps on an object using Monte-Carlo integration on shape and / or pose samples to evaluate a quality measure~\cite{christopoulos2007handling, kehoe2012estimating, kehoe2012toward}.
+Currently, the most common method of evaluating grasp quality under shape and pose uncertainty is to rank a set of random grasps on an object using Monte-Carlo integration on shape and pose samples to evaluate a quality measure~\cite{christopoulos2007handling, kehoe2012estimating, kehoe2012toward}.
 Monte-Carlo integration involves drawing random samples from a distribution to approximate an integral \cite{caflisch1998monte}, which can be slow when the distribution is high-dimensional, such as for distributions on possible shape.
-To address this, Kehoe et al.~\cite{kehoe2012estimating, kehoe2012toward} demonstrated a procedure for finding a minumum bound on grasp quality given shape uncertainty, which reduced the number of terms needed in Monte-Carlo integration in order to rank grasps, but the method could potentially remove high quality grasps.
+To address this, Kehoe et al.~\cite{kehoe2012estimating} demonstrated a procedure for finding a minumum bound on grasp quality given shape uncertainty, which reduced the number of terms needed in Monte-Carlo integration in order to rank grasps, but the adaptive sampling method involes several hyperparameters whereas our proposed budgeted MAB solution does not.
 Laaksonen et al.~\cite{laaksonen2012probabilistic} used Markov Chain Monte Carlo (MCMC) sampling to estimate grasp stability and object pose online under shape and pose uncertainty.
 MCMC simplified sampling from complicated distributions on pose and shape, but it can be slow to converge to the correct distribution~\cite{andrieu2003introduction}.
 
-We study using Gaussian process implicit surfaces (GPIS) to represent shape uncertainty, based on its ability to combine various modes of noise observations such as tactile, laser and visual.
-GPIS representations model a distribution over implicit surface functions, which are becoming increasingly popular in robotics due to their success in real-time surface modeling from range images \cite{curless1996volumetric, newcombe2011kinectfusion}.
-GPIS representations have recently been used in a number of robotic appications.
+We study our MAB sampling method using Gaussian process implicit surfaces (GPIS) to represent shape uncertainty, based on the ability to combine various modes of noise observations such as tactile, laser and visual~\cite{rasmussen2006, williams2007, dragiev2011} and its recent use in modeling uncertainty for a number of robotic applications.
 Hollinger et al. used GPIS to perform active sensing on the hulls in underwater boats \cite{hollinger2013}.
 Dragiev et al. showed how GPIS can represent shapes for grasps and used  as a grasp controller on the continuous signed distance function \cite{dragiev2011}.
-Mahler et al. used GPIS representation to find locally optimal anti-podal grasps by framing grasp planning as an optimization problem \cite{jeff}. 
-Sampling from GPIS for grasp quality evaluation is computationally intensive, however, because it involves the Cholesky decomposition of an $m \times m$ matrix which takes $O(m^6)$ time, where $m$ is the dimension for a 2D grid over and object \cite{morrison1990multivariate}.
-
+Mahler et al. used GPIS representation to find locally optimal anti-podal grasps by framing grasp planning as an optimization problem \cite{mahler2015opt}. 
+However, sampling from GPIS for grasp quality evaluation is computationally intensive because it involves the Cholesky decomposition of an $m \times m$ matrix which takes $O(m^6)$ time, where $m$ is the dimension for a 2D grid over and object \cite{morrison1990multivariate}.
+Therefore, GPIS is a good illustration of benefits provided by our efficient MAB approach to grasp planning.
 
 \section{Preliminaries and Problem Statement}
 
 In this section we describe the multi-arm bandit problem and the formal definition of our problem.
 
 \subsection{Multi-Arm Bandit Problem}
-The multi-arm bandit problem originally described by Robbins \cite{robbins1985some} is a statistical decision model of an agent trying to make correct decisions, while gathering information at the same time.
+The multi-arm bandit problem originally described by Robbins \cite{robbins1952some} is a statistical decision model of an agent trying to make correct decisions, while gathering information at the same time.
 The traditional setting of a multi-arm bandit problem is a gambler that has K independent slot machine arms and tries to infer which one will yield the highest reward.
 A successful gambler would want to exploit the machine that currently yields the highest reward and explore new arms to see if they give better rewards.
-Developing a policy that successfully trades between exploration and exploitation has been the focus of extensive research, since the problem formulation \cite{bubeck2009pure}, \cite{robbins1985some}, \cite{bergemann2006bandit}. 
+Developing a policy that successfully trades between exploration and exploitation has been the focus of extensive research, since the problem formulation \cite{bubeck2009pure}, \cite{robbins1952some}, \cite{bergemann2006bandit}. 
 
 There are a number of algorithms for developing policies to balance exploration and exploitation.
 One algorithm is $\epsilon-$greedy, which is the idea of choosing the arm with the highest empirical expected reward with $1-\epsilon$ probability and choosing a random arm with probability $\epsilon$ \cite{barto1998reinforcement}.
@@ -284,13 +280,13 @@ This derivation can also be used to predict the mean and variance of the functio
 	\text{cov}\left(\frac{\partial f (\bx_i)}{\partial x_k}, \frac{\partial f (\bx_j)}{\partial x_l} \right) &= \frac{\partial^2}{\partial x_k \partial x_l} k(\bx_i, \bx_j)\label{eq:cov_gradient}
 \end{align}
 
-\begin{figure}[ht!]
-\centering
-\includegraphics[width = 8.5cm, height = 14cm ]{figures/Slide03.jpg}
-\caption{\footnotesize Six example objects illustrating transparency, specularity, sensor noise that illustrate the need for shape uncertainty: (from top to bottom) tape, squirt bottle, stapler, loofa, marker, water bottle. Displayed from right to left are the HD color image, a point cloud observation from a Primesense Carmine, GPIS visualization technique from \cite{jeffs}, the nominal shape on a $25 \times 25$ grid.  }
-\vspace*{-10pt}
-\label{fig:GPIS_TSDF}
-\end{figure}
+%\begin{figure}[ht!]
+%\centering
+%\includegraphics[width = 8.5cm, height = 14cm ]{figures/Slide03.jpg}
+%\caption{\footnotesize Six example objects illustrating transparency, specularity, sensor noise that illustrate the need for shape uncertainty: (from top to bottom) tape, squirt bottle, stapler, loofa, marker, water bottle. Displayed from right to left are the HD color image, a point cloud observation from a Primesense Carmine, GPIS visualization technique from \cite{jeffs}, the nominal shape on a $25 \times 25$ grid.  }
+%\vspace*{-10pt}
+%\label{fig:GPIS_TSDF}
+%\end{figure}
 %\section{Related Work}
 
 For our kernel choice we decided to use the square exponential kernel, a major reason for this was its differentiability. Other kernels relevant to GPIS are the thin-plate splines kernel and the Matern kernel \cite{williams2007}. 
@@ -531,7 +527,7 @@ One particular challenge is that shape uncertainty is rarely parametric leading 
 
 
 
-\bibliographystyle{ieeetr}
+\bibliographystyle{IEEEtranS}
 \bibliography{references}
 
 \end{document}

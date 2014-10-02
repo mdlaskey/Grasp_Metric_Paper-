@@ -127,6 +127,14 @@ Given a method to represent shape uncertainty a policy for grasp sampling, we st
  
 \section{Related Work}
 
+The multi-armed bandit problem~\cite{barto1998reinforcement, lai1985asymptotically, robbins1985some} is to maximize the total expected reward over a sequence of possible choices over a set of competing options, each of which has a probabilistic reward function.
+The optimal sequence of choices if the rewards are known is to always pick the option with the maximum expected reward over the set of possible options.
+However, to discover which choice is optimal requires a balance between exploration, or choosing options that are not well known, and exploitation, or choosing the current `best' option~\cite{barto1998reinforcement}.
+Solutions to this problem, called {\it policies}, include choosing the next option based on Thompson sampling~\cite{agrawal2011analysis}, the Gittins index policy~\cite{weber1992gittins}, and by using an upper confidence bound (UCB) for the expected reward of each option~\cite{auer2002finite}.
+The UCB can be computed from the sample mean~\cite{agrawal1995sample}, Kullback-Leibler divergence~\cite{cappe2013kullback}, or a prior on the rewards~\cite{kaufmann2012bayesian}.
+Solutions to the multi-armed bandit problem are well suited to applications for which it is expensive to exhaustively evaluate all possible options, and therefore these methods have been applied to optimal design of clinical trials~\cite{simon1989optimal}, market pricing~\cite{rothschild1974two}, and choosing strategies for games~\cite{st2012online}.
+In this paper we consider the "budgeted multi-arm bandit" problem, where exploration and exploitation are decoupled and the agent can only explore for a finite time before deciding which arm to exploit~\cite{madani2004budgeted}.
+
 Past work on grasping under uncertainty has considered state uncertainty \cite{goldberg1990bayesian, stulp2011learning},  uncertainty in object pose \cite{christopoulos2007handling, weisz2012pose, kim2012physically}, or uncertainty in contact locations with an object \cite{zheng2005}.
 The effect of uncertainty in object geometry on grasp selectiong has been studied for spline representations of objects~\cite{christopoulos2007handling}, extruded polygonal mesh models~\cite{kehoe2012estimating, kehoe2012toward}, and point clouds~\cite{hsiao2011bayesian}.
 
@@ -136,16 +144,7 @@ To address this, Kehoe et al.~\cite{kehoe2012estimating, kehoe2012toward} demons
 Laaksonen et al.~\cite{laaksonen2012probabilistic} used Markov Chain Monte Carlo (MCMC) sampling to estimate grasp stability and object pose online under shape and pose uncertainty.
 MCMC simplified sampling from complicated distributions on pose and shape, but it can be slow to converge to the correct distribution~\cite{andrieu2003introduction}.
 
-The multi-armed bandit problem~\cite{barto1998reinforcement, lai1985asymptotically, robbins1985some} is to maximize the total expected reward over a sequence of possible choices over a set of competing options, each of which has a probablistic reward function.
-The optimal sequence of choices if the rewards are known is to always pick the option with the maximum expected reward over the set of possible options.
-However, to discover which choice is optimal requires a balance between exploration, or choosing options that are not well known, and exploitation, or choosing the current `best' option~\cite{barto1998reinforcement}.
-Solutions to this problem, called {\it policies}, include choosing the next option based on Thompson sampling~\cite{agrawal2011analysis}, the Gittins index policy~\cite{weber1992gittins}, and by using an upper confidence bound (UCB) for the expected reward of each option~\cite{auer2002finite}.
-The UCB can be computed from the sample mean~\cite{agrawal1995sample}, Kullback-Leibler divergence~\cite{cappe2013kullback}, or a prior on the rewards~\cite{kaufmann2012bayesian}.
-Solutions to the multi-armed bandit problem are well suited to applications for which it is expensive to exhaustively evaluate all possible options, and therefore these methods have been applied to optimal design of clinical trials~\cite{simon1989optimal}, market pricing~\cite{rothschild1974two}, and choosing strategies for games~\cite{st2012online}.
-
-In this paper we consider the "budgeted multi-arm bandit" problem, where exploration and exploitation are decoupled and the agent can only explore for a finite time before deciding which arm to exploit~\cite{madani2004budgeted}.
-
-We study using Gaussian process implicit surfaces (GPIS) to represent shape uncertainty, based on its ability to combine various modes of nois observations such as tactile, laser and visual.
+We study using Gaussian process implicit surfaces (GPIS) to represent shape uncertainty, based on its ability to combine various modes of noise observations such as tactile, laser and visual.
 GPIS representations model a distribution over implicit surface functions, which are becoming increasingly popular in robotics due to their success in real-time surface modeling from range images \cite{curless1996volumetric, newcombe2011kinectfusion}.
 GPIS representations have recently been used in a number of robotic appications.
 Hollinger et al. used GPIS to perform active sensing on the hulls in underwater boats \cite{hollinger2013}.
@@ -156,7 +155,7 @@ Sampling from GPIS for grasp quality evaluation is computationally intensive, ho
 
 \section{Preliminaries and Problem Statement}
 
-In this section we describe the multi-arm bandit problem and how it relates to grasping.
+In this section we describe the multi-arm bandit problem and the formal definition of our problem.
 
 \subsection{Multi-Arm Bandit Problem}
 The multi-arm bandit problem originally described by Robbins \cite{robbins1985some} is a statistical decision model of an agent trying to make correct decisions, while gathering information at the same time.
@@ -170,29 +169,50 @@ A class of algorithms that have theoretical guarantees are Upper Confidence Boun
 UCB algorithms maintain the empirical expected reward based off of pulling each arm multiple times, while also estimating an upper bound on the true expected reward using assumptions on the probability distribution of rewards and number of times has been sampled for each arm.
 The algorithm chooses the arm at each step which has the highest upper bound on expected reward, since that is the most potentially promising arm.
 When the rewards come from exponential family distribution, UCB minimizes cumulative regret, which is the number of times a sub-optimal arm is pulled times the difference between the true expected reward of an optimal arm and the true expected reward of that sub-optimal arm.
-In practice, when the distribution on the rewards of arms is not known, the empirical methods such as $\epsilon-$greedy have shown to have better performance \cite{kuleshov}.
+In practice, when the distribution on the rewards of arms is not known, the empirical methods such as $\epsilon-$greedy have shown to have better performance in some situations \cite{kuleshov}.
 
-\subsection{Budgeted Multi-Arm Bandit Problem and Grasping}
-%In the problem of choosing the best grasp, one must intelligently allocate samples based on the observations received so far.
-%As you can in Fig. \ref{fig:sampling_convergence}, a typical grasp can take hundreds of iterations for convergence of the expected value to be reach.
-%Thus if one had 1000 grasps to choose from, it would take on the order of millions grasp metric evaluations to choose the best grasp in the naive way.
-%If we can develop a policy to intelligently explore the proposed grasps and select the best one, we can reduce the computationally complexity of grasping with uncertainty. 
+We can formulate our problem as a "budgeted multi-arm bandit problem" \cite{madani2004budgeted}.
+The budgeted multi-arm bandit problem has a finite stopping time.
+The objective of the budgeted multi-arm bandit problem is to minimize the "simple regret", which is the difference between the true expected value of the actual best arm and the true expected value of the arm pulled at the stopping time.
+Thus the budgeted multi-arm bandit problem reduces to exploration until the very last time step, at which time one exploitation step is taken.
 
 
+\subsection{Line of action}
+Similar to the work of \cite{christopoulos2007handling}, we assume that each gripper finger approaches along a \textit{line of action}, a 1D curve $\gamma(t)$ with endpoints $a$ and $b$ as seen in Fig. \ref{fig:line_of_action}.
+A gripper finger starts at point $a$ and moves towards $b$, we assume $a$ is far enough away to be collision free of the object.
+Each gripper contact is defined by a line of action, so we assume the following tuple is provided $\Gamma = ( \gamma_1(\cdot),...,\gamma_m(\cdot) )$, which designates a proposed \textit{grasp plan}.
+\todo{move the next two lines}
+While we currently assume the gripper moves free of noise, this approach would be applicable to high precision robots such as industrial based on. 
+Future work will look at how to efficiently sample when the approach trajectory has noise. 
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[scale = 0.3]{figures/Slide01.jpg}
+\caption{Illustration of a grasp plan $\Gamma$ composed of two lines of action, $\gamma_1(t)$ and $\gamma_2(t)$}
+\vspace*{-10pt}
+\label{fig:line_of_action}
+\end{figure}
+
+\subsection{Problem Definition}
+
+Given a 2-D workspace $\mathcal{W}$, with an unknown object represented as a trained GPIS model (we will describe the GPIS model later) and set of possible grasp plans $G$.
+We are interested in determining 
+
+\begin{align}\label{eq:problem_def}
+\Gamma^* \in \mbox{argmax}_{\Gamma \in G} E(Q(\Gamma))
+\end{align}
+
+with respect to a chosen grasp metric Q. 
+
+
+\subsection{Multi-Arm Bandits for Grasping}
 In our setting, we have a probabilistic shape representation and would like to evaluate many potential grasps on that shape model.
 Motivated by limited computational resources we are interested in how to intelligently allocate sampling resources to efficiently find the best grasp plan $\Gamma^*$.
-We can formulate this problem as a "budgeted multi-arm bandit problem" \cite{madani2004budgeted}.
 Here each arm corresponds to a different grasp plan and pulling the arm is sampling the shape representation and evaluating the arm's grasp plan on the sampled shape representation.
 The reward for pulling an arm is the grasp quality of the resulting grasp on the sampled shape.
 We have a policy for exploration of different grasp plans (i.e. choosing which one to sample next) and at a given stopping time we choose to execute the grasp plan with the highest expected quality based on the samples received so far, which would correspond to actually performing the grasp.  
+The number of samples needed before the simple regret reaches zero, determines how effective an exploration policy is for grasp evaluation.
 
-
-
-We measured performance of our polices in terms of simple regret, which is the difference of the true expected value of the actual best grasp plan and the true expected value of the selected grasp plan at the given stopping time \cite{bubeck2009pure}.
-The number of samples needed before the simple regret reaches zero, determines how effective an exploration  policy is for grasp evaluation.
- 
-
-\todo{Add Multi arm bandit preliminary make it long}
 
 \subsection{Gaussian Process (GP) Background} \todo{massive trim down}
 GPs provide an infinite dimensional analogue of Multivariate
@@ -235,26 +255,6 @@ We construct a GPIS by learning a Gaussian Process to fit measurements of a sign
 
 
 
-\subsection{Line of Action}
-Similar to the work of \cite{christopoulos2007handling}, we assume that each gripper finger approaches along a \textit{line of action}, a 1D curve $\gamma(t)$ with endpoints $a$ and $b$ as seen in Fig. \ref{fig:line_of_action}. A gripper finger starts at point $a$ and moves towards $b$, we assume $a$ is far enough away to be collision free of the object.  Each gripper contact is defined by a line of action, so we assume the following tuple is provided $\Gamma = ( \gamma_1(\cdot),...,\gamma_m(\cdot) )$, which designates a proposed \textit{grasp plan}. While we currently assume the gripper moves free of noise, this approach would be applicable to high precision robots such as industrial based on. Future work will look at how to efficiently sample when the approach trajectory has noise. 
-
-\begin{figure}[ht!]
-\centering
-\includegraphics[scale = 0.3]{figures/Slide01.jpg}
-\caption{Illustration of a grasp plan $\Gamma$ composed of two lines of action, $\gamma_1(t)$ and $\gamma_2(t)$}
-\vspace*{-10pt}
-\label{fig:line_of_action}
-\end{figure}
-
-\subsection{Problem Definition}
-
-Given a 2-D workspace $\mathcal{W}$, with an unknown object represented as a trained GPIS model and set of possible grasp plans $G$. We are interested in determining 
-
-\begin{align}\label{eq:problem_def}
-\Gamma^* \in \mbox{argmax}_{\Gamma \in G} E(Q(\Gamma))
-\end{align}
-
-with respect to a chosen grasp metric Q. 
 
 \section{Multi-Arm Bandit for Grasp Selection}
 While a standard approach to solving the problem in Eq. \ref{eq:problem_def} would be to simply perform Monte-Carlo integration on each $\Gamma_i$ and compute the expected grasp quality, we propose treating the problem as a multi-arm bandit problem and forming a policy for selecting which grasp to sample. 

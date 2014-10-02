@@ -256,21 +256,14 @@ After a sample from a grasp plan, we check to see if the confidence interval of 
 \label{fig:sampling_convergence}
 \end{figure} 
 
+\section{Evaluating a Grasp}
+ In order to solve our problem definition, we must evaluate $E(Q(\Gamma))$ for a given grasp plan $\Gamma$. We will first discuss how the GPIS is constructed, then which grasp metric $Q$ we chose and lastly proceed into evaluating the expectation $E$ efficiently. 
 
 
-\subsection{Gaussian Process (GP) Background} \todo{massive trim down}
-GPs provide an infinite dimensional analogue of Multivariate
-Gaussian Distributions which allow us to model distributions over
-functions. Gaussian processes (GPs) are widely used in machine learning as a nonparametric regression method for estimating continuous functions from sparse and noisy data \cite{rasmussen2010gaussian}.
-In a GP, a training set consists of input vectors $\mX = \{\bx_1, \ldots, \bx_n\}$, $\bx_i \in \mathbb{R}^d$, and corresponding observations $\by = \{y_1, \ldots, y_n\}$. The observations are assumed to be noisy measurements from the unknown target function $f$:
-\begin{equation}
-y_i = f(\bx_i) + \epsilon,
-\end{equation}
-where $\epsilon \sim \mN(0,\sigma^2)$ is Gaussian noise in the observations.
-A zero-mean Gaussian process is completely specified by a covariance function $k(\cdot,\cdot)$, also referred to as a kernel.
-Given the training data $\mD = \{\mX, \by\}$ and covariance function $k(\cdot,\cdot)$, the posterior density $p(f_*|\bx_*,\mD)$ at a test point $\bx_{*}$ is shown to be \cite{rasmussen2010gaussian}:
+\subsection{Gaussian Process (GP) Background}
+Given the training data $\mD = \{\mX, \by\}$ and covariance function $k(\cdot,\cdot)$, the posterior density $p(sd_*|\bx_*,\mD)$ at a test point $\bx_{*}$ is shown to be \cite{rasmussen2010gaussian}:
 \begin{align*}
-	p(f_*|\bx_*,\mD) &\sim \mN\big(\mu(\bx_*), \Sigma(\bx_*)\big) \\
+	p(sd_*|\bx_*,\mD) &\sim \mN\big(\mu(\bx_*), \Sigma(\bx_*)\big) \\
 	\mu(\bx_*) &= k(\mX,\bx_*)^{\intercal}(K + \sigma^2I)^{-1}\by \\
 	\Sigma(\bx_*) &= k(\bx_*,\bx_*)-k(\mX,\bx_*)^{\intercal}(K+\sigma^2I)^{-1}k(\mX,\bx_*)\big) 
 \end{align*}
@@ -279,32 +272,14 @@ This derivation can also be used to predict the mean and variance of the functio
 
 \vspace{-2ex}
 \begin{align}
-	\text{cov}\left(f(\bx_i), f(\bx_j) \right) &=  k(\bx_i, \bx_j) \\
-	\text{cov}\left(\frac{\partial f (\bx_i)}{\partial x_k}, f(\bx_j) \right) &= \frac{\partial}{\partial x_k} k(\bx_i, \bx_j) \label{eq:mean_gradient}\\
-	\text{cov}\left(\frac{\partial f (\bx_i)}{\partial x_k}, \frac{\partial f (\bx_j)}{\partial x_l} \right) &= \frac{\partial^2}{\partial x_k \partial x_l} k(\bx_i, \bx_j)\label{eq:cov_gradient}
+	\text{cov}\left(sd(\bx_i), sd(\bx_j) \right) &=  k(\bx_i, \bx_j) \\
+	\text{cov}\left(\frac{\partial sd (\bx_i)}{\partial x_k}, sd(\bx_j) \right) &= \frac{\partial}{\partial x_k} k(\bx_i, \bx_j) \label{eq:mean_gradient}\\
+	\text{cov}\left(\frac{\partial sd (\bx_i)}{\partial x_k}, \frac{\partial sd (\bx_j)}{\partial x_l} \right) &= \frac{\partial^2}{\partial x_k \partial x_l} k(\bx_i, \bx_j)\label{eq:cov_gradient}
 \end{align}
 
-\begin{figure}[ht!]
-\centering
-\includegraphics[width = 8.5cm, height = 14cm ]{figures/Slide03.jpg}
-\caption{\footnotesize Six example objects illustrating transparency, specularity, sensor noise that illustrate the need for shape uncertainty: (from top to bottom) tape, squirt bottle, stapler, loofa, marker, water bottle. Displayed from right to left are the HD color image, a point cloud observation from a Primesense Carmine, GPIS visualization technique from \cite{jeffs}, the nominal shape on a $25 \times 25$ grid.  }
-\vspace*{-10pt}
-\label{fig:GPIS_TSDF}
-\end{figure}
-%\section{Related Work}
-
-For our kernel choice we decided to use the square exponential kernel, a major reason for this was its differentiability. Other kernels relevant to GPIS are the thin-plate splines kernel and the Matern kernel \cite{williams2007}. 
+For our kernel choice we decided to use the square exponential kernel, similar to \cite{dragiev2011}. Other kernels relevant to GPIS are the thin-plate splines kernel and the Matern kernel \cite{williams2007}. 
 
 We construct a GPIS by learning a Gaussian Process to fit measurements of a signed distance field of an unknown object.  Precisely, $x_i \in \mathbb{R}^2$ in 2D and $x_i \in \mathbb{R}^3$ in 3D, and $y_i \in \mathbb{R}$ is a noisy signed distance measurement to the unknown object at $x_i$.
-
-
-
-
-
-
-
-\section{Evaluating a Grasp}
- In order to solve our problem definition, we must evaluate $E(Q(\Gamma))$ for a given grasp plan $\Gamma$. We will first discuss which grasp metric $Q$ we chose and then proceed into evaluating the expectation $E$ efficiently. 
 
 \subsection{Grasp Metric}
 In their pioneering work over two decades ago Ferrari and Canny \cite{ferrari1992}, demonstrated a method to rank grasps by considering their contact points and surface normals. Importantly the magnitude of Q yields a measurement that allows one to rank grasps by their physical stability and evaluate the property of force-closure. Furthermore, it has wide spread use in grasp packages like GraspIT\cite{miller2004graspit}, OpenGrasp\cite{73} and Simox \cite{vahrenkamp2010simo}, which motivates studying its effect with uncertainties. 
@@ -318,8 +293,6 @@ Given a proposed grasp plan $\Gamma$, the expected grasp quality can be evaluate
 \begin{align}\label{eq:shape_sampling}
 E(Q(\Gamma)) = \int Q(g|S,\Gamma) p(S) dS
 \end{align}
-
-
 
 Where $Q(g|S,\Gamma)$ is the grasp quality that is computed on a shape sample drawn from $p(S)$. To compute this we intersect the zero crossing of the level set with the propose grasp plan $\Gamma$ and determine the parameters $g$, this has been the approach taken in previous work  \cite{kehoe2012estimating}, \cite{kehoe2012toward},  \cite{christopoulos2007handling}. See Fig. \ref{fig:shape_samples} for an example of what samples drawn from $p(S)$ induced by GPIS look like. For computational reasons we approximate the integral via Monte-Carlo Integration. We use importance sampling to draw from the distribution induced by GPIS and calculate the following
 

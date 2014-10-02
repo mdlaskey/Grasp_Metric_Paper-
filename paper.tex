@@ -205,13 +205,45 @@ We are interested in determining
 with respect to a chosen grasp metric Q. 
 
 
-\subsection{Multi-Arm Bandits for Grasping}
+\subsection{Multi-Arm Bandits for Grasp Selection}
+While a standard approach to solving the problem in Eq. \ref{eq:problem_def} would be to simply perform Monte-Carlo integration on each $\Gamma_i$ and compute the expected grasp quality, we propose treating the problem as a multi-arm bandit problem and forming a policy for selecting which grasp to sample. 
 In our setting, we have a probabilistic shape representation and would like to evaluate many potential grasps on that shape model.
 Motivated by limited computational resources we are interested in how to intelligently allocate sampling resources to efficiently find the best grasp plan $\Gamma^*$.
 Here each arm corresponds to a different grasp plan and pulling the arm is sampling the shape representation and evaluating the arm's grasp plan on the sampled shape representation.
 The reward for pulling an arm is the grasp quality of the resulting grasp on the sampled shape.
 We have a policy for exploration of different grasp plans (i.e. choosing which one to sample next) and at a given stopping time we choose to execute the grasp plan with the highest expected quality based on the samples received so far, which would correspond to actually performing the grasp.  
 The number of samples needed before the simple regret reaches zero, determines how effective an exploration policy is for grasp evaluation.
+
+In solving Eq. \ref{eq:problem_def}, we want to pick the grasp plan with the highest $E(Q(\Gamma))$ determined via Monte-Carlo Integration.
+Due to the non-linear nature of our grasp metric, we currently do not have a way to represent the distribution on grasp quality of $p(Q(\Gamma))$ in closed form.
+Thus, we are restricted in the type of bandit policies available to us, since most sophisticated polices require distributional information. \todo{double check with Dylan}
+
+For our exploration policy, we maintain a subset of the possible grasp plans that are statistically indistinguishable from the best grasp plan.
+During exploration, we sample uniformly from this subset.
+This has been shown to have good performance when the number of evaluations is large \cite{bubeck2009pure}.
+For each grasp plan, we maintain a $95\%$ confidence interval around the expected quality of the grasp plan.
+The width of the confidence interval for a grasp plan $i$ that has been sampled $n_i$ times and the samples have standard deviation $\sigma_i$ is:
+
+\vspace{-2ex}
+\begin{align}
+C_{ i} := \frac{1.96 \sigma_i}{\sqrt{n_i}}.
+\end{align}
+
+Let $\hat{\mu_i}$ be the sample mean of the grasp quality for grasp plan $i$.
+Then the confidence interval for grasp plan $i$ is $[\hat{\mu_i} - C_i, \hat{\mu_i} + C_i]$ \cite{caflisch1998monte}.  
+After a sample from a grasp plan, we check to see if the confidence interval of the sampled grasp intersects with the confidence interval of the current best grasp plan, and if it does not, we prune that grasp plan from the current active set of  grasp plans. Since we prune grasps that our below a confidence interval we have statistical guarantees unlike earlier approaches to this problem\cite{kehoe2012toward}. In future work, we will look at using other exploration strategies. 
+
+
+
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=8.5cm,height=9cm]{figures/Slide11.jpg}
+\caption{ \footnotesize Convergence of expected grasp quality, $E(Q(g))$,  for a typical grasp. You can see it can take hundreds of evaluations to correctly estimate the expected grasp quality, thus it is important to  intelligently allocate sampling resources}
+\vspace*{-10pt}
+\label{fig:sampling_convergence}
+\end{figure} 
+
 
 
 \subsection{Gaussian Process (GP) Background} \todo{massive trim down}
@@ -256,33 +288,7 @@ We construct a GPIS by learning a Gaussian Process to fit measurements of a sign
 
 
 
-\section{Multi-Arm Bandit for Grasp Selection}
-While a standard approach to solving the problem in Eq. \ref{eq:problem_def} would be to simply perform Monte-Carlo integration on each $\Gamma_i$ and compute the expected grasp quality, we propose treating the problem as a multi-arm bandit problem and forming a policy for selecting which grasp to sample. 
 
-
-\begin{figure}[ht!]
-\centering
-\includegraphics[width=8.5cm,height=9cm]{figures/Slide11.jpg}
-\caption{ \footnotesize Convergence of expected grasp quality, $E(Q(g))$,  for a typical grasp. You can see it can take hundreds of evaluations to correctly estimate the expected grasp quality, thus it is important to  intelligently allocate sampling resources}
-\vspace*{-10pt}
-\label{fig:sampling_convergence}
-\end{figure} 
-
-\subsection{Our Implementation}
-In solving Eq. \ref{eq:problem_def}, we want to pick the grasp plan with the highest $E(Q(\Gamma))$ determined via Monte-Carlo Integration. Due to the non-linear nature of our grasp metric, we currently do not have a way to represent the distribution on grasp quality of $p(Q(\Gamma))$ in closed form. Thus, we are restricted in the type of bandit policies available to us, since most sophisticated polices require distributional information. \todo{double check with Dylan}
-
-For our exploration policy, we maintain a subset of the possible grasp plans that are statistically indistinguishable from the best grasp plan.
-During exploration, we sample uniformly from this subset.  This has been shown to have good performance when the number of evaluations is large \cite{bubeck2009pure}.
-For each grasp plan, we maintain a $95\%$ confidence interval around the expected quality of the grasp plan.  The width of the confidence interval for a grasp plan $i$ that has been sampled $n_i$ times and the samples have standard deviation $\sigma_i$ is:
-
-\vspace{-2ex}
-\begin{align}
-C_{ i} := \frac{1.96 \sigma_i}{\sqrt{n_i}}.
-\end{align}
-
-
-Let $\hat{\mu_i}$ be the sample mean of the grasp quality for grasp plan $i$.  Thus the confidence interval for grasp plan $i$ is $[\hat{\mu_i} - C_i, \hat{\mu_i} + C_i]$ \cite{caflisch1998monte}.  
-After a sample from a grasp plan, we check to see if the confidence interval of the sampled grasp intersects with the confidence interval of the current best grasp plan, and if it does not, we prune that grasp plan from the current active set of  grasp plans. Since we prune grasps that our below a confidence interval we have statistical guarantees unlike earlier approaches to this problem\cite{kehoe2012toward}. In future work, we will look at using other exploration strategies. 
 
 
 \section{Evaluating a Grasp}

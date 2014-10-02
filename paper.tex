@@ -124,7 +124,6 @@ The multi-armed bandit (MAB) problem, a framework for sequential decision making
 The goal in MAB problems is to make a sequence of decisions over a set of possible options such that a measure of the expected value of such decisions is maximized.
 Solutions to the MAB problem are particularly useful in applications where it is too expensive to fully evaluate a set of options; for example, in optimal design of clinical trials~\cite{simon1989optimal}, market pricing~\cite{rothschild1974two}, and choosing strategies for games~\cite{st2012online}.
 
-\todo{ref figure}
 
 Our main contribution in this paper is formulating the problem of planning grasps with a high expected quality in the presence of uncertainty as a multi-armed bandit problem.
 We use this formulation to rank a set of potential grasps by expected Ferrari-Canny quality under shape uncertainty represented as a Gaussian process implicit surface (GPIS), a Bayesian representation of shape uncertainty that seen recent use in various robotic applications~\cite{dragiev2011, hollinger2013} but has been limited by its computational complexity~\cite{rasmussen2006, williams2007}.
@@ -194,7 +193,6 @@ Before we present the problem definition, we introduce the grasping model, the l
 Similar to the work of \cite{christopoulos2007handling}, we assume that each gripper finger approaches along a \textit{line of action}, a 1D curve $\gamma(t)$ with endpoints $a$ and $b$ as seen in Fig. \ref{fig:line_of_action}.
 A gripper finger starts at point $a$ and moves towards $b$, we assume $a$ is far enough away to be collision free of the object.
 Each gripper contact is defined by a line of action, so we assume the following tuple is provided $\Gamma = ( \gamma_1(\cdot),...,\gamma_m(\cdot) )$, which designates a proposed \textit{grasp plan}.
-\todo{move the next two lines}
 While we currently assume the gripper moves free of noise, this approach would be applicable to high precision robots such as industrial based on. 
 Future work will look at how to efficiently sample when the approach trajectory has noise. 
 
@@ -229,7 +227,6 @@ The number of samples needed before the simple regret reaches zero, determines h
 
 In solving Eq. \ref{eq:problem_def}, we want to pick the grasp plan with the highest $E(Q(\Gamma))$ determined via Monte-Carlo Integration.
 Due to the non-linear nature of our grasp metric, we currently do not have a way to represent the distribution on grasp quality of $p(Q(\Gamma))$ in closed form.
-Thus, we are restricted in the type of bandit policies available to us, since most sophisticated polices require distributional information. \todo{double check with Dylan}
 
 For our exploration policy, we maintain a subset of the possible grasp plans that are statistically indistinguishable from the best grasp plan.
 During exploration, we sample uniformly from this subset.
@@ -287,7 +284,7 @@ We construct a GPIS by learning a Gaussian Process to fit measurements of a sign
 \subsection{Grasp Metric}
 In their pioneering work over two decades ago Ferrari and Canny \cite{ferrari1992}, demonstrated a method to rank grasps by considering their contact points and surface normals. Importantly the magnitude of Q yields a measurement that allows one to rank grasps by their physical stability and evaluate the property of force-closure. Furthermore, it has wide spread use in grasp packages like GraspIT\cite{miller2004graspit}, OpenGrasp\cite{73} and Simox \cite{vahrenkamp2010simo}, which motivates studying its effect with uncertainties. 
 
-The $L^1$ version of the metric works by taking as input the contact points $\textbf{c}_1,...,\textbf{c}_m$, surface normals $\textbf{n}_1,...,\textbf{n}_m$, center of mass $z$ and friction coefficient $\mu$. Then constructing a convex hull around the wrenches made up of those parameters and finding the radius of the largest unit ball centered at the origin in wrench space. A wrench is defined as concatenation of a force and torque vector.  If the convex hull doesn't enclose the origin, the grasp is not in force-closure. Thus a grasp can be parameterized by the following tuple $g = \lbrace \textbf{c}_1,...,\textbf{c}_m,\textbf{n}_1,...,\textbf{n}_m,\mu, \textbf{z} \rbrace$, our method is applicable to all grasp metrics that represent a grasp as the tuple $g$, such as \cite{christopoulos2007handling}, \cite{li1988task}. 
+The $L^1$ version of the metric works by taking as input the contact points $\textbf{c}_1,...,\textbf{c}_m$, surface normals $\textbf{n}_1,...,\textbf{n}_m$, center of mass $z$ and friction coefficient $\mu$. Then constructing a convex hull around the wrenches made up of those parameters and finding the radius of the largest unit ball centered at the origin in wrench space. A wrench is defined as concatenation of a force and torque vector.  If the convex hull doesn't enclose the origin, the grasp is not in force-closure. Thus a grasp can be parameterized by the following tuple $g = ( \textbf{c}_1,...,\textbf{c}_m,\textbf{n}_1,...,\textbf{n}_m,\mu, \textbf{z} )$, our method is applicable to all grasp metrics that represent a grasp as the tuple $g$, such as \cite{christopoulos2007handling}, \cite{li1988task}. 
 
 \subsection{Calculating the Expected Grasp Quality}
 Given a proposed grasp plan $\Gamma$, the expected grasp quality can be evaluated as follows:
@@ -319,7 +316,7 @@ p(S) = p(sd(\mathcal{W})) \sim N(\mu(\mathcal{W}),\Sigma(\mathcal{W}))
 
 Thus if the workspace is an $n \times n$ grid, the joint distribution is an  $n^2$ multi-variate Gaussian, due to $sd:\mathbb{R}^2 \rightarrow \mathbb{R}$.  Sampling from a Gaussian involves inverting the covariance matrix and inversion is in the naive way $O(n^3)$ \cite{petersen2008matrix}. Thus the complexity of this operation is $O(n^6)$ in 2D and $O(n^9)$ in 3D. 
 
-To reduce complexity we propose sampling not from the shape distributions, but instead from the distributions on the grasps parameters themselves. We recall that a grasp according to our metric is defined as the tuple $g = \lbrace \textbf{c}_1,...,\textbf{c}_m,\textbf{n}_1,...,\textbf{n}_m,\mu, z \rbrace$. We are thus interested in calculating $p(g|\Gamma,\mu(x),\Sigma(x))$. The distribution on a grasp is defined then as: 
+To reduce complexity we propose sampling not from the shape distributions, but instead from the distributions on the grasps parameters themselves. We recall that a grasp according to our metric is defined as the tuple $g = ( \textbf{c}_1,...,\textbf{c}_m,\textbf{n}_1,...,\textbf{n}_m,\mu, z )$. We are thus interested in calculating $p(g|\Gamma,\mu(x),\Sigma(x))$. The distribution on a grasp is defined then as: 
 
 \begin{align}\label{eq:joint_on_shape}
 p(g) = p\big(\textbf{c}_1,...,\textbf{c}_m,\textbf{n}_1,...,\textbf{n}_m|\Gamma,\mu(x),\Sigma(x)\big)

@@ -100,8 +100,8 @@ Gaussian Process Implicit Surface (GPIS) have emerged recently as a new probabil
 \todo{Get High res GPIS visualizations, Incorporate next round of feedback}
 Consider a robot packing boxes in a shipping warehouse environment. The robot will frequently encounter objects that it has not seen before. The robot will have to plan stable grasps without any prior information other than its sensor data. As seen in Fig. \ref{fig:noisy data}, with today's RGB and depth sensors, surface properties, such as specularity and transparency, can greatly effect the returned observations. Grasp planners based on deterministic algorithms are not designed to handle such noise and could fail. To plan grasps in a partially observed world, recent research has focused on incorporating uncertainty in the shape of the object \cite{kehoe2012estimating}, \cite{christopoulos2007handling}, \cite{zheng2005}.
 
-While past work has encoded uncertainty in a polygonal mesh representation \cite{kehoe2012estimating}, an alternative is to work with the signed distance fields (SDFs), a continuous valued function that is an implicit surface: zero-valued at the surface of the object, positive value outside the surface and negative valued inside the surface. This representation is growing in popularity in the robotics field for its ability to integrate range data in real time \cite{newcombe2011kinectfusion}, \cite{curless1996volumetric}. To incorporate uncertainty one can use a Gaussian Process Implicit Surface (GPIS), a Gaussian process over signed distance field. Not only does GPIS present a straightforward and formal way to incorporate measurements from visual, laser and tactile sensors, they  also allow for a continuous differentiable function on shape, which can be used for a feedback grasp controller, finding locally optimal grasps and active exploration  \cite{dragiev2011}, \cite{jeffs}, \cite{hollinger2013}. 
- 
+A common method to evaluate a grasp with uncertainty is to perform Monte-Carlo integration on a grasp evaluation method. Methods to evaluate a grasp can either be a physics based algorithm \cite{ferrari1992}\cite{pokorny2013classical} or actually trying the grasp in simulation \cite{miller2004graspit} \cite{73}. Since, Monte-Carlo integration requires many evaluations to reach convergences this can be a very computationally intensive operation, when dealing with the problem of choosing the best grasp to select. We show that by framing this problem as a multi-arm bandit problem \cite{barto1998reinforcement}, we can intelligently select which grasps to sample from and  have shown empirically to find the best grasp an order of magnitude faster than a simple uniform sampling policy using only the simplest methods from this field. 
+
 \begin{figure}[ht!]
 \centering
 \includegraphics[width=8.5cm,height=4cm]{figures/Slide02.jpg}
@@ -111,12 +111,18 @@ Left: HD image of a common measuring cup from in a household environment. Right:
 \label{fig:noisy data}
 \end{figure}
 
-Given a method to represent shape uncertainty, a common technique to evaluate grasp quality is to sample from the distribution on shape and perform Monte-Carlo integration on a given grasp metric \cite{kehoe2012estimating}, \cite{kehoe2012toward}, \cite{christopoulos2007handling}. Applying this technique to GPIS requires an exhaustive sampling of the signed distance field, which scales $O(n^6)$ for a 2D $n \times n$ workspace and $O(n^9)$ for a 3D workspace.The computationally complexity of sampling is derived from the fact sampling from a Gaussian requires matrix inversion of the entire signed distance field. Our paper reduces this complexity to $O(n^3)$ by using the insight that for grasp quality evaluation one only cares about the parameters that define a grasp: contacts points, surface normals, center of mass and friction coefficient \cite{pokorny2013classical}. We constrain the contact points by considering the approach trajectory of a gripper.  Hence, sampling the whole signed distance field is not needed, but instead one can only work with the distributions on grasp parameters given the shape uncertainty model and gripper trajectory. In light of this our contributions are the following:
+
+
+We apply our multi-arm bandit approach to an emerging new representation in shape uncertainty, the Gaussian Process Implicit Surface, which puts a Gaussian prior on signed distance fields.  The signed distance fields (SDFs), is a continuous valued function that is an implicit surface: zero-valued at the surface of the object, positive value outside the surface and negative valued inside the surface. This representation is growing in popularity in the robotics field for its ability to integrate range data in real time \cite{newcombe2011kinectfusion}, \cite{curless1996volumetric}. To incorporate uncertainty one can use a Gaussian Process Implicit Surface (GPIS), a Gaussian process over signed distance field. Not only does GPIS present a straightforward and formal way to incorporate measurements from visual, laser and tactile sensors, they  also allow for a continuous differentiable function on shape, which can be used for a feedback grasp controller, finding locally optimal grasps and active exploration  \cite{dragiev2011}, \cite{jeffs}, \cite{hollinger2013}. 
+ 
+
+Given a method to represent shape uncertainty a policy for grasp sampling, we still need to draw samples from a distribution to evaulate a grasp.  A common technique is to sample from the distribution on shape and calculate the quality of grasp on that shape\cite{kehoe2012estimating}, \cite{kehoe2012toward}, \cite{christopoulos2007handling}. Applying this technique to GPIS requires an exhaustive sampling of the signed distance field, which scales $O(n^6)$ for a 2D $n \times n$ workspace and $O(n^9)$ for a 3D workspace.The computationally complexity of sampling is derived from the fact sampling from a Gaussian requires matrix inversion of the entire signed distance field. Our paper reduces this complexity to $O(n^3)$ by using the insight that for grasp quality evaluation one only cares about the parameters that define a grasp: contacts points, surface normals, center of mass and friction coefficient \cite{pokorny2013classical}. We constrain the contact points by considering the approach trajectory of a gripper.  Hence, sampling the whole signed distance field is not needed, but instead one can only work with the distributions on grasp parameters given the shape uncertainty model and gripper trajectory. In light of this our contributions are the following:
  
 \begin{enumerate}
+\item Framing the selection of a grasp as from a given set as a mutli-arm bandit problem 
 	\item Derivation of  distributions on grasp parameters given GPIS shape uncertainty model and approach trajectory of gripper.
 	\item  Demonstrating both theoretically and empirically how those distributions reduce the computational complexity of sampling.
-	\item Applying adaptive sampling techniques to efficiently find high quality grasps in a given set of proposed grasps. 
+	
 \end{enumerate}
  
 \section{Related Work}
@@ -143,6 +149,7 @@ There is a number of algorithms for developing policies to balance exploration a
 In the problem of choosing the best grasp, one must intelligently allocate samples based on the observations received so far. As you can in Fig. \ref{fig:sampling_convergence}, a typical grasp can take hundreds of iterations for convergence of the expected value to be reach. Thus if one had 1000 grasps to choose from, it would take on the order of millions grasp metric evaluations to choose the best grasp in the naive way. If we can develop a policy to intelligently explore the proposed grasps and select the best one, we can reduce the computationally complexity of grasping with uncertainty. 
 
  
+
 
 \todo{Add Multi arm bandit preliminary make it long}
 
@@ -208,8 +215,9 @@ Given a 2-D workspace $\mathcal{W}$, with an unknown object represented as a tra
 
 with respect to a chosen grasp metric Q. 
 
-\section{Adaptive Sampling for Grasp Selection}
-After determining how to efficiently compute the $E(Q(\Gamma))$, we need to now compute the full problem of Eq. \ref{eq:problem_def}, hence the selecting the best grasp plan $\Gamma^*$. While a standard approach to solving this problem would be to simply perform Monte-Carlo integration on each $\Gamma_i$ and compute the expected grasp quality, we propose treating the problem as a multi-arm bandit problem and forming a policy for selecting which grasp to sample. The motivation behind this is due to the expensive evaluation that our grasp metric Q can take \cite{ferrari1992} and the fact that the convergence of the expected quality of a typical grasp can take hundreds of evaluations as shown in Fig. \ref{fig:sampling_convergence}. 
+\section{Multi-Arm Bandit for Grasp Selection}
+While a standard approach to solving the problem in Eq. \ref{eq:problem_def} would be to simply perform Monte-Carlo integration on each $\Gamma_i$ and compute the expected grasp quality, we propose treating the problem as a multi-arm bandit problem and forming a policy for selecting which grasp to sample. 
+
 
 \begin{figure}[ht!]
 \centering
@@ -217,15 +225,7 @@ After determining how to efficiently compute the $E(Q(\Gamma))$, we need to now 
 \caption{ \footnotesize Convergence of expected grasp quality, $E(Q(g))$,  for a typical grasp. You can see it can take hundreds of evaluations to correctly estimate the expected grasp quality, thus it is important to  intelligently allocate sampling resources}
 \vspace*{-10pt}
 \label{fig:sampling_convergence}
-\end{figure}
-
-
-\subsection{Preliminaries}
-Motivated by limited computational resources we are interested in how to intelligently allocate sampling resources to efficiently find the best grasp plan $\Gamma^*$.  We can formulate this problem as a "budgeted multi-arm bandit problem" \cite{madani2004budgeted}. We  have a policy for exploration of different grasp plans (i.e. choosing which one to sample next) and at a given stopping time we choose to execute the grasp plan with the highest expected quality based on the samples received so far.  
-
-
-
-We measured performance of our polices in terms of simple regret, which is the difference of the true expected value of the actual best grasp plan and the true expected value of the selected grasp plan at the given stopping time \cite{bubeck2009pure}. The number of samples needed before the simple regret reaches zero, determines how effective an exploration  policy is for grasp evaluation.
+\end{figure} 
 
 \subsection{Our Implementation}
 In solving Eq. \ref{eq:problem_def}, we want to pick the grasp plan with the highest $E(Q(\Gamma))$ determined via Monte-Carlo Integration. Due to the non-linear nature of our grasp metric, we currently do not have a way to represent the distribution on grasp quality of $p(Q(\Gamma))$ in closed form. Thus, we are restricted in the type of bandit policies available to us, since most sophisticated polices require distributional information. \todo{double check with Dylan}
@@ -245,7 +245,7 @@ After a sample from a grasp plan, we check to see if the confidence interval of 
 
 
 \section{Evaluating a Grasp}
-In order to solve our problem definition, we must evaluate $E(Q(\Gamma))$ for a given grasp plan $\Gamma$. We will first discuss which grasp metric $Q$ we chose and then proceed into evaluating the expectation $E$ efficiently. 
+ In order to solve our problem definition, we must evaluate $E(Q(\Gamma))$ for a given grasp plan $\Gamma$. We will first discuss which grasp metric $Q$ we chose and then proceed into evaluating the expectation $E$ efficiently. 
 
 \subsection{Grasp Metric}
 In their pioneering work over two decades ago Ferrari and Canny \cite{ferrari1992}, demonstrated a method to rank grasps by considering their contact points and surface normals. Importantly the magnitude of Q yields a measurement that allows one to rank grasps by their physical stability and evaluate the property of force-closure. Furthermore, it has wide spread use in grasp packages like GraspIT\cite{miller2004graspit}, OpenGrasp\cite{73} and Simox \cite{vahrenkamp2010simo}, which motivates studying its effect with uncertainties. 
@@ -448,12 +448,23 @@ We consider the problem of selecting the best grasp out of a set $G$ given a fix
 
 
 
-\section{Limitations and Future Work}
+\section{Limitations} 
 Sampling from our distribution $p(g)$ over $p(S)$ yields a reduction in computationally complexity, but only if the number of grasps one wants to evaluate remains small relative to $n^3$, techniques to ensure this could be to find locally optimal potential grasps using optimization approaches \cite{jeffs}. 
 
 An additional problem is that we only have an expected center of mass and not a distribution on the center of mass. This might prove to be to expensive to compute, however recent work by Panahi et al. showed a way to bound the center of mass for convex parts. Extension of his work to implicit surfaces could be of possible interest \cite{panahi2014bounding}.  
 
 Our budgeted multi-arm bandit approach appears promising, but we still do not know how well it will perform on 3D shapes and large scale grids. Future work will be building an efficient construction of GPIS to scale to 3D. Lastly, we are interested in investigating how well our algorithm works in parallel computing to be used in the cloud computing context. Furthermore, their is a large literature on formulating bandit policies and experimenting with them all will need to be done to see which one works best. 
+
+
+\section{Future Work}
+We have demonstrated how the multi-arm bandit problem can be used to sample grasps with shape uncertainty. However, one could imagine this approach to work with other forms of uncertainity like pose, center of mass, friction coefficient or motion. 
+
+We are interested in seeing how we can apply this to different shape representations other than GPIS like polygonal \cite{kehoe2012estimating} or splines \cite{christopoulos2007handling}. Furthermore, we want to extend this to 3D and see if our simplest bandit method still works well. There are many different methods for exploration policies, so it would be interesting to see how well they perform in 3D as well. 
+
+\section{Conclusion}
+
+We demonstrate how formulation the problem of grasp selection as multi-arm bandit method enables much more efficeint sampling of grasp plans. We applied this to a new method for shape uncertainity, GPIS. While GPIS has been used before for very interesting applications \cite{hollinger2013},\cite{jeff},\cite{dragiev2011} evaluating a grasp on it remained to computationally intensive if one sampled from the distribution on shape, $p(S)$, we present a an alternative distribution to sample from and demonstrate how it reduces computational complexity of sampling. 
+
 
 \bibliographystyle{ieeetr}
 \bibliography{references}

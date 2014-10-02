@@ -99,7 +99,7 @@ Due to sensor noise, occlusions, and surface properties such as transparency and
 Planning grasps in the presence of uncertainty can be computationally demanding because fully evaluating the expected quality of even a single grasp may require a large number of samples.
 In this paper, we show that framing grasp planning as a multi-armed bandit problem, a standard framework for making sequential descisions, provides a principled way to quickly select a grasp from a set of candidates on an uncertain shape.
 We demonstrate this method for planning grasps in the presence of shape uncertainty encoded by a Gaussian process implicit surface (GPIS), which can be especially computationally demanding.
-We utilize successive elimination to solve a multi-armed bandit problem and show a speedup of T versus planning grasps using existing methods.
+We utilize successive elimination to solve a multi-armed bandit problem and show a speedup of 10x versus planning grasps using existing methods.
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -120,17 +120,6 @@ To select a grasp with high quality this evaluation is often performed for a lar
 However, when ranking a set of grasps we may be able to determine the relative quality between grasps with only a few samples and throw away grasps that are likely to be suboptimal \cite{kehoe2012estimating}.
 Thus, we can adaptively concentrate grasp evaluation on the grasps that are most likely to have the highest quality based on the evaluation done so far.
 
-The multi-armed bandit (MAB) problem, a framework for sequential decision making problems, provide a principled way to reason about selecting the next grasp to evaluate and the grasps to discard from consideration~\cite{barto1998reinforcement, lai1985asymptotically, robbins1952some}.
-The goal in MAB problems is to make a sequence of decisions over a set of possible options such that a measure of the expected value of such decisions is maximized.
-Solutions to the MAB problem are particularly useful in applications where it is too expensive to fully evaluate a set of options; for example, in optimal design of clinical trials~\cite{simon1989optimal}, market pricing~\cite{rothschild1974two}, and choosing strategies for games~\cite{st2012online}.
-
-\todo{ref figure}
-
-Our main contribution in this paper is formulating the problem of planning grasps with a high expected quality in the presence of uncertainty as a multi-armed bandit problem.
-We use this formulation to rank a set of potential grasps by expected Ferrari-Canny quality under shape uncertainty represented as a Gaussian process implicit surface (GPIS), a Bayesian representation of shape uncertainty that seen recent use in various robotic applications~\cite{dragiev2011, hollinger2013} but has been limited by its computational complexity~\cite{rasmussen2006, williams2007}.
-We also show how to estimate distributions on the contact points, surface normals, and center of mass using a GPIS shape representation.
-Our experiments demonstrate that using the MAB sampling method improves the time to rank a set of N grasps by T over other grasp evaluation methods.
-
 
 \begin{figure}[t!]
 \centering
@@ -141,6 +130,16 @@ Convergance in regret of the bandit sampling method (red), compared to the tradi
 \label{fig:noisy data}
 \end{figure}
  
+
+The multi-armed bandit (MAB) problem, a framework for sequential decision making problems, provide a principled way to reason about selecting the next grasp to evaluate and the grasps to discard from consideration~\cite{barto1998reinforcement, lai1985asymptotically, robbins1952some}.
+The goal in MAB problems is to make a sequence of decisions over a set of possible options such that a measure of the expected value of such decisions is maximized.
+Solutions to the MAB problem are particularly useful in applications where it is too expensive to fully evaluate a set of options; for example, in optimal design of clinical trials~\cite{simon1989optimal}, market pricing~\cite{rothschild1974two}, and choosing strategies for games~\cite{st2012online}.
+
+Our main contribution in this paper is formulating the problem of planning grasps with a high expected quality in the presence of uncertainty as a multi-armed bandit problem.
+We use this formulation to rank a set of potential grasps by expected Ferrari-Canny quality under shape uncertainty represented as a Gaussian process implicit surface (GPIS), a Bayesian representation of shape uncertainty that seen recent use in various robotic applications~\cite{dragiev2011, hollinger2013} but has been limited by its computational complexity~\cite{rasmussen2006, williams2007}.
+We also show how to estimate distributions on the contact points, surface normals, and center of mass using a GPIS shape representation and use those to efficiently sample from the GPIS for grasp quality evaluation, which reduces computational complexity of sampling from $O(n^6)$ to $O(n^3)$ for a 2D $n \times n$ workspace. Our experiments demonstrate that using the MAB sampling method improves the time to rank a set of N grasps by T over other grasp evaluation methods.
+
+
 \section{Related Work}
 
 The multi-armed bandit (MAB) problem~\cite{barto1998reinforcement, lai1985asymptotically, robbins1952some} considers maximize the total expected reward over a sequence of possible choices over a set of competing options, each of which has a probabilistic reward function.
@@ -247,15 +246,6 @@ Then the confidence interval for grasp plan $i$ is $[\hat{\mu_i} - C_i, \hat{\mu
 After a sample from a grasp plan, we check to see if the confidence interval of the sampled grasp intersects with the confidence interval of the current best grasp plan, and if it does not, we prune that grasp plan from the current active set of  grasp plans. Since we prune grasps that our below a confidence interval we have statistical guarantees unlike earlier approaches to this problem\cite{kehoe2012toward}. In future work, we will look at using other exploration strategies. 
 
 
-
-
-\begin{figure}[ht!]
-\centering
-\includegraphics[width=8.5cm,height=9cm]{figures/Slide11.jpg}
-\caption{ \footnotesize Convergence of expected grasp quality, $E(Q(g))$,  for a typical grasp. You can see it can take hundreds of evaluations to correctly estimate the expected grasp quality, thus it is important to  intelligently allocate sampling resources}
-\vspace*{-10pt}
-\label{fig:sampling_convergence}
-\end{figure} 
 
 \section{Evaluating a Grasp}
  In order to solve our problem definition, we must evaluate $E(Q(\Gamma))$ for a given grasp plan $\Gamma$. We will first discuss how the GPIS is constructed, then which grasp metric $Q$ we chose and lastly proceed into evaluating the expectation $E$ efficiently. 

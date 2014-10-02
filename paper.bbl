@@ -1,33 +1,39 @@
 \begin{thebibliography}{10}
 
+\bibitem{kehoe2012toward}
+B.~Kehoe, D.~Berenson, and K.~Goldberg, ``Toward cloud-based grasping with
+  uncertainty in shape: Estimating lower bounds on achieving force closure with
+  zero-slip push grasps,'' in {\em Robotics and Automation (ICRA), 2012 IEEE
+  International Conference on}, pp.~576--583, IEEE, 2012.
+
+\bibitem{kim2012physically}
+J.~Kim, K.~Iwamoto, J.~J. Kuffner, Y.~Ota, and N.~S. Pollard,
+  ``Physically-based grasp quality evaluation under uncertainty,'' in {\em
+  Robotics and Automation (ICRA), 2012 IEEE International Conference on},
+  pp.~3258--3263, IEEE, 2012.
+
+\bibitem{weisz2012pose}
+J.~Weisz and P.~K. Allen, ``Pose error robust grasping from contact wrench
+  space metrics,'' in {\em Robotics and Automation (ICRA), 2012 IEEE
+  International Conference on}, pp.~557--562, IEEE, 2012.
+
 \bibitem{kehoe2012estimating}
 B.~Kehoe, D.~Berenson, and K.~Goldberg, ``Estimating part tolerance bounds
   based on adaptive cloud-based grasp planning with slip,'' in {\em Automation
   Science and Engineering (CASE), 2012 IEEE International Conference on},
   pp.~1106--1113, IEEE, 2012.
 
-\bibitem{christopoulos2007handling}
-V.~N. Christopoulos and P.~Schrater, ``Handling shape and contact location
-  uncertainty in grasping two-dimensional planar objects,'' in {\em Intelligent
-  Robots and Systems, 2007. IROS 2007. IEEE/RSJ International Conference on},
-  pp.~1557--1563, IEEE, 2007.
+\bibitem{simon1989optimal}
+R.~Simon, ``Optimal two-stage designs for phase ii clinical trials,'' {\em
+  Controlled clinical trials}, vol.~10, no.~1, pp.~1--10, 1989.
 
-\bibitem{zheng2005}
-Y.~Zheng and W.-H. Qian, ``Coping with the grasping uncertainties in
-  force-closure analysis,'' {\em Int. J. Robotics Research (IJRR)}, vol.~24,
-  no.~4, pp.~311--327, 2005.
+\bibitem{rothschild1974two}
+M.~Rothschild, ``A two-armed bandit theory of market pricing,'' {\em Journal of
+  Economic Theory}, vol.~9, no.~2, pp.~185--202, 1974.
 
-\bibitem{newcombe2011kinectfusion}
-R.~A. Newcombe, A.~J. Davison, S.~Izadi, P.~Kohli, O.~Hilliges, J.~Shotton,
-  D.~Molyneaux, S.~Hodges, D.~Kim, and A.~Fitzgibbon, ``Kinectfusion: Real-time
-  dense surface mapping and tracking,'' in {\em Mixed and augmented reality
-  (ISMAR), 2011 10th IEEE international symposium on}, pp.~127--136, IEEE,
-  2011.
-
-\bibitem{curless1996volumetric}
-B.~Curless and M.~Levoy, ``A volumetric method for building complex models from
-  range images,'' in {\em Proceedings of the 23rd annual conference on Computer
-  graphics and interactive techniques}, pp.~303--312, ACM, 1996.
+\bibitem{st2012online}
+D.~L. St-Pierre, Q.~Louveaux, and O.~Teytaud, ``Online sparse bandit for card
+  games,'' in {\em Advances in Computer Games}, pp.~295--305, Springer, 2012.
 
 \bibitem{dragiev2011}
 S.~Dragiev, M.~Toussaint, and M.~Gienger, ``Gaussian process implicit surfaces
@@ -39,16 +45,13 @@ G.~A. Hollinger, B.~Englot, F.~S. Hover, U.~Mitra, and G.~S. Sukhatme, ``Active
   planning for underwater inspection and the benefit of adaptivity,'' {\em Int.
   J. Robotics Research (IJRR)}, vol.~32, no.~1, pp.~3--18, 2013.
 
-\bibitem{kehoe2012toward}
-B.~Kehoe, D.~Berenson, and K.~Goldberg, ``Toward cloud-based grasping with
-  uncertainty in shape: Estimating lower bounds on achieving force closure with
-  zero-slip push grasps,'' in {\em Robotics and Automation (ICRA), 2012 IEEE
-  International Conference on}, pp.~576--583, IEEE, 2012.
+\bibitem{rasmussen2006}
+C.~Rasmussen and C.~Williams, {\em Gaussian processes for machine learning}.
+\newblock MIT Press, 2006.
 
-\bibitem{pokorny2013classical}
-F.~T. Pokorny and D.~Kragic, ``Classical grasp quality evaluation: New
-  algorithms and theory,'' in {\em Intelligent Robots and Systems (IROS), 2013
-  IEEE/RSJ International Conference on}, pp.~3493--3500, IEEE, 2013.
+\bibitem{williams2007}
+O.~Williams and A.~Fitzgibbon, ``Gaussian process implicit surfaces,'' {\em
+  Gaussian Proc. in Practice}, 2007.
 
 \bibitem{goldberg1990bayesian}
 K.~Y. Goldberg and M.~T. Mason, ``Bayesian grasping,'' in {\em Robotics and
@@ -60,16 +63,16 @@ F.~Stulp, E.~Theodorou, J.~Buchli, and S.~Schaal, ``Learning to grasp under
   uncertainty,'' in {\em Robotics and Automation (ICRA), 2011 IEEE
   International Conference on}, pp.~5703--5708, IEEE, 2011.
 
-\bibitem{weisz2012pose}
-J.~Weisz and P.~K. Allen, ``Pose error robust grasping from contact wrench
-  space metrics,'' in {\em Robotics and Automation (ICRA), 2012 IEEE
-  International Conference on}, pp.~557--562, IEEE, 2012.
+\bibitem{christopoulos2007handling}
+V.~N. Christopoulos and P.~Schrater, ``Handling shape and contact location
+  uncertainty in grasping two-dimensional planar objects,'' in {\em Intelligent
+  Robots and Systems, 2007. IROS 2007. IEEE/RSJ International Conference on},
+  pp.~1557--1563, IEEE, 2007.
 
-\bibitem{kim2012physically}
-J.~Kim, K.~Iwamoto, J.~J. Kuffner, Y.~Ota, and N.~S. Pollard,
-  ``Physically-based grasp quality evaluation under uncertainty,'' in {\em
-  Robotics and Automation (ICRA), 2012 IEEE International Conference on},
-  pp.~3258--3263, IEEE, 2012.
+\bibitem{zheng2005}
+Y.~Zheng and W.-H. Qian, ``Coping with the grasping uncertainties in
+  force-closure analysis,'' {\em Int. J. Robotics Research (IJRR)}, vol.~24,
+  no.~4, pp.~311--327, 2005.
 
 \bibitem{hsiao2011bayesian}
 K.~Hsiao, M.~Ciocarlie, and P.~Brook, ``Bayesian grasp planning,'' in {\em ICRA
@@ -132,21 +135,21 @@ E.~Kaufmann, O.~Capp{\'e}, and A.~Garivier, ``On bayesian upper confidence
   bounds for bandit problems,'' in {\em International Conference on Artificial
   Intelligence and Statistics}, pp.~592--600, 2012.
 
-\bibitem{simon1989optimal}
-R.~Simon, ``Optimal two-stage designs for phase ii clinical trials,'' {\em
-  Controlled clinical trials}, vol.~10, no.~1, pp.~1--10, 1989.
-
-\bibitem{rothschild1974two}
-M.~Rothschild, ``A two-armed bandit theory of market pricing,'' {\em Journal of
-  Economic Theory}, vol.~9, no.~2, pp.~185--202, 1974.
-
-\bibitem{st2012online}
-D.~L. St-Pierre, Q.~Louveaux, and O.~Teytaud, ``Online sparse bandit for card
-  games,'' in {\em Advances in Computer Games}, pp.~295--305, Springer, 2012.
-
 \bibitem{madani2004budgeted}
 O.~Madani, D.~J. Lizotte, and R.~Greiner, ``The budgeted multi-armed bandit
   problem,'' in {\em Learning Theory}, pp.~643--645, Springer, 2004.
+
+\bibitem{curless1996volumetric}
+B.~Curless and M.~Levoy, ``A volumetric method for building complex models from
+  range images,'' in {\em Proceedings of the 23rd annual conference on Computer
+  graphics and interactive techniques}, pp.~303--312, ACM, 1996.
+
+\bibitem{newcombe2011kinectfusion}
+R.~A. Newcombe, A.~J. Davison, S.~Izadi, P.~Kohli, O.~Hilliges, J.~Shotton,
+  D.~Molyneaux, S.~Hodges, D.~Kim, and A.~Fitzgibbon, ``Kinectfusion: Real-time
+  dense surface mapping and tracking,'' in {\em Mixed and augmented reality
+  (ISMAR), 2011 10th IEEE international symposium on}, pp.~127--136, IEEE,
+  2011.
 
 \bibitem{morrison1990multivariate}
 D.~F. Morrison, ``Multivariate statistical methods. 3,'' {\em New York, NY.
@@ -160,10 +163,6 @@ S.~Bubeck, R.~Munos, and G.~Stoltz, ``Pure exploration in multi-armed bandits
 D.~Bergemann and J.~V{\"a}lim{\"a}ki, ``Bandit problems,'' tech. rep., Cowles
   Foundation for Research in Economics, Yale University, 2006.
 
-\bibitem{audibert2010best}
-J.-Y. Audibert, S.~Bubeck, {\em et~al.}, ``Best arm identification in
-  multi-armed bandits,'' {\em COLT 2010-Proceedings}, 2010.
-
 \bibitem{rasmussen2010gaussian}
 C.~E. Rasmussen and H.~Nickisch, ``Gaussian processes for machine learning
   (gpml) toolbox,'' {\em The Journal of Machine Learning Research}, vol.~9999,
@@ -173,10 +172,6 @@ C.~E. Rasmussen and H.~Nickisch, ``Gaussian processes for machine learning
 E.~Solak, R.~Murray-Smith, W.~E. Leithead, D.~J. Leith, and C.~E. Rasmussen,
   ``Derivative observations in gaussian process models of dynamic systems,''
   2003.
-
-\bibitem{williams2007}
-O.~Williams and A.~Fitzgibbon, ``Gaussian process implicit surfaces,'' {\em
-  Gaussian Proc. in Practice}, 2007.
 
 \bibitem{ferrari1992}
 C.~Ferrari and J.~Canny, ``Planning optimal grasps,'' in {\em {Proc. {IEEE}

@@ -17,9 +17,9 @@
 \BOOKMARK [2][-]{subsection.6.3}{Expected Center of Mass}{section.6}% 17
 \BOOKMARK [2][-]{subsection.6.4}{Complexity Analysis on Sampling From Grasps Distributions}{section.6}% 18
 \BOOKMARK [1][-]{section.7}{Experiments}{}% 19
-\BOOKMARK [2][-]{subsection.7.1}{Sampling from Grasps Vs. Shape}{section.7}% 20
-\BOOKMARK [2][-]{subsection.7.2}{Adaptive Sampling Technique}{section.7}% 21
+\BOOKMARK [2][-]{subsection.7.1}{Multi-Arm Bandit Experiments}{section.7}% 20
+\BOOKMARK [2][-]{subsection.7.2}{Sampling from Grasps Vs. Shape}{section.7}% 21
 \BOOKMARK [1][-]{section.8}{Limitations}{}% 22
-\BOOKMARK [1][-]{section.9}{Future Work}{}% 23
-\BOOKMARK [1][-]{section.10}{Conclusion}{}% 24
+\BOOKMARK [1][-]{section.9}{Conclusion}{}% 23
+\BOOKMARK [1][-]{section.10}{Future Work}{}% 24
 \BOOKMARK [1][-]{section*.10}{References}{}% 25

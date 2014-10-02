@@ -393,10 +393,10 @@ One interesting effect of this technique is that we can now marginalize out the 
 
 \vspace{-2ex}
 \begin{equation}
-p(\textbf{n}_i ) = \int_a^b   p\big(\textbf{n}_i = \textbf{v} | \textbf{c}_i = \gamma(t) \big)p\big(\textbf{c}_i = \gamma(t)\big) dt
+    p(\textbf{n}_i ) = \int_a^b   p\big(\textbf{n}_i = \textbf{v} | \textbf{c}_i = \gamma(t) \big)p\big(\textbf{c}_i = \gamma(t)\big) dt \label{eq:normal_dist}
 \end{equation}
 
-Grasp metrics such as  Ferrari-Canny require $\textbf{n}_i$ be normalized, or, equivalently, a member of the sphere $\mathcal{S}^{d-1}$ \cite{ferrari1992}. To account for this we densely sample from the  distribution $p \big(\textbf{n}_i ) \big)$  and project onto $\mathcal{S}^{d-1}$.  In Fig.\ref{fig:GraspDIst}, we visualize the theoretical distribution on $\textbf{n}_i$ calculated for a given GPIS and approach line of action.
+Grasp metrics such as  Ferrari-Canny require $\textbf{n}_i$ be normalized, or, equivalently, a member of the sphere $\mathcal{S}^{d-1}$ \cite{ferrari1992}. To account for this we densely sample from the  distribution $p \big(\textbf{n}_i ) \big)$  and project onto $\mathcal{S}^{d-1}$.  In Fig.\ref{fig:GraspDist}, we visualize the distribution on $\textbf{n}_i$ calculated for a given GPIS and approach line of action.
 
 
 \subsection{Expected Center of Mass}\label{sec:mass} 
@@ -427,7 +427,7 @@ Right: The distribution on the density of each point assuming uniform density}
 
 \subsection{Complexity Analysis on Sampling From Grasps Distributions}
 
-After formally deriving each distribution,  we can now sample along each line of action $\gamma_i(t)$ from the joint distribution $p(\textbf{c}_i,\textbf{n}_i | \gamma_i(t))$, due to our independence assumption Eq. \ref{eq:independence}. This can be done by drawing samples from Eq. \ref{eq:joint_contact_normal}. and using our projection technique for the normal distribution. 
+After formally deriving each distribution,  we can now sample along each line of action $\gamma_i(t)$ from the joint distribution $p(\textbf{c}_i,\textbf{n}_i | \gamma_i(t))$, due to our independence assumption Eq. \ref{eq:independence}. This can be done by drawing samples from the GP for signed distance and normals simultaneously and using our projection technique for the normal distribution. 
 
 Having a distribution along a line of action model allows us to sample from those instead of the joint distribution $p(sd(\mathcal{W}))$. Assuming the line of action is on the order of $n$, sampling from this distribution for a single grasp is $O(n^3)$. However, each proposed grasp plan $\Gamma$ requires the distribution to be computed, so if we have $T=|G|$ then the complexity is $O(Tn^3)$. In practice, this should be much smaller than $O(n^6)$. 
 
@@ -435,7 +435,7 @@ Having a distribution along a line of action model allows us to sample from thos
 
 
 \section{Experiments}
-For the experiments below we used common household objects shown in Fig. \ref{fig:GPIS_TSDF}. We manually created a 25 x 25 grid, by tracing a pointcloud of the object on a table taken with a Primesense Carmine depth sensor. To accompany the SDF, we created an occupancy map, which holds 1 if the point cloud was observed and 0 if it was not observed, and a measurement noise map, which holds the variance 0-mean noise added to the SDF values. The parameters of the GPIS were selected using maximum likelihood on a held-out set of validation shapes. Our visualization technique follows the approach of \cite{jeffs} and consisted of drawing many shape samples from the distribution and blurring accordingly to a histogram equalization scheme. 
+For the experiments below we used common household objects.  The objects used can be found at \url{http://rll.berkeley.edu/grasping/} We manually created a 25 x 25 grid, by tracing a pointcloud of the object on a table taken with a Primesense Carmine depth sensor. To accompany the SDF, we created an occupancy map, which holds 1 if the point cloud was observed and 0 if it was not observed, and a measurement noise map, which holds the variance 0-mean noise added to the SDF values. The parameters of the GPIS were selected using maximum likelihood on a held-out set of validation shapes. Our visualization technique follows the approach of \cite{mahler2015opt} and consisted of drawing many shape samples from the distribution and blurring accordingly to a histogram equalization scheme. 
 
 We did experiments for the case of two hard contacts in 2-D, however our methods are not limited to this implementation. We drew random lines of actions $\gamma_1(t)$ and $\gamma_2(t)$ by sampling around a circle with radius $\sqrt{2}n$ and sampling the circles origin, then projecting onto the largest inscribing circle in the workspace. 
 
@@ -450,7 +450,7 @@ We consider the problem of selecting the best grasp plan, $\Gamma^*$ out of a se
 \begin{figure*}[ht!]
 \centering
 \includegraphics[width = 17cm, height = 12cm]{figures/Slide09.jpg}
-\caption{ \footnotesize Top: Comparison of two sampling methods. Red is the multi-arm bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. In all cases the bandit method converges a least a magnitude faster than the pure Monte-Carlo integration. Bottom: Three objects from our data set that we tested on (Tape, Loofa, Water Bottle), we used a visualization technique described in \cite{jeffs}}
+\caption{ \footnotesize Top: Comparison of two sampling methods. Red is the multi-arm bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. In all cases the bandit method converges a least a magnitude faster than the pure Monte-Carlo integration. Bottom: Three objects from our data set that we tested on (Tape, Loofa, Water Bottle), we used a visualization technique described in \cite{mahler2015opt}}
 \vspace*{-10pt}
 \label{fig:simple_regret}
 \end{figure*}
@@ -473,7 +473,7 @@ We first tested 1000 grasp plans and sampled each one 5000 times  and measured t
 
 Our budgeted multi-arm bandit approach appears promising, but we still do not know how well it will perform on 3D shapes and large scale grids. Future work will be building an efficient construction of GPIS to scale to 3D and test the bandit method there. While we have empirically seen the bandit method always converge to the correct value, our method only has a statistical guarantee of doing so. A low quality grasp plan could be found, albeit with a low probability. 
 
-Sampling from our distribution $p(g)$ over $p(S)$ yields a reduction in computationally complexity, but only if the number of grasps one wants to evaluate remains small relative to $n^3$, techniques to ensure this could be to find locally optimal potential grasps using optimization approaches \cite{jeffs}. 
+Sampling from our distribution $p(g)$ over $p(S)$ yields a reduction in computationally complexity, but only if the number of grasps one wants to evaluate remains small relative to $n^3$, techniques to ensure this could be to find locally optimal potential grasps using optimization approaches \cite{mahler2015opt}. 
 
 An additional problem is that we only have an expected center of mass and not a distribution on the center of mass. This might prove to be to expensive to compute, however recent work by Panahi et al. showed a way to bound the center of mass for convex parts. Extension of his work to implicit surfaces could be of possible interest \cite{panahi2014bounding}.  
 

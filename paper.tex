@@ -165,11 +165,8 @@ Mahler et al. used GPIS representation to find locally optimal anti-podal grasps
 Sampling from GPIS for grasp quality evaluation is computationally intensive, however, because it involves the Cholesky decomposition of an $m \times m$ matrix which takes $O(m^6)$ time, where $m$ is the dimension for a 2D grid over and object \cite{morrison1990multivariate}.
 
 
-\section{Preliminaries and Problem Statement}
 
-In this section we describe the multi-arm bandit problem and the formal definition of our problem.
-
-\subsection{Multi-Arm Bandit Problem}
+\section{Multi-Arm Bandit Problem}
 The multi-arm bandit problem originally described by Robbins \cite{robbins1985some} is a statistical decision model of an agent trying to make correct decisions, while gathering information at the same time.
 The traditional setting of a multi-arm bandit problem is a gambler that has K independent slot machine arms and tries to infer which one will yield the highest reward.
 A successful gambler would want to exploit the machine that currently yields the highest reward and explore new arms to see if they give better rewards.
@@ -188,6 +185,9 @@ The budgeted multi-arm bandit problem has a finite stopping time.
 The objective of the budgeted multi-arm bandit problem is to minimize the "simple regret", which is the difference between the true expected value of the actual best arm and the true expected value of the arm pulled at the stopping time.
 Thus the budgeted multi-arm bandit problem reduces to exploration until the very last time step, at which time one exploitation step is taken.
 
+
+\section{Problem Definition}
+Before we present the problem definition, we introduce the grasping model, the line of action.
 
 \subsection{Line of action}
 Similar to the work of \cite{christopoulos2007handling}, we assume that each gripper finger approaches along a \textit{line of action}, a 1D curve $\gamma(t)$ with endpoints $a$ and $b$ as seen in Fig. \ref{fig:line_of_action}.
@@ -217,7 +217,7 @@ We are interested in determining
 with respect to a chosen grasp metric Q. 
 
 
-\subsection{Multi-Arm Bandits for Grasp Selection}
+\section{Multi-Arm Bandits for Grasp Selection}
 While a standard approach to solving the problem in Eq. \ref{eq:problem_def} would be to simply perform Monte-Carlo integration on each $\Gamma_i$ and compute the expected grasp quality, we propose treating the problem as a multi-arm bandit problem and forming a policy for selecting which grasp to sample. 
 In our setting, we have a probabilistic shape representation and would like to evaluate many potential grasps on that shape model.
 Motivated by limited computational resources we are interested in how to intelligently allocate sampling resources to efficiently find the best grasp plan $\Gamma^*$.

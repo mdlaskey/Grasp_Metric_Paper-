@@ -149,15 +149,40 @@ Sampling from GPIS for grasp quality evaluation is computationally intensive, ho
 
 \section{Preliminaries and Problem Statement}
 
-In this section we describe the mathematical derivation of Gaussian Process Implicit Surface representations.
+In this section we describe the multi-arm bandit problem and how it relates to grasping.
 
 \subsection{Multi-Arm Bandit Problem}
-The multi-arm bandit problem originally described by Robbins \cite{robbins1985some} is a statistical decision model of an agent trying to optimize his decisions, while improving his information at the same time. In a multi-arm bandit problem the gambler has K independent slot machine arms and tries to infer, which one will yield the highest return. A good gambler would want to exploit the machine that currently yields a high reward and explore new machines to see if he can better his chances. Developing a policy that successfully does this trade has been the focus of extensive research, since the problem formulation \cite{bubeck2009pure}\cite{robbins1985some} \cite{bergemann2006bandit}. 
+The multi-arm bandit problem originally described by Robbins \cite{robbins1985some} is a statistical decision model of an agent trying to make correct decisions, while gathering information at the same time.
+The traditional setting of a multi-arm bandit problem is a gambler that has K independent slot machine arms and tries to infer which one will yield the highest reward.
+A successful gambler would want to exploit the machine that currently yields the highest reward and explore new arms to see if they give better rewards.
+Developing a policy that successfully trades between exploration and exploitation has been the focus of extensive research, since the problem formulation \cite{bubeck2009pure}, \cite{robbins1985some}, \cite{bergemann2006bandit}. 
 
-There is a number of algorithms for developing policies to balance exploration and exploitation. Algorithms that have theoretical guarantees are based on UCB \todo{descibe UCB}. Those that are derived from emprical methods are developed off of the $\epsilon-$greedy approach. $\epsilon-$ greedy is the idea of choosing the arm with the current best expected value with $1-\epsilon$ probability and choosing a different arm with probability $\epsilon$. \cite{barto1998reinforcement}. In practice, when the distribution on the arm is not in closed form, like not in the exponential family, the empirical methods have shown to have better performance \cite{audibert2010best}.
+There are a number of algorithms for developing policies to balance exploration and exploitation.
+One algorithm is $\epsilon-$greedy, which is the idea of choosing the arm with the highest empirical expected reward with $1-\epsilon$ probability and choosing a random arm with probability $\epsilon$ \cite{barto1998reinforcement}.
+A class of algorithms that have theoretical guarantees are Upper Confidence Bound (UCB).
+UCB algorithms maintain the empirical expected reward based off of pulling each arm multiple times, while also estimating an upper bound on the true expected reward using assumptions on the probability distribution of rewards and number of times has been sampled for each arm.
+The algorithm chooses the arm at each step which has the highest upper bound on expected reward, since that is the most potentially promising arm.
+When the rewards come from exponential family distribution, UCB minimizes cumulative regret, which is the number of times a sub-optimal arm is pulled times the difference between the true expected reward of an optimal arm and the true expected reward of that sub-optimal arm.
+In practice, when the distribution on the rewards of arms is not known, the empirical methods such as $\epsilon-$greedy have shown to have better performance \cite{kuleshov}.
 
-In the problem of choosing the best grasp, one must intelligently allocate samples based on the observations received so far. As you can in Fig. \ref{fig:sampling_convergence}, a typical grasp can take hundreds of iterations for convergence of the expected value to be reach. Thus if one had 1000 grasps to choose from, it would take on the order of millions grasp metric evaluations to choose the best grasp in the naive way. If we can develop a policy to intelligently explore the proposed grasps and select the best one, we can reduce the computationally complexity of grasping with uncertainty. 
+\subsection{Budgeted Multi-Arm Bandit Problem and Grasping}
+%In the problem of choosing the best grasp, one must intelligently allocate samples based on the observations received so far.
+%As you can in Fig. \ref{fig:sampling_convergence}, a typical grasp can take hundreds of iterations for convergence of the expected value to be reach.
+%Thus if one had 1000 grasps to choose from, it would take on the order of millions grasp metric evaluations to choose the best grasp in the naive way.
+%If we can develop a policy to intelligently explore the proposed grasps and select the best one, we can reduce the computationally complexity of grasping with uncertainty. 
 
+
+In our setting, we have a probabilistic shape representation and would like to evaluate many potential grasps on that shape model.
+Motivated by limited computational resources we are interested in how to intelligently allocate sampling resources to efficiently find the best grasp plan $\Gamma^*$.
+We can formulate this problem as a "budgeted multi-arm bandit problem" \cite{madani2004budgeted}.
+Here each arm corresponds to a different grasp plan and pulling the arm is sampling the shape representation and evaluating the arm's grasp plan on the sampled shape representation.
+The reward for pulling an arm is the grasp quality of the resulting grasp on the sampled shape.
+We have a policy for exploration of different grasp plans (i.e. choosing which one to sample next) and at a given stopping time we choose to execute the grasp plan with the highest expected quality based on the samples received so far, which would correspond to actually performing the grasp.  
+
+
+
+We measured performance of our polices in terms of simple regret, which is the difference of the true expected value of the actual best grasp plan and the true expected value of the selected grasp plan at the given stopping time \cite{bubeck2009pure}.
+The number of samples needed before the simple regret reaches zero, determines how effective an exploration  policy is for grasp evaluation.
  
 
 \todo{Add Multi arm bandit preliminary make it long}
@@ -236,12 +261,6 @@ After determining how to efficiently compute the $E(Q(\Gamma))$, we need to now 
 \end{figure}
 
 
-\subsection{Preliminaries}
-Motivated by limited computational resources we are interested in how to intelligently allocate sampling resources to efficiently find the best grasp plan $\Gamma^*$.  We can formulate this problem as a "budgeted multi-arm bandit problem" \cite{madani2004budgeted}. We  have a policy for exploration of different grasp plans (i.e. choosing which one to sample next) and at a given stopping time we choose to execute the grasp plan with the highest expected quality based on the samples received so far.  
-
-
-
-We measured performance of our polices in terms of simple regret, which is the difference of the true expected value of the actual best grasp plan and the true expected value of the selected grasp plan at the given stopping time \cite{bubeck2009pure}. The number of samples needed before the simple regret reaches zero, determines how effective an exploration  policy is for grasp evaluation.
 
 \subsection{Our Implementation}
 In solving Eq. \ref{eq:problem_def}, we want to pick the grasp plan with the highest $E(Q(\Gamma))$ determined via Monte-Carlo Integration. Due to the non-linear nature of our grasp metric, we currently do not have a way to represent the distribution on grasp quality of $p(Q(\Gamma))$ in closed form. Thus, we are restricted in the type of bandit policies available to us, since most sophisticated polices require distributional information. \todo{double check with Dylan}

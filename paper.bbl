@@ -60,27 +60,109 @@ F.~Stulp, E.~Theodorou, J.~Buchli, and S.~Schaal, ``Learning to grasp under
   uncertainty,'' in {\em Robotics and Automation (ICRA), 2011 IEEE
   International Conference on}, pp.~5703--5708, IEEE, 2011.
 
-\bibitem{felip2009robust}
-J.~Felip and A.~Morales, ``Robust sensor-based grasp primitive for a
-  three-finger robot hand,'' in {\em Intelligent Robots and Systems, 2009. IROS
-  2009. IEEE/RSJ International Conference on}, pp.~1811--1816, IEEE, 2009.
+\bibitem{weisz2012pose}
+J.~Weisz and P.~K. Allen, ``Pose error robust grasping from contact wrench
+  space metrics,'' in {\em Robotics and Automation (ICRA), 2012 IEEE
+  International Conference on}, pp.~557--562, IEEE, 2012.
 
-\bibitem{hornung2013octomap}
-A.~Hornung, K.~M. Wurm, M.~Bennewitz, C.~Stachniss, and W.~Burgard, ``Octomap:
-  An efficient probabilistic 3d mapping framework based on octrees,'' {\em
-  Autonomous Robots}, vol.~34, no.~3, pp.~189--206, 2013.
+\bibitem{kim2012physically}
+J.~Kim, K.~Iwamoto, J.~J. Kuffner, Y.~Ota, and N.~S. Pollard,
+  ``Physically-based grasp quality evaluation under uncertainty,'' in {\em
+  Robotics and Automation (ICRA), 2012 IEEE International Conference on},
+  pp.~3258--3263, IEEE, 2012.
+
+\bibitem{hsiao2011bayesian}
+K.~Hsiao, M.~Ciocarlie, and P.~Brook, ``Bayesian grasp planning,'' in {\em ICRA
+  2011 Workshop on Mobile Manipulation: Integrating Perception and
+  Manipulation}, 2011.
 
 \bibitem{caflisch1998monte}
 R.~E. Caflisch, ``Monte carlo and quasi-monte carlo methods,'' {\em Acta
   numerica}, vol.~7, pp.~1--49, 1998.
 
+\bibitem{laaksonen2012probabilistic}
+J.~Laaksonen, E.~Nikandrova, and V.~Kyrki, ``Probabilistic sensor-based
+  grasping,'' in {\em Intelligent Robots and Systems (IROS), 2012 IEEE/RSJ
+  International Conference on}, pp.~2019--2026, IEEE, 2012.
+
+\bibitem{andrieu2003introduction}
+C.~Andrieu, N.~De~Freitas, A.~Doucet, and M.~I. Jordan, ``An introduction to
+  mcmc for machine learning,'' {\em Machine learning}, vol.~50, no.~1-2,
+  pp.~5--43, 2003.
+
 \bibitem{barto1998reinforcement}
 A.~G. Barto, {\em Reinforcement learning: An introduction}.
 \newblock MIT press, 1998.
 
+\bibitem{lai1985asymptotically}
+T.~L. Lai and H.~Robbins, ``Asymptotically efficient adaptive allocation
+  rules,'' {\em Advances in applied mathematics}, vol.~6, no.~1, pp.~4--22,
+  1985.
+
+\bibitem{robbins1985some}
+H.~Robbins, ``Some aspects of the sequential design of experiments,'' in {\em
+  Herbert Robbins Selected Papers}, pp.~169--177, Springer, 1985.
+
+\bibitem{agrawal2011analysis}
+S.~Agrawal and N.~Goyal, ``Analysis of thompson sampling for the multi-armed
+  bandit problem,'' {\em arXiv preprint arXiv:1111.1797}, 2011.
+
+\bibitem{weber1992gittins}
+R.~Weber {\em et~al.}, ``On the gittins index for multiarmed bandits,'' {\em
+  The Annals of Applied Probability}, vol.~2, no.~4, pp.~1024--1033, 1992.
+
+\bibitem{auer2002finite}
+P.~Auer, N.~Cesa-Bianchi, and P.~Fischer, ``Finite-time analysis of the
+  multiarmed bandit problem,'' {\em Machine learning}, vol.~47, no.~2-3,
+  pp.~235--256, 2002.
+
+\bibitem{agrawal1995sample}
+R.~Agrawal, ``Sample mean based index policies with o (log n) regret for the
+  multi-armed bandit problem,'' {\em Advances in Applied Probability},
+  pp.~1054--1078, 1995.
+
+\bibitem{cappe2013kullback}
+O.~Capp{\'e}, A.~Garivier, O.-A. Maillard, R.~Munos, G.~Stoltz, {\em et~al.},
+  ``Kullback--leibler upper confidence bounds for optimal sequential
+  allocation,'' {\em The Annals of Statistics}, vol.~41, no.~3, pp.~1516--1541,
+  2013.
+
+\bibitem{kaufmann2012bayesian}
+E.~Kaufmann, O.~Capp{\'e}, and A.~Garivier, ``On bayesian upper confidence
+  bounds for bandit problems,'' in {\em International Conference on Artificial
+  Intelligence and Statistics}, pp.~592--600, 2012.
+
+\bibitem{simon1989optimal}
+R.~Simon, ``Optimal two-stage designs for phase ii clinical trials,'' {\em
+  Controlled clinical trials}, vol.~10, no.~1, pp.~1--10, 1989.
+
+\bibitem{rothschild1974two}
+M.~Rothschild, ``A two-armed bandit theory of market pricing,'' {\em Journal of
+  Economic Theory}, vol.~9, no.~2, pp.~185--202, 1974.
+
+\bibitem{st2012online}
+D.~L. St-Pierre, Q.~Louveaux, and O.~Teytaud, ``Online sparse bandit for card
+  games,'' in {\em Advances in Computer Games}, pp.~295--305, Springer, 2012.
+
 \bibitem{madani2004budgeted}
 O.~Madani, D.~J. Lizotte, and R.~Greiner, ``The budgeted multi-armed bandit
   problem,'' in {\em Learning Theory}, pp.~643--645, Springer, 2004.
+
+\bibitem{morrison1990multivariate}
+D.~F. Morrison, ``Multivariate statistical methods. 3,'' {\em New York, NY.
+  Mc}, 1990.
+
+\bibitem{bubeck2009pure}
+S.~Bubeck, R.~Munos, and G.~Stoltz, ``Pure exploration in multi-armed bandits
+  problems,'' in {\em Algorithmic Learning Theory}, pp.~23--37, Springer, 2009.
+
+\bibitem{bergemann2006bandit}
+D.~Bergemann and J.~V{\"a}lim{\"a}ki, ``Bandit problems,'' tech. rep., Cowles
+  Foundation for Research in Economics, Yale University, 2006.
+
+\bibitem{audibert2010best}
+J.-Y. Audibert, S.~Bubeck, {\em et~al.}, ``Best arm identification in
+  multi-armed bandits,'' {\em COLT 2010-Proceedings}, 2010.
 
 \bibitem{rasmussen2010gaussian}
 C.~E. Rasmussen and H.~Nickisch, ``Gaussian processes for machine learning
@@ -123,10 +205,6 @@ Z.~Li and S.~S. Sastry, ``Task-oriented optimal grasping by multifingered robot
 
 \bibitem{petersen2008matrix}
 K.~B. Petersen, ``The matrix cookbook,''
-
-\bibitem{bubeck2009pure}
-S.~Bubeck, R.~Munos, and G.~Stoltz, ``Pure exploration in multi-armed bandits
-  problems,'' in {\em Algorithmic Learning Theory}, pp.~23--37, Springer, 2009.
 
 \bibitem{panahi2014bounding}
 F.~Panahi and A.~F. van~der Stappen, ``Bounding the locus of the center of mass

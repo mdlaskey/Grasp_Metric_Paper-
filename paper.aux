@@ -67,28 +67,26 @@
 \citation{robbins1985some}
 \citation{bergemann2006bandit}
 \citation{barto1998reinforcement}
-\citation{audibert2010best}
-\citation{rasmussen2010gaussian}
+\citation{kuleshov}
+\citation{madani2004budgeted}
 \@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{2}{section.2}}
 \@writefile{toc}{\contentsline {section}{\numberline {III}Preliminaries and Problem Statement}{2}{section.3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {III-A}Multi-Arm Bandit Problem}{2}{subsection.3.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {III-B}Gaussian Process (GP) Background}{2}{subsection.3.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-B}Budgeted Multi-Arm Bandit Problem and Grasping}{2}{subsection.3.2}}
+\citation{bubeck2009pure}
+\citation{rasmussen2010gaussian}
 \citation{rasmussen2010gaussian}
 \citation{solak2003derivative}
 \citation{jeffs}
 \citation{jeffs}
 \citation{williams2007}
 \citation{christopoulos2007handling}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-C}Gaussian Process (GP) Background}{3}{subsection.3.3}}
 \newlabel{eq:mean_gradient}{{3}{3}{Gaussian Process (GP) Background}{equation.3.3}{}}
 \newlabel{eq:cov_gradient}{{4}{3}{Gaussian Process (GP) Background}{equation.3.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {III-C}Line of Action}{3}{subsection.3.3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {III-D}Problem Definition}{3}{subsection.3.4}}
-\newlabel{eq:problem_def}{{5}{3}{Problem Definition}{equation.3.5}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \relax \fontsize  {8}{9pt}\selectfont  Six example objects illustrating transparency, specularity, sensor noise that illustrate the need for shape uncertainty: (from top to bottom) tape, squirt bottle, stapler, loofa, marker, water bottle. Displayed from right to left are the HD color image, a point cloud observation from a Primesense Carmine, GPIS visualization technique from \cite  {jeffs}, the nominal shape on a $25 \times 25$ grid. \relax }}{3}{figure.caption.2}}
 \newlabel{fig:GPIS_TSDF}{{2}{3}{\footnotesize Six example objects illustrating transparency, specularity, sensor noise that illustrate the need for shape uncertainty: (from top to bottom) tape, squirt bottle, stapler, loofa, marker, water bottle. Displayed from right to left are the HD color image, a point cloud observation from a Primesense Carmine, GPIS visualization technique from \cite {jeffs}, the nominal shape on a $25 \times 25$ grid. \relax }{figure.caption.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Illustration of a grasp plan $\Gamma $ composed of two lines of action, $\gamma _1(t)$ and $\gamma _2(t)$\relax }}{3}{figure.caption.3}}
-\newlabel{fig:line_of_action}{{3}{3}{Illustration of a grasp plan $\Gamma $ composed of two lines of action, $\gamma _1(t)$ and $\gamma _2(t)$\relax }{figure.caption.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {IV}Multi-Arm Bandit for Grasp Selection}{3}{section.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-D}Line of Action}{3}{subsection.3.4}}
 \citation{bubeck2009pure}
 \citation{caflisch1998monte}
 \citation{kehoe2012toward}
@@ -98,18 +96,22 @@
 \citation{vahrenkamp2010simo}
 \citation{christopoulos2007handling}
 \citation{li1988task}
-\citation{kehoe2012estimating}
-\citation{kehoe2012toward}
-\citation{christopoulos2007handling}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Illustration of a grasp plan $\Gamma $ composed of two lines of action, $\gamma _1(t)$ and $\gamma _2(t)$\relax }}{4}{figure.caption.3}}
+\newlabel{fig:line_of_action}{{3}{4}{Illustration of a grasp plan $\Gamma $ composed of two lines of action, $\gamma _1(t)$ and $\gamma _2(t)$\relax }{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-E}Problem Definition}{4}{subsection.3.5}}
+\newlabel{eq:problem_def}{{5}{4}{Problem Definition}{equation.3.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Multi-Arm Bandit for Grasp Selection}{4}{section.4}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Convergence of expected grasp quality, $E(Q(g))$, for a typical grasp. You can see it can take hundreds of evaluations to correctly estimate the expected grasp quality, thus it is important to intelligently allocate sampling resources\relax }}{4}{figure.caption.4}}
 \newlabel{fig:sampling_convergence}{{4}{4}{\footnotesize Convergence of expected grasp quality, $E(Q(g))$, for a typical grasp. You can see it can take hundreds of evaluations to correctly estimate the expected grasp quality, thus it is important to intelligently allocate sampling resources\relax }{figure.caption.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {IV-A}Our Implementation}{4}{subsection.4.1}}
 \@writefile{toc}{\contentsline {section}{\numberline {V}Evaluating a Grasp}{4}{section.5}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {V-A}Grasp Metric}{4}{subsection.5.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {V-B}Calculating the Expected Grasp Quality}{4}{subsection.5.2}}
-\newlabel{eq:shape_sampling}{{7}{4}{Calculating the Expected Grasp Quality}{equation.5.7}{}}
+\citation{kehoe2012estimating}
+\citation{kehoe2012toward}
+\citation{christopoulos2007handling}
 \citation{petersen2008matrix}
-\citation{ferrari1992}
+\@writefile{toc}{\contentsline {subsection}{\numberline {V-B}Calculating the Expected Grasp Quality}{5}{subsection.5.2}}
+\newlabel{eq:shape_sampling}{{7}{5}{Calculating the Expected Grasp Quality}{equation.5.7}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Shape samples drawn from Eq. \ref  {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }}{5}{figure.caption.5}}
 \newlabel{fig:shape_samples}{{5}{5}{Shape samples drawn from Eq. \ref {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }{figure.caption.5}{}}
 \newlabel{eq:joint_shape}{{8}{5}{Calculating the Expected Grasp Quality}{equation.5.8}{}}
@@ -122,12 +124,11 @@
 \newlabel{sec:contact}{{VI-A}{5}{Distribution on Contact Points}{subsection.6.1}{}}
 \newlabel{eq:density_cond}{{12}{5}{Distribution on Contact Points}{equation.6.12}{}}
 \newlabel{eq:cdf_cond}{{13}{5}{Distribution on Contact Points}{equation.6.13}{}}
-\newlabel{eq:line_of_act_dist}{{14}{5}{Distribution on Contact Points}{equation.6.14}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {VI-B}Distribution on Surface Normals}{5}{subsection.6.2}}
-\newlabel{sec:normals}{{VI-B}{5}{Distribution on Surface Normals}{subsection.6.2}{}}
+\citation{ferrari1992}
 \citation{jeffs}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma (t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma (t)$ described by equation \ref  {eq:normal_dist}. \relax }}{6}{figure.caption.6}}
-\newlabel{fig:GraspDist}{{6}{6}{\footnotesize (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma (t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma (t)$ described by equation \ref {eq:normal_dist}. \relax }{figure.caption.6}{}}
+\newlabel{eq:line_of_act_dist}{{14}{6}{Distribution on Contact Points}{equation.6.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {VI-B}Distribution on Surface Normals}{6}{subsection.6.2}}
+\newlabel{sec:normals}{{VI-B}{6}{Distribution on Surface Normals}{subsection.6.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {VI-C}Expected Center of Mass}{6}{subsection.6.3}}
 \newlabel{sec:mass}{{VI-C}{6}{Expected Center of Mass}{subsection.6.3}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Left: A surface with GPIS construction and expected center of mass (black X) Right: The distribution on the density of each point assuming uniform density\relax }}{6}{figure.caption.7}}
@@ -137,19 +138,19 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {VII-A}Sampling from Grasps Vs. Shape}{6}{subsection.7.1}}
 \citation{jeffs}
 \citation{panahi2014bounding}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma (t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma (t)$ described by equation \ref  {eq:normal_dist}. \relax }}{7}{figure.caption.6}}
+\newlabel{fig:GraspDist}{{6}{7}{\footnotesize (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma (t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma (t)$ described by equation \ref {eq:normal_dist}. \relax }{figure.caption.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal  {R}))$ or shapes and Green is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }}{7}{figure.caption.8}}
+\newlabel{fig:speed_dif}{{8}{7}{\footnotesize Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal {R}))$ or shapes and Green is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }{figure.caption.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {VII-B}Adaptive Sampling Technique}{7}{subsection.7.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Comparison of two sampling methods. Green is the adaptive bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret Eq. \ref  {eq:simple_regret} averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. As you can see our method converges much faster with an average of evaluation of 4 samples per grasp. We start the process though by deterministically evaluating every grasp 2 times to achieve a baseline, which explains the first part of the graph.\relax }}{7}{figure.caption.9}}
+\newlabel{fig:simple_regret}{{9}{7}{\footnotesize Comparison of two sampling methods. Green is the adaptive bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret Eq. \ref {eq:simple_regret} averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. As you can see our method converges much faster with an average of evaluation of 4 samples per grasp. We start the process though by deterministically evaluating every grasp 2 times to achieve a baseline, which explains the first part of the graph.\relax }{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VIII}Limitations}{7}{section.8}}
 \citation{kehoe2012estimating}
 \citation{christopoulos2007handling}
 \citation{hollinger2013}
 \citation{jeff}
 \citation{dragiev2011}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal  {R}))$ or shapes and Green is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }}{7}{figure.caption.8}}
-\newlabel{fig:speed_dif}{{8}{7}{\footnotesize Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal {R}))$ or shapes and Green is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }{figure.caption.8}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {VII-B}Adaptive Sampling Technique}{7}{subsection.7.2}}
-\@writefile{toc}{\contentsline {section}{\numberline {VIII}Limitations}{7}{section.8}}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Comparison of two sampling methods. Green is the adaptive bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret Eq. \ref  {eq:simple_regret} averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. As you can see our method converges much faster with an average of evaluation of 4 samples per grasp. We start the process though by deterministically evaluating every grasp 2 times to achieve a baseline, which explains the first part of the graph.\relax }}{7}{figure.caption.9}}
-\newlabel{fig:simple_regret}{{9}{7}{\footnotesize Comparison of two sampling methods. Green is the adaptive bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret Eq. \ref {eq:simple_regret} averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. As you can see our method converges much faster with an average of evaluation of 4 samples per grasp. We start the process though by deterministically evaluating every grasp 2 times to achieve a baseline, which explains the first part of the graph.\relax }{figure.caption.9}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {IX}Future Work}{7}{section.9}}
-\@writefile{toc}{\contentsline {section}{\numberline {X}Conclusion}{7}{section.10}}
 \bibstyle{ieeetr}
 \bibdata{references}
 \bibcite{kehoe2012estimating}{1}
@@ -179,4 +180,6 @@
 \bibcite{petersen2008matrix}{25}
 \bibcite{bubeck2009pure}{26}
 \bibcite{panahi2014bounding}{27}
+\@writefile{toc}{\contentsline {section}{\numberline {IX}Future Work}{8}{section.9}}
+\@writefile{toc}{\contentsline {section}{\numberline {X}Conclusion}{8}{section.10}}
 \@writefile{toc}{\contentsline {section}{References}{8}{section*.10}}

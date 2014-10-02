@@ -1,25 +1,25 @@
-\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
-\BOOKMARK [1][-]{section.2}{Related Work}{}% 2
-\BOOKMARK [1][-]{section.3}{Preliminaries and Problem Statement}{}% 3
-\BOOKMARK [2][-]{subsection.3.1}{Multi-Arm Bandit Problem}{section.3}% 4
-\BOOKMARK [2][-]{subsection.3.2}{Budgeted Multi-Arm Bandit Problem and Grasping}{section.3}% 5
-\BOOKMARK [2][-]{subsection.3.3}{Gaussian Process \(GP\) Background}{section.3}% 6
-\BOOKMARK [2][-]{subsection.3.4}{Line of Action}{section.3}% 7
-\BOOKMARK [2][-]{subsection.3.5}{Problem Definition}{section.3}% 8
-\BOOKMARK [1][-]{section.4}{Multi-Arm Bandit for Grasp Selection}{}% 9
-\BOOKMARK [2][-]{subsection.4.1}{Our Implementation}{section.4}% 10
-\BOOKMARK [1][-]{section.5}{Evaluating a Grasp}{}% 11
-\BOOKMARK [2][-]{subsection.5.1}{Grasp Metric}{section.5}% 12
-\BOOKMARK [2][-]{subsection.5.2}{Calculating the Expected Grasp Quality}{section.5}% 13
-\BOOKMARK [1][-]{section.6}{Distribution of Grasp Parameters}{}% 14
-\BOOKMARK [2][-]{subsection.6.1}{Distribution on Contact Points}{section.6}% 15
-\BOOKMARK [2][-]{subsection.6.2}{Distribution on Surface Normals}{section.6}% 16
-\BOOKMARK [2][-]{subsection.6.3}{Expected Center of Mass}{section.6}% 17
-\BOOKMARK [2][-]{subsection.6.4}{Complexity Analysis on Sampling From Grasps Distributions}{section.6}% 18
-\BOOKMARK [1][-]{section.7}{Experiments}{}% 19
-\BOOKMARK [2][-]{subsection.7.1}{Sampling from Grasps Vs. Shape}{section.7}% 20
-\BOOKMARK [2][-]{subsection.7.2}{Adaptive Sampling Technique}{section.7}% 21
-\BOOKMARK [1][-]{section.8}{Limitations}{}% 22
-\BOOKMARK [1][-]{section.9}{Future Work}{}% 23
-\BOOKMARK [1][-]{section.10}{Conclusion}{}% 24
-\BOOKMARK [1][-]{section*.10}{References}{}% 25
+\BOOKMARK [1][-]{section.1}{Introduction}{}
+\BOOKMARK [1][-]{section.2}{Related Work}{}
+\BOOKMARK [1][-]{section.3}{Preliminaries and Problem Statement}{}
+\BOOKMARK [2][-]{subsection.3.1}{Multi-Arm Bandit Problem}{section.3}
+\BOOKMARK [2][-]{subsection.3.2}{Budgeted Multi-Arm Bandit Problem and Grasping}{section.3}
+\BOOKMARK [2][-]{subsection.3.3}{Gaussian Process \(GP\) Background}{section.3}
+\BOOKMARK [2][-]{subsection.3.4}{Line of Action}{section.3}
+\BOOKMARK [2][-]{subsection.3.5}{Problem Definition}{section.3}
+\BOOKMARK [1][-]{section.4}{Multi-Arm Bandit for Grasp Selection}{}
+\BOOKMARK [2][-]{subsection.4.1}{Our Implementation}{section.4}
+\BOOKMARK [1][-]{section.5}{Evaluating a Grasp}{}
+\BOOKMARK [2][-]{subsection.5.1}{Grasp Metric}{section.5}
+\BOOKMARK [2][-]{subsection.5.2}{Calculating the Expected Grasp Quality}{section.5}
+\BOOKMARK [1][-]{section.6}{Distribution of Grasp Parameters}{}
+\BOOKMARK [2][-]{subsection.6.1}{Distribution on Contact Points}{section.6}
+\BOOKMARK [2][-]{subsection.6.2}{Distribution on Surface Normals}{section.6}
+\BOOKMARK [2][-]{subsection.6.3}{Expected Center of Mass}{section.6}
+\BOOKMARK [2][-]{subsection.6.4}{Complexity Analysis on Sampling From Grasps Distributions}{section.6}
+\BOOKMARK [1][-]{section.7}{Experiments}{}
+\BOOKMARK [2][-]{subsection.7.1}{Sampling from Grasps Vs. Shape}{section.7}
+\BOOKMARK [2][-]{subsection.7.2}{Adaptive Sampling Technique}{section.7}
+\BOOKMARK [1][-]{section.8}{Limitations}{}
+\BOOKMARK [1][-]{section.9}{Future Work}{}
+\BOOKMARK [1][-]{section.10}{Conclusion}{}
+\BOOKMARK [1][-]{section*.10}{References}{}

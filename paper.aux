@@ -113,6 +113,7 @@
 \citation{kehoe2012estimating}
 \citation{kehoe2012toward}
 \citation{christopoulos2007handling}
+\citation{petersen2008matrix}
 \@writefile{toc}{\contentsline {section}{\numberline {VI}Evaluating a Grasp}{4}{section.6}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {VI-A}Gaussian Process (GP) Background}{4}{subsection.6.1}}
 \newlabel{eq:mean_gradient}{{4}{4}{Gaussian Process (GP) Background}{equation.6.4}{}}
@@ -122,9 +123,8 @@
 \newlabel{eq:shape_sampling}{{6}{4}{Calculating the Expected Grasp Quality}{equation.6.6}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Shape samples drawn from Eq. \ref  {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }}{4}{figure.caption.3}}
 \newlabel{fig:shape_samples}{{3}{4}{Shape samples drawn from Eq. \ref {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }{figure.caption.3}{}}
-\citation{petersen2008matrix}
+\newlabel{eq:joint_shape}{{7}{4}{Calculating the Expected Grasp Quality}{equation.6.7}{}}
 \citation{ferrari1992}
-\newlabel{eq:joint_shape}{{7}{5}{Calculating the Expected Grasp Quality}{equation.6.7}{}}
 \newlabel{eq:joint_on_shape}{{8}{5}{Calculating the Expected Grasp Quality}{equation.6.8}{}}
 \newlabel{eq:independence}{{9}{5}{Calculating the Expected Grasp Quality}{equation.6.9}{}}
 \newlabel{eq:grasp_sampling}{{10}{5}{Calculating the Expected Grasp Quality}{equation.6.10}{}}
@@ -151,14 +151,16 @@
 \@writefile{toc}{\contentsline {section}{\numberline {VIII}Experiments}{6}{section.8}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {VIII-A}Multi-Arm Bandit Experiments}{6}{subsection.8.1}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {VIII-B}Sampling from Grasps Vs. Shape}{6}{subsection.8.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {IX}Limitations}{6}{section.9}}
 \citation{mahler2015opt}
 \citation{panahi2014bounding}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Top: Comparison of two sampling methods. Red is the multi-arm bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. In all cases the bandit method converges a least a magnitude faster than the pure Monte-Carlo integration. Bottom: Three objects from our data set that we tested on (Tape, Loofa, Water Bottle), we used a visualization technique described in \cite  {mahler2015opt}\relax }}{7}{figure.caption.6}}
-\newlabel{fig:simple_regret}{{6}{7}{\footnotesize Top: Comparison of two sampling methods. Red is the multi-arm bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. In all cases the bandit method converges a least a magnitude faster than the pure Monte-Carlo integration. Bottom: Three objects from our data set that we tested on (Tape, Loofa, Water Bottle), we used a visualization technique described in \cite {mahler2015opt}\relax }{figure.caption.6}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {IX}Limitations}{7}{section.9}}
-\@writefile{toc}{\contentsline {section}{\numberline {X}Conclusion}{7}{section.10}}
 \citation{kehoe2012estimating}
 \citation{christopoulos2007handling}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Top: Comparison of two sampling methods. Red is the multi-arm bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. In all cases the bandit method converges a least a magnitude faster than the pure Monte-Carlo integration. Bottom: Three objects from our data set that we tested on (Tape, Loofa, Water Bottle), we used a visualization technique described in \cite  {mahler2015opt}\relax }}{7}{figure.caption.6}}
+\newlabel{fig:simple_regret}{{6}{7}{\footnotesize Top: Comparison of two sampling methods. Red is the multi-arm bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. In all cases the bandit method converges a least a magnitude faster than the pure Monte-Carlo integration. Bottom: Three objects from our data set that we tested on (Tape, Loofa, Water Bottle), we used a visualization technique described in \cite {mahler2015opt}\relax }{figure.caption.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal  {R}))$ or shapes and Red is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }}{7}{figure.caption.7}}
+\newlabel{fig:speed_dif}{{7}{7}{\footnotesize Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal {R}))$ or shapes and Red is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }{figure.caption.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {X}Conclusion}{7}{section.10}}
 \bibstyle{IEEEtranS}
 \bibdata{references}
 \bibcite{agrawal1995sample}{1}
@@ -191,10 +193,6 @@
 \bibcite{panahi2014bounding}{28}
 \bibcite{petersen2008matrix}{29}
 \bibcite{rasmussen2006}{30}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal  {R}))$ or shapes and Red is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }}{8}{figure.caption.7}}
-\newlabel{fig:speed_dif}{{7}{8}{\footnotesize Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal {R}))$ or shapes and Red is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }{figure.caption.7}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {XI}Future Work}{8}{section.11}}
-\@writefile{toc}{\contentsline {section}{References}{8}{section*.8}}
 \bibcite{rasmussen2010gaussian}{31}
 \bibcite{robbins1952some}{32}
 \bibcite{robbins1985some}{33}
@@ -208,3 +206,5 @@
 \bibcite{weisz2012pose}{41}
 \bibcite{williams2007}{42}
 \bibcite{zheng2005}{43}
+\@writefile{toc}{\contentsline {section}{\numberline {XI}Future Work}{8}{section.11}}
+\@writefile{toc}{\contentsline {section}{References}{8}{section*.8}}

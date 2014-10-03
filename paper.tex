@@ -180,15 +180,15 @@ Before we present the problem definition, we introduce a way to evaluate the qua
 \subsection{Grasp Metric}
 In their work over two decades ago Ferrari and Canny \cite{ferrari1992}, demonstrated a method to rank grasps by considering their contact points and surface normals. Importantly the magnitude of Q yields a measurement that allows one to rank grasps by their physical stability and evaluate the property of force-closure. Furthermore, it has wide spread use in grasp packages like GraspIT\cite{miller2004graspit}, OpenGrasp\cite{73} and Simox \cite{vahrenkamp2010simo}, which motivates studying its effect with uncertainties. 
 
-The $L^1$ version of the metric works by taking as input the contact points $\textbf{c}_1,...,\textbf{c}_m$, surface normals $\textbf{n}_1,...,\textbf{n}_m$, center of mass $z$ and friction coefficient $\mu$. Then constructing a convex hull around the wrenches made up of those parameters and finding the radius of the largest unit ball centered at the origin in wrench space. A wrench is defined as concatenation of a force and torque vector.  If the convex hull doesn't enclose the origin, the grasp is not in force-closure. Thus a grasp can be parameterized by the following tuple $g = ( \textbf{c}_1,...,\textbf{c}_m,\textbf{n}_1,...,\textbf{n}_m,\mu, \textbf{z} )$, our method is applicable to all grasp metrics that represent a grasp as the tuple $g$, such as \cite{christopoulos2007handling}, \cite{li1988task}. 
+The $L^1$ version of the metric works by taking as input the contact points $\textbf{c}_1,...,\textbf{c}_m$, surface normals $\textbf{n}_1,...,\textbf{n}_m$, center of mass $z$ and friction coefficient $\mu$. Then constructing a convex hull around the wrenches made up of those parameters and finding the radius of the largest unit ball centered at the origin in wrench space. A wrench is defined as concatenation of a force and torque vector.  If the convex hull does not enclose the origin, the grasp is not in force-closure. Thus a grasp can be parameterized by the following tuple $g = ( \textbf{c}_1,...,\textbf{c}_m,\textbf{n}_1,...,\textbf{n}_m,\mu, \textbf{z} )$, our method is applicable to all grasp metrics that represent a grasp as the tuple $g$, such as \cite{christopoulos2007handling}, \cite{li1988task}. 
 
-Since we are in an uncertain environment, we are interested in calculating the expected quality, or $E(Q)$. $E(Q)$ is computed by sampling from our distributions on pose, shape or material properties (friction coefficient or density) and averaging the qualities that are computed. Reducing the time to do this for a large number of grasps is the primary focus of the paper. 
+Since we are in an uncertain environment, we are interested in calculating the expected quality, or $E(Q)$. $E(Q)$ is computed by sampling from our distributions on pose, shape or material properties (friction coefficient or density) and averaging the qualities that are computed. Reducing the time to find the best expected grasp from a set of a large number of grasps is the primary focus of the paper. 
 
 \subsection{Line of action}
-In an uncertain environment one wouldn't actually know the true $g$, thus we have to work with the trajectory of the gripper. Similar to the work of \cite{christopoulos2007handling}, we assume that each gripper finger approaches along a \textit{line of action}, a 1D curve $\gamma(t)$ with endpoints $a$ and $b$ as seen in Fig. \ref{fig:line_of_action}.
+In an uncertain environment one would not actually know the true $g$, thus we have to work with the trajectory of the gripper. Similar to the work of \cite{christopoulos2007handling}, we assume that each gripper finger approaches along a \textit{line of action}, a 1D curve $\gamma(t)$ with endpoints $a$ and $b$ as seen in Fig. \ref{fig:line_of_action}.
 A gripper finger starts at point $a$ and moves towards $b$, we assume $a$ is far enough away to be collision free of the object.
 Each gripper contact is defined by a line of action, so we assume the following tuple is provided $\Gamma = ( \gamma_1(\cdot),...,\gamma_m(\cdot) )$, which designates a proposed \textit{grasp plan}.
-While we currently assume the gripper moves free of noise, this approach would be applicable to high precision robots such as industrial based on. 
+While we currently assume the gripper moves free of noise, this approach would be applicable to high precision robots such as industrial robots. 
 Future work will look at how to efficiently sample when the approach trajectory has noise. 
 
 \begin{figure}[ht!]
@@ -212,7 +212,7 @@ with respect to a chosen grasp metric Q.
 
 
 \section{Multi-Armed Bandits for Grasp Selection}
-While a standard approach to solving the problem in Eq. \ref{eq:problem_def} would be to simply perform Monte-Carlo integration on each $\Gamma_i$ and compute the expected grasp quality, we propose treating the problem as a multi-armed bandit model and forming a policy for selecting which grasp to sample. 
+While a standard approach to solving the problem in Eq. \ref{eq:problem_def} would be to perform Monte-Carlo integration on each $\Gamma_i$ and compute the expected grasp quality, we propose treating the problem as a multi-armed bandit model and forming a policy for selecting which grasp to sample. 
 In our setting, we have a probabilistic shape representation and would like to evaluate many potential grasps on that shape model.
 Motivated by limited computational resources we are interested in how to intelligently allocate sampling resources to efficiently find the best grasp plan $\Gamma^*$.
 Here each arm corresponds to a different grasp plan and pulling the arm is sampling the shape representation and evaluating the arm's grasp plan on the sampled shape representation.
@@ -236,7 +236,7 @@ C_{ i} := \frac{1.96 \sigma_i}{\sqrt{n_i}}.
 
 Let $\hat{\mu_i}$ be the sample mean of the grasp quality for grasp plan $i$.
 Then the confidence interval for grasp plan $i$ is $[\hat{\mu_i} - C_i, \hat{\mu_i} + C_i]$ \cite{caflisch1998monte}.  
-After a sample from a grasp plan, we check to see if the confidence interval of the sampled grasp intersects with the confidence interval of the current best grasp plan, and if it does not, we prune that grasp plan from the current active set of  grasp plans. Since we prune grasps that our below a confidence interval we have statistical guarantees unlike earlier approaches to this problem\cite{kehoe2012toward}. In future work, we will look at using other exploration strategies. 
+After a sample from a grasp plan, we check to see if the confidence interval of the sampled grasp intersects with the confidence interval of the current best grasp plan, and if it does not, we prune that grasp plan from the current active set of  grasp plans. Since we prune grasps that are below a confidence interval we have statistical guarantees unlike earlier approaches to this problem \cite{kehoe2012toward}. In future work, we will look at using other exploration strategies. 
 
 \section{Evaluating a Grasp on Gaussian Process Implicit Surface}
  In order to solve our problem definition, we must evaluate $E(Q(\Gamma))$ for a given grasp plan $\Gamma$. We will first discuss how the GPIS is constructed, then which grasp metric $Q$ we chose and lastly proceed into evaluating the expectation $E$ efficiently. 
@@ -295,7 +295,7 @@ To compute the above distribution we must draw samples from $p(S)$. In order to 
 p(S) = p(sd(\mathcal{W})) \sim N(\mu(\mathcal{W}),\Sigma(\mathcal{W}))
 \end{align}
 
-Thus if the workspace is an $n \times n$ grid, the joint distribution is an  $n^2$ multi-variate Gaussian, due to $sd:\mathbb{R}^2 \rightarrow \mathbb{R}$.  Sampling from a Gaussian involves inverting the covariance matrix and inversion is in the naive way $O(n^3)$ \cite{petersen2008matrix}. Thus the complexity of this operation is $O(n^6)$ in 2D and $O(n^9)$ in 3D. 
+Thus if the workspace is an $n \times n$ grid, the joint distribution is an  $n^2$ multi-variate Gaussian, due to $sd:\mathbb{R}^2 \rightarrow \mathbb{R}$.  Sampling from a Gaussian involves inverting the covariance matrix and inversion is in the naive way scales with the cube of the number of input dimensions \cite{petersen2008matrix}. Thus the complexity of this operation is $O(n^6)$ in 2D and $O(n^9)$ in 3D. 
 
 To reduce complexity we propose sampling not from the shape distributions, but instead from the distributions on the grasps parameters themselves. We recall that a grasp according to our metric is defined as the tuple $g = ( \textbf{c}_1,...,\textbf{c}_m,\textbf{n}_1,...,\textbf{n}_m,\mu, z )$. We are thus interested in calculating $p(g|\Gamma,\mu(x),\Sigma(x))$. The distribution on a grasp is defined then as: 
 
@@ -317,7 +317,7 @@ We compute the expected grasp quality now as follows:
 E(Q(\Gamma)) = \frac{1}{N} \sum_{i=1}^N Q(g_i) , \ \ g_i \sim p(g)
 \end{align}
 
-We will now show how these distributions can be computed and how the computational complexity for sampling form a grasp plan is reduced from $O(n^6)$ to $O(n^3)$ for a GPIS model. 
+We will now show how these distributions can be computed and how the computational complexity for sampling from a grasp plan is reduced from $O(n^6)$ to $O(n^3)$ for a GPIS model. 
 
 \section{Distribution of Grasp Parameters}
 \label{sec:distgrasp}
@@ -350,7 +350,7 @@ The probability distribution along the line $\gamma(t)$ is given by:
 p\big(sd(\gamma(t)) ; \mu(t),\Sigma(t)\big) \ \forall t \in [a,b] 
 \end{equation}
 
-This gives the signed distance function distributions along the entire line of action in the workspace as a multivariate Gaussian. One could think of this as a marginalization of all other points in signed distance field except the line of action. To sample contact points, one can simply draw samples from Eq. \ref{fig:line_of_action} and iterate from $a$ to $b$ until they reach a point that satisfies  Eq. \ref{eq:density_cond} and Eq. \ref{eq:cdf_cond}. 
+This gives the signed distance function distributions along the entire line of action in the workspace as a multivariate Gaussian. One could think of this as a marginalization of all other points in signed distance field except the line of action. To sample contact points, one can draw samples from Eq. \ref{fig:line_of_action} and iterate from $a$ to $b$ until they reach a point that satisfies  Eq. \ref{eq:density_cond} and Eq. \ref{eq:cdf_cond}. 
 
 \begin{figure*}[ht!]
 \centering
@@ -408,15 +408,15 @@ Right: The distribution on the density of each point assuming uniform density}
 
 \subsection{Complexity Analysis on Sampling From Grasps Distributions}
 
-After formally deriving each distribution,  we can now sample along each line of action $\gamma_i(t)$ from the joint distribution $p(\textbf{c}_i,\textbf{n}_i | \gamma_i(t))$, due to our independence assumption Eq. \ref{eq:independence}. This can be done by drawing samples from the GP for signed distance and normals simultaneously and using our projection technique for the normal distribution. 
+After deriving each distribution,  we can now sample along each line of action $\gamma_i(t)$ from the joint distribution $p(\textbf{c}_i,\textbf{n}_i | \gamma_i(t))$, due to our independence assumption Eq. \ref{eq:independence}. This can be done by drawing samples from the GP for signed distance and normals simultaneously and using our projection technique for the normal distribution. 
 
-Having a distribution along a line of action model allows us to sample from those instead of the joint distribution $p(sd(\mathcal{W}))$. Assuming the line of action is on the order of $n$, sampling from this distribution for a single grasp is $O(n^3)$. However, each proposed grasp plan $\Gamma$ requires the distribution to be computed, so if we have $T=|G|$ then the complexity is $O(Tn^3)$. In practice, this should be much smaller than $O(n^6)$. 
+Having a distribution along a line of action model allows us to sample from those instead of the joint distribution $p(sd(\mathcal{W}))$. Assuming the number of discretization points along the line of action is $n$, sampling from this distribution for a single grasp is $O(n^3)$. However, each proposed grasp plan $\Gamma$ requires the distribution to be computed, so if we have $T=|G|$ then the complexity is $O(Tn^3)$. In practice, this should be much smaller than $O(n^6)$. 
 
 
 
 
 \section{Experiments}
-For the experiments below we used common household objects.  The objects used can be found at \url{http://rll.berkeley.edu/grasping/} We manually created a 25 x 25 grid, by tracing a pointcloud of the object on a table taken with a Primesense Carmine depth sensor. To accompany the SDF, we created an occupancy map, which holds 1 if the point cloud was observed and 0 if it was not observed, and a measurement noise map, which holds the variance 0-mean noise added to the SDF values. The parameters of the GPIS were selected using maximum likelihood on a held-out set of validation shapes. Our visualization technique follows the approach of \cite{mahler2015opt} and consisted of drawing many shape samples from the distribution and blurring accordingly to a histogram equalization scheme. 
+For the experiments below we used common household objects.  The objects used can be found at \url{http://rll.berkeley.edu/grasping/} We manually created a 25 x 25 grid, by tracing a point cloud of the object on a table taken with a Primesense Carmine depth sensor. To accompany the SDF, we created an occupancy map, which holds 1 if the point cloud was observed and 0 if it was not observed, and a measurement noise map, which holds the variance 0-mean noise added to the SDF values. The parameters of the GPIS were selected using maximum likelihood on a held-out set of validation shapes. Our visualization technique follows the approach of \cite{mahler2015opt} and consisted of drawing many shape samples from the distribution and blurring accordingly to a histogram equalization scheme. 
 
 We did experiments for the case of two hard contacts in 2-D, however our methods are not limited to this implementation. We drew random lines of actions $\gamma_1(t)$ and $\gamma_2(t)$ by sampling around a circle with radius $\sqrt{2}n$ and sampling the circles origin, then projecting onto the largest inscribing circle in the workspace. 
 
@@ -426,18 +426,18 @@ We did experiments for the case of two hard contacts in 2-D, however our methods
 
 \subsection{Multi-Armed Bandit Experiments}
 
-We consider the problem of selecting the best grasp plan, $\Gamma^*$ out of a set $G$. For our experiments we look at selecting the best grasp out of a size of $|G| = 1000$. In Fig. \ref{fig:simple_regret}, we plotted the simple regret for three of the shapes in our data set averaged over 100 runs and compare it to the Monte-Carlo method that randomly chooses a grasp plan to draw a sample from. We initialize both the Monte-Carlo and bandit technique by sampling each grasp 2 times this is to achieve the standard deviation. We draw samples from our calculated distributions $p(g)$.  The most interesting thing is that the regret is minimized at least an order of magnitude faster than the traditional approach for the shapes we considered, thus motivating the use of including observations as you select samples. 
+We consider the problem of selecting the best grasp plan, $\Gamma^*$ out of a set $G$. For our experiments we look at selecting the best grasp out of a size of $|G| = 1000$. In Fig. \ref{fig:simple_regret}, we plotted the simple regret for three of the shapes in our data set averaged over 100 runs and compare it to the Monte-Carlo method that randomly chooses a grasp plan to draw a sample from. We initialize both the Monte-Carlo and bandit technique by sampling each grasp 2 times.  This is to seed the standard deviation. We draw samples from our calculated distributions $p(g)$.  Interestingly, regret is minimized at least an order of magnitude faster than the baseline approach for the shapes we considered, thus motivating the use of sampled observations to choose what to sample next. 
 
 \begin{figure*}[ht!]
 \centering
 \includegraphics[width = 16.5cm, height = 9cm]{figures/Slide09.jpg}
-\caption{ \footnotesize Top: Comparison of two sampling methods. Red is the multi-armed bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. In all cases the bandit method converges a least a magnitude faster than the pure Monte-Carlo integration. Bottom: Three objects from our data set that we tested on (Tape, Loofa, Water Bottle), we used a visualization technique described in \cite{mahler2015opt}}
+\caption{ \footnotesize Top: Comparison of two sampling methods. Red is the multi-armed bandit method that actively chooses which one to sample and Blue is the Monte-Carlo method. We measure their ability to converge in terms of simple regret averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. In all cases the bandit method converges a least a magnitude faster than the pure Monte-Carlo integration. Bottom: Three objects from our data set that we tested on (Tape, Loofa, Water Bottle), we used a visualization technique described in \cite{mahler2015opt}}
 \vspace*{-10pt}
 \label{fig:simple_regret}
 \end{figure*}
 
 
-\subsection{Sampling from Grasps Vs. Shape}
+\subsection{Sampling from Grasps vs. Shape}
 We first tested 1000 grasp plans and sampled each one 5000 times  and measured the RMS error between converged expected grasp plan qualities for sampling shape Eq. \ref{eq:shape_sampling} vs. grasps  Eq. \ref{eq:grasp_sampling} was 0.004. After confirming the distributions converged close to the same value, we show the computational complexity in Fig. \ref{fig:speed_dif} of the two methods for evaluating 100 grasps on an $n \times n$ grid. 
 
 
@@ -452,11 +452,11 @@ We first tested 1000 grasp plans and sampled each one 5000 times  and measured t
 
 \section{Limitations} 
 
-Our budgeted multi-armed bandit approach appears promising, but we still do not know how well it will perform on 3D shapes and large scale grids. Future work will be building an efficient construction of GPIS to scale to 3D and test the bandit method there. While we have empirically seen the bandit method always converge to the correct value, our method only has a statistical guarantee of doing so. A low quality grasp plan could be found, albeit with a low probability. 
+Our budgeted multi-armed bandit approach appears promising, but we still do not know how well it will perform on 3D shapes and large scale grids. Future work will be building an efficient construction of GPIS to scale to 3D and test the bandit method there. While we have seen the bandit method always converge to the correct value in our experiments, our method only has a statistical guarantee of doing so. A non-optimal grasp plan could be found, albeit with a low probability. 
 
 Sampling from our distribution $p(g)$ over $p(S)$ yields a reduction in computationally complexity, but only if the number of grasps one wants to evaluate remains small relative to $n^3$, techniques to ensure this could be to find locally optimal potential grasps using optimization approaches \cite{mahler2015opt}. 
 
-An additional problem is that we only have an expected center of mass and not a distribution on the center of mass. This might prove to be to expensive to compute, however recent work by Panahi et al. showed a way to bound the center of mass for convex parts. Extension of his work to implicit surfaces could be of possible interest \cite{panahi2014bounding}.  
+An additional problem is that we only have an expected center of mass and not a distribution on the center of mass. This might prove to be to expensive to compute, however recent work by Panahi et al. showed a way to bound the center of mass for convex parts. Extension of his work to implicit surfaces could be of possible interest \cite{panahi2014bounding}.  When using the shape sampling approach on the GPIS instead of sampling along the grasp plan trajectory, the center of mass is easy to compute on a sampled shape, so this is a limitation of our sampling method.
 
 \section{Conclusion}
 Assessing grasp quality under shape uncertainty is computationally expensive as it often requires repeated evaluations of the grasp metric over many random samples.
@@ -465,18 +465,18 @@ A key insight from our work is that uniformly allocating samples to grasps is in
  we found that the Successive Elimination multi-armed bandit approach prioritizes evaluation of high-quality grasps while quickly pruning-out obviously poor grasps.
 A pre-requisite for applying a bandit approach is to formulate an efficient representation of how shape uncertainty affects grasp parameters and thus grasp quality.
 We modeled uncertainty with Gaussian process implicit surfaces (GPIS) and derived the distribution of grasp parameters when a nominal grasp is applied to the GPIS.
-As a result, we were able to more efficiently sample from a distribution of grasps executions rather than the shape; leading to a complexity improvement of $n^3$ in the resolution of the representation.
-We evaluated this theoretical model on a dataset of common objects and confirmed that: (1) the bandits approach always converged to the best grasp in the candidate set, (2) it performs on average a magnitude faster than a naive uniform sampling approach in our experiments, and (3) sampling from the grasp contacts is 12x faster than sampling from shapes for a 64x64 grid.
+As a result, we were able to more efficiently sample from a distribution of grasps executions rather than the shape; leading to a complexity improvement of $n^3$ in the resolution of the discretization $n$.
+We evaluated this theoretical model on a dataset of common objects and confirmed that: (1) the bandits approach always converged to the best grasp in the candidate set, (2) it converges on average an order of magnitude faster than a uniform sampling approach in our experiments, and (3) sampling from the grasp contacts is 12x faster than sampling from shapes for a 64x64 grid.
 
 
 
 \section{Future Work}
-Our results are promising and they suggest many avenues of future work. By utilizing the BMAB model, we can simply encode uncertainty in the grasp parameters and then leverage the existing algorithms to efficiently find the best grasp. 
+Our results are promising and they suggest many avenues of future work. By utilizing the BMAB model, we can encode uncertainty in the grasp parameters and then leverage the existing algorithms to efficiently find the best grasp. 
 
 In principle, our method can be applied to other representations of shape uncertainty such as perturbations on polygonal vertices \cite{kehoe2012estimating} or splines \cite{christopoulos2007handling}.
-It can further be applied to other grasp quality metrics or even simulation based evaluation methods \cite{73}. 
+It can further be applied to other grasp quality metrics or simulation based evaluation methods \cite{73}. 
 
-Future work, will also consider applying BMAB approach to grasp planners like GraspIt! \cite{miller2004graspit} to see if we can handle uncertainty and still maintain the time constraints needed for most real time applications. We currently have only tested one bandit algorithm, successive elimination. While our results were impressive, it remains to be seen how well it scales to the more complicated 3D models. However, the BMAB model has a large amount of literature to draw from as we encounter new and more challenging problems \cite{bergemann2006bandit}.
+Future work will also consider applying BMAB approach to grasp planners like GraspIt! \cite{miller2004graspit} to see if our method can handle uncertainty while working under the time constraints needed for most real time applications. We currently have only tested one bandit algorithm, successive elimination. While our results are promising, it remains to be seen how well it deals with the increased complexity of 3D models over 2D models and larger scale experiments. However, the BMAB model has a large amount of literature to draw from as we encounter new and more challenging problems \cite{bergemann2006bandit}.
 
 \bibliographystyle{IEEEtranS}
 \bibliography{references}

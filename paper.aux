@@ -108,6 +108,8 @@
 \newlabel{fig:shape_samples}{{3}{4}{Shape samples drawn from Eq. \ref {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }{figure.caption.3}{}}
 \newlabel{eq:joint_shape}{{7}{4}{Calculating the Expected Grasp Quality}{equation.6.7}{}}
 \newlabel{eq:joint_on_shape}{{8}{4}{Calculating the Expected Grasp Quality}{equation.6.8}{}}
+\citation{mahler2015opt}
+\citation{mahler2015opt}
 \citation{ferrari1992}
 \newlabel{eq:independence}{{9}{5}{Calculating the Expected Grasp Quality}{equation.6.9}{}}
 \newlabel{eq:grasp_sampling}{{10}{5}{Calculating the Expected Grasp Quality}{equation.6.10}{}}
@@ -128,15 +130,14 @@
 \citation{mahler2015opt}
 \citation{mahler2015opt}
 \citation{mahler2015opt}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma (t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma (t)$ described by equation \ref  {eq:normal_dist}. \relax }}{6}{figure.caption.4}}
-\newlabel{fig:GraspDist}{{4}{6}{\footnotesize (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma (t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma (t)$ described by equation \ref {eq:normal_dist}. \relax }{figure.caption.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Visualization technique comes from \cite  {mahler2015opt}. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma (t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma (t)$ described by equation \ref  {eq:normal_dist}. We plotted the probability mass along the unit circle, to reflect the normalization of the surface normals. \relax }}{6}{figure.caption.4}}
+\newlabel{fig:GraspDist}{{4}{6}{\footnotesize (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Visualization technique comes from \cite {mahler2015opt}. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma (t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma (t)$ described by equation \ref {eq:normal_dist}. We plotted the probability mass along the unit circle, to reflect the normalization of the surface normals. \relax }{figure.caption.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {VII-D}Complexity Analysis on Sampling From Grasps Distributions}{6}{subsection.7.4}}
 \@writefile{toc}{\contentsline {section}{\numberline {VIII}Experiments}{6}{section.8}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {VIII-A}Multi-Arm Bandit Experiments}{6}{subsection.8.1}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {VIII-B}Sampling from Grasps Vs. Shape}{6}{subsection.8.2}}
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal  {R}))$ or shapes and Red is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }}{6}{figure.caption.7}}
 \newlabel{fig:speed_dif}{{7}{6}{\footnotesize Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal {R}))$ or shapes and Red is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }{figure.caption.7}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {IX}Limitations}{6}{section.9}}
 \citation{mahler2015opt}
 \citation{panahi2014bounding}
 \citation{kehoe2012estimating}
@@ -145,6 +146,7 @@
 \citation{bergemann2006bandit}
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Top: Comparison of two sampling methods. Red is the multi-arm bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. In all cases the bandit method converges a least a magnitude faster than the pure Monte-Carlo integration. Bottom: Three objects from our data set that we tested on (Tape, Loofa, Water Bottle), we used a visualization technique described in \cite  {mahler2015opt}\relax }}{7}{figure.caption.6}}
 \newlabel{fig:simple_regret}{{6}{7}{\footnotesize Top: Comparison of two sampling methods. Red is the multi-arm bandit method that actively chooses which one to sample and Blue is the naive Monte-Carlo method. We measure their ability to converge in terms of simple regret averaged over 100 runs. We had them determine the best grasp when $|G|=1000$. In all cases the bandit method converges a least a magnitude faster than the pure Monte-Carlo integration. Bottom: Three objects from our data set that we tested on (Tape, Loofa, Water Bottle), we used a visualization technique described in \cite {mahler2015opt}\relax }{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IX}Limitations}{7}{section.9}}
 \@writefile{toc}{\contentsline {section}{\numberline {X}Conclusion}{7}{section.10}}
 \@writefile{toc}{\contentsline {section}{\numberline {XI}Future Work}{7}{section.11}}
 \bibstyle{IEEEtranS}

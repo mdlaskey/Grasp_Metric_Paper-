@@ -96,7 +96,7 @@ Budgeted Multi-Armed Bandit Models for Sample-Based Grasp Planning in the Presen
 
 
 \begin{abstract}
-Sampling perturbations in shape, state, and control can facilitate grasp planning in the presence of uncertainty arising from noise, occlusions, and surface properties such as transparency and specularities.  Monte-Carlo sampling is computationally demanding, even for planar models. We consider an alternative based on the multi-armed bandit (MAB) model for making sequential decisions, which can apply to a variety of uncertainty models.  We formulate grasp planning as a ``budgeted multi-armed bandit model" with finite stopping time to minimize ``simple regret", the difference between the expected quality of the best grasp and the expected quality of the grasp evaluated at the stopping time.  To evaluate MAB-based sampling, we compare it with Monte-Carlo sampling for grasping an uncertain planar object defined by a Gaussian process implicit surface (GPIS), but the method is applicable to other models of uncertainty.  We derive distributions on contact points, surface normal, and center of mass and use these solve the associated MAB model, finding that it computes grasps of similar quality and can reduce computation time by an order of magnitude.  This suggests a number of new research questions about how MAB can be applied to other models of uncertainty and how different MAB solution techniques can be applied to further reduce computation.
+Sampling perturbations in shape, state, and control can facilitate grasp planning in the presence of uncertainty arising from noise, occlusions, and surface properties such as transparency and specularities.  Monte-Carlo sampling is computationally demanding, even for planar models. We consider an alternative based on the multi-armed bandit (MAB) model for making sequential decisions, which can apply to a variety of uncertainty models.  We formulate grasp planning as a ``budgeted multi-armed bandit model" (BMAB) with finite stopping time to minimize ``simple regret", the difference between the expected quality of the best grasp and the expected quality of the grasp evaluated at the stopping time.  To evaluate MAB-based sampling, we compare it with Monte-Carlo sampling for grasping an uncertain planar object defined by a Gaussian process implicit surface (GPIS), but the method is applicable to other models of uncertainty.  We derive distributions on contact points, surface normal, and center of mass and use these solve the associated MAB model, finding that it computes grasps of similar quality and can reduce computation time by an order of magnitude.  This suggests a number of new research questions about how MAB can be applied to other models of uncertainty and how different MAB solution techniques can be applied to further reduce computation.
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -174,11 +174,18 @@ The objective of the budgeted multi-armed bandit model is to minimize the ``simp
 Thus the budgeted multi-armed bandit model reduces to exploration until the very last time step, at which time one exploitation step is taken.
 
 
-\section{Problem Definition}
-Before we present the problem definition, we introduce the our grasping model, the line of action.
+\section{Preliminaries and Problem Definition}
+Before we present the problem definition, we introduce a way to evaluate the quality of a grasp and our grasping model, the line of action.
+
+\subsection{Grasp Metric}
+In their work over two decades ago Ferrari and Canny \cite{ferrari1992}, demonstrated a method to rank grasps by considering their contact points and surface normals. Importantly the magnitude of Q yields a measurement that allows one to rank grasps by their physical stability and evaluate the property of force-closure. Furthermore, it has wide spread use in grasp packages like GraspIT\cite{miller2004graspit}, OpenGrasp\cite{73} and Simox \cite{vahrenkamp2010simo}, which motivates studying its effect with uncertainties. 
+
+The $L^1$ version of the metric works by taking as input the contact points $\textbf{c}_1,...,\textbf{c}_m$, surface normals $\textbf{n}_1,...,\textbf{n}_m$, center of mass $z$ and friction coefficient $\mu$. Then constructing a convex hull around the wrenches made up of those parameters and finding the radius of the largest unit ball centered at the origin in wrench space. A wrench is defined as concatenation of a force and torque vector.  If the convex hull doesn't enclose the origin, the grasp is not in force-closure. Thus a grasp can be parameterized by the following tuple $g = ( \textbf{c}_1,...,\textbf{c}_m,\textbf{n}_1,...,\textbf{n}_m,\mu, \textbf{z} )$, our method is applicable to all grasp metrics that represent a grasp as the tuple $g$, such as \cite{christopoulos2007handling}, \cite{li1988task}. 
+
+Since we are in an uncertain environment, we are interested in calculating the expected quality, or $E(Q)$. $E(Q)$ is computed by sampling from our distributions on pose, shape or material properties (friction coefficient or density) and averaging the qualities that are computed. Reducing the time to do this for a large number of grasps is the primary focus of the paper. 
 
 \subsection{Line of action}
-Similar to the work of \cite{christopoulos2007handling}, we assume that each gripper finger approaches along a \textit{line of action}, a 1D curve $\gamma(t)$ with endpoints $a$ and $b$ as seen in Fig. \ref{fig:line_of_action}.
+In an uncertain environment one wouldn't actually know the true $g$, thus we have to work with the trajectory of the gripper. Similar to the work of \cite{christopoulos2007handling}, we assume that each gripper finger approaches along a \textit{line of action}, a 1D curve $\gamma(t)$ with endpoints $a$ and $b$ as seen in Fig. \ref{fig:line_of_action}.
 A gripper finger starts at point $a$ and moves towards $b$, we assume $a$ is far enough away to be collision free of the object.
 Each gripper contact is defined by a line of action, so we assume the following tuple is provided $\Gamma = ( \gamma_1(\cdot),...,\gamma_m(\cdot) )$, which designates a proposed \textit{grasp plan}.
 While we currently assume the gripper moves free of noise, this approach would be applicable to high precision robots such as industrial based on. 
@@ -186,7 +193,7 @@ Future work will look at how to efficiently sample when the approach trajectory 
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[scale = 0.3]{figures/Slide01.jpg}
+\includegraphics[width = 6cm, height = 4cm]{figures/Slide01.jpg}
 \caption{Illustration of a grasp plan $\Gamma$ composed of two lines of action, $\gamma_1(t)$ and $\gamma_2(t)$}
 \vspace*{-10pt}
 \label{fig:line_of_action}
@@ -231,7 +238,7 @@ Let $\hat{\mu_i}$ be the sample mean of the grasp quality for grasp plan $i$.
 Then the confidence interval for grasp plan $i$ is $[\hat{\mu_i} - C_i, \hat{\mu_i} + C_i]$ \cite{caflisch1998monte}.  
 After a sample from a grasp plan, we check to see if the confidence interval of the sampled grasp intersects with the confidence interval of the current best grasp plan, and if it does not, we prune that grasp plan from the current active set of  grasp plans. Since we prune grasps that our below a confidence interval we have statistical guarantees unlike earlier approaches to this problem\cite{kehoe2012toward}. In future work, we will look at using other exploration strategies. 
 
-\section{Evaluating a Grasp}
+\section{Evaluating a Grasp on Gaussian Process Implicit Surface}
  In order to solve our problem definition, we must evaluate $E(Q(\Gamma))$ for a given grasp plan $\Gamma$. We will first discuss how the GPIS is constructed, then which grasp metric $Q$ we chose and lastly proceed into evaluating the expectation $E$ efficiently. 
 
 
@@ -258,10 +265,7 @@ For our kernel choice we decided to use the square exponential kernel, similar t
 
 We construct a GPIS by learning a Gaussian process to fit measurements of a signed distance field of an unknown object.  Precisely, $x_i \in \mathbb{R}^2$ in 2D and $x_i \in \mathbb{R}^3$ in 3D, and $y_i \in \mathbb{R}$ is a noisy signed distance measurement to the unknown object at $x_i$.
 
-\subsection{Grasp Metric}
-In their work over two decades ago Ferrari and Canny \cite{ferrari1992}, demonstrated a method to rank grasps by considering their contact points and surface normals. Importantly the magnitude of Q yields a measurement that allows one to rank grasps by their physical stability and evaluate the property of force-closure. Furthermore, it has wide spread use in grasp packages like GraspIT\cite{miller2004graspit}, OpenGrasp\cite{73} and Simox \cite{vahrenkamp2010simo}, which motivates studying its effect with uncertainties. 
 
-The $L^1$ version of the metric works by taking as input the contact points $\textbf{c}_1,...,\textbf{c}_m$, surface normals $\textbf{n}_1,...,\textbf{n}_m$, center of mass $z$ and friction coefficient $\mu$. Then constructing a convex hull around the wrenches made up of those parameters and finding the radius of the largest unit ball centered at the origin in wrench space. A wrench is defined as concatenation of a force and torque vector.  If the convex hull doesn't enclose the origin, the grasp is not in force-closure. Thus a grasp can be parameterized by the following tuple $g = ( \textbf{c}_1,...,\textbf{c}_m,\textbf{n}_1,...,\textbf{n}_m,\mu, \textbf{z} )$, our method is applicable to all grasp metrics that represent a grasp as the tuple $g$, such as \cite{christopoulos2007handling}, \cite{li1988task}. 
 
 \subsection{Calculating the Expected Grasp Quality}
 Given a proposed grasp plan $\Gamma$, the expected grasp quality can be evaluated as follows:
@@ -351,7 +355,7 @@ This gives the signed distance function distributions along the entire line of a
 \begin{figure*}[ht!]
 \centering
 \includegraphics[width = 17cm, height = 4.5cm]{figures/Slide04.jpg}
-\caption{ \footnotesize (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma(t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma(t)$ described by equation \ref{eq:normal_dist}. }
+\caption{ \footnotesize (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Visualization technique comes from \cite{mahler2015opt}. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma(t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma(t)$ described by equation \ref{eq:normal_dist}. We plotted the probability mass along the unit circle, to reflect the normalization of the surface normals. }
 \vspace*{-10pt}
 \label{fig:GraspDist}
 \end{figure*}
@@ -467,15 +471,12 @@ We evaluated this theoretical model on a dataset of common objects and confirmed
 
 
 \section{Future Work}
-Our results are promising and they suggest many avenues of future work.
-First, we are actively working to apply this approach to 3D environments.
-In particular, we are interested in investigating the entire end-to-end pipeline of perception, grasp planning, and grasp execution.
-Next, in principle, our method can be applied to other representations of shape uncertainty such as perturbations on polygonal vertices \cite{kehoe2012estimating} or splines \cite{christopoulos2007handling}.
+Our results are promising and they suggest many avenues of future work. The advantage of this model is that we can have uncertainty in all elements that compose a grasp: shape, pose, friction coefficient and center of mass. While at the same time not exhaustively sampling all of our potential grasp plans. 
+
+In principle, our method can be applied to other representations of shape uncertainty such as perturbations on polygonal vertices \cite{kehoe2012estimating} or splines \cite{christopoulos2007handling}.
 It can further be applied to other grasp quality metrics.
-Next, we are investigating the application of recent results from reinforcement learning or bandit theory for analytic stopping criteria for the sampling.
-One particular challenge is that shape uncertainty is rarely parametric leading to problems with many recent bounds and optimality conditions.
 
-
+Future work, will consider applying BMAB approach to grasp planners like GraspIt! \cite{miller2004graspit} to see if we can handle uncertainty and still maintain the time constraints needed for most real time applications. Also, we currently have only tested out one bandit algorithm, succesive elimination, and had very successful results. As we scale to more complicated models, we will have a large area of research to draw from and improve our method \cite{bergemann2006bandit}.
 
 \bibliographystyle{IEEEtranS}
 \bibliography{references}

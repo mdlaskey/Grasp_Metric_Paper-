@@ -468,12 +468,12 @@ We evaluated this theoretical model on a dataset of common objects and confirmed
 
 
 \section{Future Work}
-Our results are promising and they suggest many avenues of future work. The advantage of this model is that we can have uncertainty in all elements that compose a grasp: shape, pose, friction coefficient and center of mass. While at the same time not exhaustively sampling all of our potential grasp plans. 
+Our results are promising and they suggest many avenues of future work. By utilizing the BMAB model, we can simply encode uncertainty in the grasp parameters and then leverage the existing algorithms to efficiently find the best grasp. 
 
 In principle, our method can be applied to other representations of shape uncertainty such as perturbations on polygonal vertices \cite{kehoe2012estimating} or splines \cite{christopoulos2007handling}.
-It can further be applied to other grasp quality metrics.
+It can further be applied to other grasp quality metrics or even simulation based evaluation methods \cite{73}. 
 
-Future work, will consider applying BMAB approach to grasp planners like GraspIt! \cite{miller2004graspit} to see if we can handle uncertainty and still maintain the time constraints needed for most real time applications. Also, we currently have only tested out one bandit algorithm, succesive elimination, and had very successful results. As we scale to more complicated models, we will have a large area of research to draw from and improve our method \cite{bergemann2006bandit}.
+Future work, will also consider applying BMAB approach to grasp planners like GraspIt! \cite{miller2004graspit} to see if we can handle uncertainty and still maintain the time constraints needed for most real time applications. We currently have only tested one bandit algorithm, successive elimination. While our results were impressive, it remains to be seen how well it scales to the more complicated 3D models. However, the BMAB model has a large amount of literature to draw from as we encounter new and more challenging problems \cite{bergemann2006bandit}.
 
 \bibliographystyle{IEEEtranS}
 \bibliography{references}

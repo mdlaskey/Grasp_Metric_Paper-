@@ -18,11 +18,6 @@
 \fi
 #2}}
 
-\bibitem{agrawal1995sample}
-R.~Agrawal, ``Sample mean based index policies with o (log n) regret for the
-  multi-armed bandit problem,'' \emph{Advances in Applied Probability}, pp.
-  1054--1078, 1995.
-
 \bibitem{agrawal2011analysis}
 S.~Agrawal and N.~Goyal, ``Analysis of thompson sampling for the multi-armed
   bandit problem,'' \emph{arXiv preprint arXiv:1111.1797}, 2011.
@@ -31,11 +26,6 @@ S.~Agrawal and N.~Goyal, ``Analysis of thompson sampling for the multi-armed
 C.~Andrieu, N.~De~Freitas, A.~Doucet, and M.~I. Jordan, ``An introduction to
   mcmc for machine learning,'' \emph{Machine learning}, vol.~50, no. 1-2, pp.
   5--43, 2003.
-
-\bibitem{auer2002finite}
-P.~Auer, N.~Cesa-Bianchi, and P.~Fischer, ``Finite-time analysis of the
-  multiarmed bandit problem,'' \emph{Machine learning}, vol.~47, no. 2-3, pp.
-  235--256, 2002.
 
 \bibitem{barto1998reinforcement}
 A.~G. Barto, \emph{Reinforcement learning: An introduction}.\hskip 1em plus
@@ -53,12 +43,6 @@ S.~Bubeck, R.~Munos, and G.~Stoltz, ``Pure exploration in multi-armed bandits
 \bibitem{caflisch1998monte}
 R.~E. Caflisch, ``Monte carlo and quasi-monte carlo methods,'' \emph{Acta
   numerica}, vol.~7, pp. 1--49, 1998.
-
-\bibitem{cappe2013kullback}
-O.~Capp{\'e}, A.~Garivier, O.-A. Maillard, R.~Munos, G.~Stoltz, \emph{et~al.},
-  ``Kullback--leibler upper confidence bounds for optimal sequential
-  allocation,'' \emph{The Annals of Statistics}, vol.~41, no.~3, pp.
-  1516--1541, 2013.
 
 \bibitem{christopoulos2007handling}
 V.~N. Christopoulos and P.~Schrater, ``Handling shape and contact location
@@ -90,11 +74,6 @@ G.~A. Hollinger, B.~Englot, F.~S. Hover, U.~Mitra, and G.~S. Sukhatme, ``Active
 K.~Hsiao, M.~Ciocarlie, and P.~Brook, ``Bayesian grasp planning,'' in
   \emph{ICRA 2011 Workshop on Mobile Manipulation: Integrating Perception and
   Manipulation}, 2011.
-
-\bibitem{kaufmann2012bayesian}
-E.~Kaufmann, O.~Capp{\'e}, and A.~Garivier, ``On bayesian upper confidence
-  bounds for bandit problems,'' in \emph{International Conference on Artificial
-  Intelligence and Statistics}, 2012, pp. 592--600.
 
 \bibitem{kehoe2012estimating}
 B.~Kehoe, D.~Berenson, and K.~Goldberg, ``Estimating part tolerance bounds
@@ -153,10 +132,6 @@ J.~Mahler, S.~Patil, B.~Kehoe, J.~van~den Berg, M.~Ciocarlie, P.~Abbeel, and
 A.~T. Miller and P.~K. Allen, ``Graspit! a versatile simulator for robotic
   grasping,'' \emph{Robotics \& Automation Magazine, IEEE}, vol.~11, no.~4, pp.
   110--122, 2004.
-
-\bibitem{morrison1990multivariate}
-D.~F. Morrison, ``Multivariate statistical methods. 3,'' \emph{New York, NY.
-  Mc}, 1990.
 
 \bibitem{panahi2014bounding}
 F.~Panahi and A.~F. van~der Stappen, ``Bounding the locus of the center of mass

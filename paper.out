@@ -4,7 +4,7 @@
 \BOOKMARK [1][-]{section.4}{Problem Definition}{}% 4
 \BOOKMARK [2][-]{subsection.4.1}{Line of action}{section.4}% 5
 \BOOKMARK [2][-]{subsection.4.2}{Problem Definition}{section.4}% 6
-\BOOKMARK [1][-]{section.5}{Multi-Arm Bandits for Grasp Selection}{}% 7
+\BOOKMARK [1][-]{section.5}{Multi-Armed Bandits for Grasp Selection}{}% 7
 \BOOKMARK [1][-]{section.6}{Evaluating a Grasp}{}% 8
 \BOOKMARK [2][-]{subsection.6.1}{Gaussian Process \(GP\) Background}{section.6}% 9
 \BOOKMARK [2][-]{subsection.6.2}{Grasp Metric}{section.6}% 10
@@ -15,7 +15,7 @@
 \BOOKMARK [2][-]{subsection.7.3}{Expected Center of Mass}{section.7}% 15
 \BOOKMARK [2][-]{subsection.7.4}{Complexity Analysis on Sampling From Grasps Distributions}{section.7}% 16
 \BOOKMARK [1][-]{section.8}{Experiments}{}% 17
-\BOOKMARK [2][-]{subsection.8.1}{Multi-Arm Bandit Experiments}{section.8}% 18
+\BOOKMARK [2][-]{subsection.8.1}{Multi-Armed Bandit Experiments}{section.8}% 18
 \BOOKMARK [2][-]{subsection.8.2}{Sampling from Grasps Vs. Shape}{section.8}% 19
 \BOOKMARK [1][-]{section.9}{Limitations}{}% 20
 \BOOKMARK [1][-]{section.10}{Conclusion}{}% 21

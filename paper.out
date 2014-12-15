@@ -1,23 +1,30 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
 \BOOKMARK [1][-]{section.2}{Related Work}{}% 2
-\BOOKMARK [1][-]{section.3}{Preliminaries and Problem Statement}{}% 3
-\BOOKMARK [2][-]{subsection.3.1}{Multi-Arm Bandit Problem}{section.3}% 4
-\BOOKMARK [2][-]{subsection.3.2}{Line of action}{section.3}% 5
-\BOOKMARK [2][-]{subsection.3.3}{Problem Definition}{section.3}% 6
-\BOOKMARK [2][-]{subsection.3.4}{Multi-Arm Bandits for Grasp Selection}{section.3}% 7
-\BOOKMARK [2][-]{subsection.3.5}{Gaussian Process \(GP\) Background}{section.3}% 8
-\BOOKMARK [1][-]{section.4}{Evaluating a Grasp}{}% 9
-\BOOKMARK [2][-]{subsection.4.1}{Grasp Metric}{section.4}% 10
-\BOOKMARK [2][-]{subsection.4.2}{Calculating the Expected Grasp Quality}{section.4}% 11
-\BOOKMARK [1][-]{section.5}{Distribution of Grasp Parameters}{}% 12
-\BOOKMARK [2][-]{subsection.5.1}{Distribution on Contact Points}{section.5}% 13
-\BOOKMARK [2][-]{subsection.5.2}{Distribution on Surface Normals}{section.5}% 14
-\BOOKMARK [2][-]{subsection.5.3}{Expected Center of Mass}{section.5}% 15
-\BOOKMARK [2][-]{subsection.5.4}{Complexity Analysis on Sampling From Grasps Distributions}{section.5}% 16
-\BOOKMARK [1][-]{section.6}{Experiments}{}% 17
-\BOOKMARK [2][-]{subsection.6.1}{Multi-Arm Bandit Experiments}{section.6}% 18
-\BOOKMARK [2][-]{subsection.6.2}{Sampling from Grasps Vs. Shape}{section.6}% 19
-\BOOKMARK [1][-]{section.7}{Limitations}{}% 20
-\BOOKMARK [1][-]{section.8}{Conclusion}{}% 21
-\BOOKMARK [1][-]{section.9}{Future Work}{}% 22
-\BOOKMARK [1][-]{section*.10}{References}{}% 23
+\BOOKMARK [1][-]{section.3}{Multi-Armed Bandit Model}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{Fixed Confidence}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{Fixed Budget}{section.3}% 5
+\BOOKMARK [1][-]{section.4}{Preliminaries and Problem Definition}{}% 6
+\BOOKMARK [2][-]{subsection.4.1}{Grasp Metric}{section.4}% 7
+\BOOKMARK [2][-]{subsection.4.2}{Types of Uncertainty}{section.4}% 8
+\BOOKMARK [2][-]{subsection.4.3}{Line of action}{section.4}% 9
+\BOOKMARK [2][-]{subsection.4.4}{Problem Definition}{section.4}% 10
+\BOOKMARK [1][-]{section.5}{Multi-Armed Bandits for Grasp Selection}{}% 11
+\BOOKMARK [1][-]{section.6}{Bandit Algorithms For Best Arm Identification}{}% 12
+\BOOKMARK [2][-]{subsection.6.1}{Thompson Sampling}{section.6}% 13
+\BOOKMARK [2][-]{subsection.6.2}{Upper Confidence Bound \(UCB\)}{section.6}% 14
+\BOOKMARK [2][-]{subsection.6.3}{Gittins Index}{section.6}% 15
+\BOOKMARK [1][-]{section.7}{Evaluating a Grasp on Gaussian Process Implicit Surface}{}% 16
+\BOOKMARK [2][-]{subsection.7.1}{Gaussian Process \(GP\) Background}{section.7}% 17
+\BOOKMARK [2][-]{subsection.7.2}{Calculating the Probability of Force Closure}{section.7}% 18
+\BOOKMARK [1][-]{section.8}{Distribution of Grasp Parameters}{}% 19
+\BOOKMARK [2][-]{subsection.8.1}{Distribution on Contact Points}{section.8}% 20
+\BOOKMARK [2][-]{subsection.8.2}{Distribution on Surface Normals}{section.8}% 21
+\BOOKMARK [2][-]{subsection.8.3}{Expected Center of Mass}{section.8}% 22
+\BOOKMARK [2][-]{subsection.8.4}{Complexity Analysis on Sampling From Grasps Distributions}{section.8}% 23
+\BOOKMARK [1][-]{section.9}{Experiments}{}% 24
+\BOOKMARK [2][-]{subsection.9.1}{Multi-Armed Bandit Experiments}{section.9}% 25
+\BOOKMARK [2][-]{subsection.9.2}{Sampling from Grasps vs. Shape}{section.9}% 26
+\BOOKMARK [1][-]{section.10}{Limitations}{}% 27
+\BOOKMARK [1][-]{section.11}{Conclusion}{}% 28
+\BOOKMARK [1][-]{section.12}{Future Work}{}% 29
+\BOOKMARK [1][-]{section*.11}{References}{}% 30

@@ -42,6 +42,7 @@
 \newcommand{\bn}{\mathbf{n}}
 \newcommand{\bp}{\mathbf{p}}
 \newcommand{\bw}{\mathbf{w}}
+\newcommand{\bt}{\mathbf{t}}
 \newcommand{\by}{\mathbf{y}}
 \newcommand{\bx}{\mathbf{x}}
 \newcommand{\bz}{\mathbf{z}}
@@ -95,7 +96,7 @@ Budgeted Multi-Armed Bandit Models for Sample-Based Grasp Planning in the Presen
 
 
 \begin{abstract}
-Sampling perturbations in shape, state, and control can facilitate grasp planning in the presence of uncertainty arising from noise, occlusions, and surface properties such as transparency and specularities.  Monte-Carlo sampling is computationally demanding, even for planar models. We consider an alternative based on the multi-armed bandit (MAB) model for making sequential decisions, which can apply to a variety of uncertainty models.  We formulate grasp planning as a ``budgeted multi-armed bandit model" (BMAB) with finite stopping time to minimize ``simple regret", the difference between the expected quality of the best grasp and the expected quality of the grasp evaluated at the stopping time.  To evaluate MAB-based sampling, we compare it with Monte-Carlo sampling for grasping an uncertain planar object defined by a Gaussian process implicit surface (GPIS), but the method is applicable to other models of uncertainty.  We derive distributions on contact points, surface normal, and center of mass and use these solve the associated MAB model, finding that it computes grasps of similar quality and can reduce computation time by an order of magnitude.  This suggests a number of new research questions about how MAB can be applied to other models of uncertainty and how different MAB solution techniques can be applied to further reduce computation.
+Sampling perturbations in shape, state, and control can facilitate grasp planning in the presence of uncertainty arising from noise, occlusions, and surface properties such as transparency and specularities.  Monte-Carlo sampling is computationally demanding, even for planar models. We consider an alternative based on the multi-armed bandit (MAB) model for making sequential decisions, which can apply to a variety of uncertainty models.  We formulate grasp planning as a ``budgeted multi-armed bandit model" (BMAB) with finite stopping time to minimize ``simple regret", the difference between the expected quality of the best grasp and the expected quality of the grasp evaluated at the stopping time.  To evaluate MAB-based sampling, we compare it with Monte-Carlo sampling for grasping an uncertain planar object with shape uncertainty defined by a Gaussian process implicit surface (GPIS), but the method is also applicable to other models of uncertainty.  We derive distributions on contact points, surface normal, and center of mass under shape uncertainty and use these to formulate the associated MAB model, finding that it computes grasps of similar quality to Monte-Carlo sampling and can reduce computation time by an order of magnitude.  This suggests a number of new research questions about how MAB can be applied to other models of uncertainty and how different MAB solution techniques can be applied to further reduce computation.
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -107,12 +108,13 @@ Sampling perturbations in shape, state, and control can facilitate grasp plannin
 %\todo{Get High res GPIS visualizations, Incorporate next round of feedback}
 
 Consider a robot packing boxes in a shipping warehouse environment, where it may frequently encounter new consumer products and need to process them quickly.
-The robot may need to rapidly plan grasps for these objects without prior knowledge of their shape, pose and even material properties like friction coefficient or center of mass.  Due to sensor noise and missing data due to partial visibility and object properties such as transparency, the robot may not be able to measure these quantities exactly.
+The robot may need to rapidly plan grasps for these objects without prior knowledge of their shape, pose and material properties like friction coefficient or center of mass. 
+Furthermore, the robot may not be able to measure these quantities exactly due to sensor noise and missing data resulting from partial visibility and object properties such as transparency, .
 Grasp planners that assume exact prior knowledge of object geometry or an exact measurement of pose may fail in this environment.
 
 Grasp quality metrics have been developed to determine if a grasp will be successful or not and how much force it needs to exert to resist an opposing force, however most of them evaluate a grasp assuming all the parameters are known \cite{ferrari1992}.
-This motivates using knowledge of uncertainty to select grasps, but most methods for evaluating the quality of a single grasp in the presence of uncertainty require use of an exhaustive sampling over the possible values of the uncertain quantity \cite{kim2012physically, weisz2012pose}.
-To select a grasp with high quality this evaluation is often performed for a large set of potential grasps, which can be very time-consuming.
+Recent work motivated using knowledge of uncertainty to select grasps, but most methods for evaluating grasp quality in the presence of uncertainty requires exhaustive sampling over the possible values of the uncertain quantity \cite{kim2012physically, weisz2012pose}.
+To select a grasp with high quality this evaluation must be performed for a large set of potential grasps, which can be very time-consuming.
 However, when evaluating a set of grasps we may be able to determine the difference of quality between grasps with only a few samples and throw away grasps that are likely to be suboptimal \cite{kehoe2012estimating}.
 Thus, we can adaptively concentrate grasp quality evaluation on the grasps that are most likely to have the highest quality based on the evaluation done so far.
 
@@ -126,14 +128,14 @@ Convergance in regret of the bandit sampling method (red), compared to the tradi
 \end{figure}
 
 The multi-armed bandit (MAB) model for sequential decision making problems \cite{barto1998reinforcement, lai1985asymptotically, robbins1952some} provides a way to reason about selecting the next grasp to evaluate and the grasps to discard from consideration.
-The goal in a MAB model is to make a sequence of decisions over a set of possible options such that a measure of the expected reward of such decisions is maximized.
+The goal in a MAB model is to make a sequence of decisions over a set of possible options, or ``arms", such that a measure of the expected reward of such decisions is maximized.
 Solutions to the MAB model are particularly useful in applications where it is too expensive to fully evaluate a set of options; for example, in optimal design of clinical trials~\cite{simon1989optimal}, market pricing~\cite{rothschild1974two}, and choosing strategies for games~\cite{st2012online}.
 The budgeted multi-armed bandit model \cite{madani2004budgeted} is a specialization of the MAB model with a finite stopping time where the objective is to maximize the expected reward of the decision made at the stopping time, or equivalently to minimize ``simple regret", which is the difference between the true expected reward of an optimal arm and the true expected reward of the arm pulled at the stopping time.
 
-Our main contribution in this paper is formulating the problem of planning grasps with a high expected quality in the presence of uncertainty as a budgeted multi-armed bandit model.
-We use this formulation to rank a set of potential grasps by expected Ferrari-Canny quality \cite{ferrari1992} under shape uncertainty.
-We use a budgeted multi-armed bandit model since we would like to execute only one grasp plan after evaluating the expected quality of many potential grasp plans.
-We choose the model of uncertainty to be a Gaussian process implicit surface (GPIS), a Bayesian representation of shape uncertainty that seen recent use in various robotic applications~\cite{dragiev2011, hollinger2013}, however the method applies to any model of uncertainty that can be sampled.
+Our main contribution in this paper is formulating the problem of planning grasps with a high probabilty of success in the presence of uncertainty as a budgeted multi-armed bandit model.
+We use this formulation to rank a set of potential grasps by the probability of force closure \cite{christopoulos2007handling, kehoe2012toward} under shape uncertainty.
+We use a budgeted multi-armed bandit model since we would like to execute only one grasp plan after evaluating the probability of success for many potential grasp plans.
+We choose the model of uncertainty to be a Gaussian process implicit surface (GPIS), a Bayesian representation of shape uncertainty that has been used in various robotic applications~\cite{dragiev2011, hollinger2013}, but our method applies to any model of uncertainty that can be sampled.
 
 We also show how to estimate distributions on the contact points and surface normals and center of mass using a graphical model to represent uncertainty in motion, shape, pose and friction coefficient. Our experiments demonstrate that using the MAB sampling method improves the time to rank a set of 1000 grasps by 10x, an order of magnitude improvement, over the baseline Monte-Carlo approach. These promising results suggest that our MAB approach could be used on other types of uncertainty, such as pose, friction coefficent or center of mass and provide significant speed improvements. 
 
@@ -158,31 +160,35 @@ Mahler et al. used the GPIS representation to find locally optimal anti-podal gr
 The multi-armed bandit model, originally described by Robbins \cite{robbins1985some}, is a statistical decision model of an agent trying to make correct decisions, while gathering information at the same time.
 The traditional setting of a multi-armed bandit model is a gambler that has K independent slot machine arms and decides what machines to play, how many times to play each one, what order to play them in.
 A successful gambler would want to exploit the machine that currently yields the highest reward and explore new arms to see if they give better rewards.
-Developing a policy that successfully trades between exploration and exploitation has been the focus of extensive research, since the problem formulation \cite{bubeck2009pure}, \cite{robbins1952some}, \cite{bergemann2006bandit}. Solutions to the multi-armed bandit model have been used in applications for which evaluating all possible options is expensive or impossible, such as the optimal design of clinical trials~\cite{simon1989optimal}, market pricing~\cite{rothschild1974two}, and choosing strategies for games~\cite{st2012online}. 
+Developing a policy that successfully trades between exploration and exploitation has been the focus of extensive research since the problem formulation \cite{bubeck2009pure}, \cite{robbins1952some}, \cite{bergemann2006bandit}. Solutions to the multi-armed bandit model have been used in applications for which evaluating all possible options is expensive or impossible, such as the optimal design of clinical trials~\cite{simon1989optimal}, market pricing~\cite{rothschild1974two}, and choosing strategies for games~\cite{st2012online}. 
 
-Traditional bandit algorithms minimize cumulative regret, which is the sum over each sub-optimal arm of the number of times that arm is pulled times the difference between the true expected reward of an optimal arm and the true expected reward of that sub-optimal arm. There are a number of algorithms for developing policies to balance exploration and exploitation.
+A common measure of success in MAB problems is {\it regret}, the difference between the expected optimal reward and the expected reward of the selected arm on a single pull.
+Traditional bandit algorithms minimize cumulative regret,  the sum of regret over the entire sequence of arm choices. There are a number of algorithms for developing policies to balance exploration and exploitation.
 One algorithm is $\epsilon-$greedy, which is the idea of choosing the arm with the highest empirical expected reward with $1-\epsilon$ probability and choosing a random arm with probability $\epsilon$ \cite{barto1998reinforcement}.
 A class of algorithms that have stronger theoretical guarantees are from the Upper Confidence Bound (UCB) family.
-UCB algorithms maintain the empirical expected reward based off of pulling each arm multiple times, while also estimating an upper bound on the true expected reward using assumptions on the probability distribution of rewards and number of times each arm has been sampled. 
+For each arm, UCB algorithms maintain the empirical expected reward and an upper confidence bound on the true expected reward using concentration inequalities for the assumed reward distribution.
 
 %In practice, when the distribution on the rewards of arms is not known, the empirical methods such as $\epsilon-$greedy have shown to have better performance in some situations \cite{kuleshov}.
 
-Different to the normal bandit problem, we do not actually care about cumulative regret because the exploration and exploitation stage is decoupled from each other. For example in medical testing for patients it is important to always administer the best treatment for the given patient. However for the case of product testing in cosmetics it does not matter what products are administer in the testing phase, but only what final product is sold to the consumer. Thus, performance of Budgeted Multi-Armed Bandit models is measured in terms of the convergence of simple regret. Given a set of arms $\lbrace 1,...K \rbrace$ with respective mean rewards $\mu_1, ..., \mu_K$ and the optimal arm $\mu^* = \underset{k\in\lbrace 1, ..., K \rbrace}{\mbox{max}\mu_k}$. The regret at time $t$ is given by Eq. \ref{eq:simple_regret}, where $\mu_t$ is the estimate of the best arm at time $t$ from the previous observations. 
+In our case we only care about the regret at the time our decision of the optimal grasp needs to be made, decoupling the exploration and exploitation stages. 
+%For example in medical testing for patients it is important to always administer the best treatment for the given patient. %However for the case of product testing in cosmetics it does not matter what products are administer in the testing phase, but only what final product is sold to the consumer.
+This is an instance of the Budgeted Multi-Armed Bandit (BMAB) model, in which performance is measured in terms of simple regret after a fixed ``budget'' number of arm pulls. Thus our goal in the BMAB model is to identify the best arm by the end of our budget. Given a set of arms $\lbrace 1,...K \rbrace$ with respective mean rewards $\mu_1, ..., \mu_K$ and the optimal arm $\mu^* = \underset{k\in\lbrace 1, ..., K \rbrace}{\mbox{max}\mu_k}$. The simple regret at time $t$ is given by
 
 \vspace{-2ex}
 \begin{align}\label{eq:simple_regret}
 r_t = \mu^* - \mu_t
 \end{align}
+\noindent where $\mu_t$ is the estimate of the best arm at time $t$ from the previous observations. 
 
 Best arm identification has a wide variety of literature that largely falls into two camps: one where the algorithm terminates once a fixed confidence interval around the best arm is met and one where a set horizon is given and the algorithm has to choose a arm at that stopping time.
 
 \subsection{Fixed Confidence}
-In the fixed confidence setting the forecaster seeks to minimize the simple regret until a fixed confidence threshold is met at which point it terminates. Originally the problem was solved by racing algorithms, were methods used Hoeffding inequalities or the empirical Bernstein inequality to prune arms that were deemed not likely to succeed and used uniform allocation to explore the remaining set \cite{maron1993hoeffding} \cite{mnih2008empirical}. These methods were later extended to include not only the best arm, but return the top $m$ arms \cite{gabillon2012best}.
+In the fixed confidence setting the forecaster seeks to minimize the simple regret until a fixed confidence threshold is met at which point it terminates. Originally the problem was solved racing algorithms, which used Hoeffding inequalities or the empirical Bernstein inequality to prune arms that were likely to be suboptimal and used uniform allocation to explore the remaining set \cite{maron1993hoeffding} \cite{mnih2008empirical}. These methods were later extended to return the top $m$ arms instead of only the best arm\cite{gabillon2012best}.
 
 \subsection{Fixed Budget}
-In the fixed budget setting the algorithm is given a stopping time and needs to return the best arm at that stopping time. Audibert el al. demonstrated an algorithm called Successive Rejects that given a budget divides up the time each arm is pull an can return the best arm with near-optimal probability depending on the hardness of the problem \cite{audibert2010best}. Other UCB like methods have been proposed as well that measure a confidence gap and then pull the arm with the highest confidence interval \cite{gabillon2012best}. In \cite{bubeck2009pure}, they showed a link between simple regret and cumulative regret that allowed for the analysis of the existing bandit algorithms like UCB1.
+In the fixed budget setting the algorithm is given a stopping time and needs to return the best arm at that stopping time. Audibert el al. demonstrated an algorithm called Successive Rejects that divides up the total budget into successively shorter phases and discards the worst arm left at the end of each phase. This algorithm can return the best arm with near-optimal probability depending on the hardness of the problem \cite{audibert2010best}. In addition, UCB-like methods have been proposed that measure a confidence gap and then pull the arm with the highest confidence interval \cite{gabillon2012best}. For example in \cite{bubeck2009pure}, they showed a link between simple regret and cumulative regret that allowed for the analysis of the existing bandit algorithms like UCB1.
 
-For the case of choosing the best grasp, we are working in the scenario where the robot has a fix amount of time to choose a grasp and thus the fixed budget setting is more appropriate.
+In  this work we consider a setting in which a robot has a fixed computational time budget to select a grasp and thus the fixed budget setting is more appropriate.
 
 
 
@@ -190,7 +196,7 @@ For the case of choosing the best grasp, we are working in the scenario where th
 
 \section{Bandit Algorithms For Best Arm Identification}\label{sec:algorithms}
 \subsection{Thompson Sampling}
-Thompson Sampling is a Bayesian method for the multi-armed bandit problem. The main idea behind it is to update the conjugate prior for the distribution of the arm recently pulled. Then sample from the prior distribution on all arms and pull the arm with the highest sample drawn. The full algorithm is shown in Algorithm 1.  Empirically this method has been shown to outperform frequentist methods like UCB \cite{chapelle2011empirical} 
+Thompson Sampling is a Bayesian method for the multi-armed bandit problem. The main idea behind it is to update the conjugate prior for the distribution of the arm recently pulled, then sample from the prior distribution on all arms and pull the arm with the highest sample drawn. The full algorithm is shown in Algorithm 1.  Empirically this method has been shown to outperform frequentist methods like UCB in certain settings \cite{chapelle2011empirical} 
 
 \begin{algorithm}
  \KwResult{Best Arm, $g^*$ }
@@ -209,7 +215,7 @@ Thompson Sampling is a Bayesian method for the multi-armed bandit problem. The m
 
 
 \subsection{Upper Confidence Bound (UCB)}
-The UCB strategy was the first strategy shown to have asymptotic logarithmic regret \cite{lai1985asymptotically} for distributions with bounded rewards. UCB estimates an empirical confidence bound for each arm based on the observations seen so far. Then it pulls the arm with the highest confidence bound. The confidence interval is derived from various concentration inequalities and assumes the reward function is bounded. The algorithm is in Algorithm 2 and assumes a Beta-Bernoulli Distribution, which is the case in our grasping. 
+The UCB strategy was the first strategy shown to have asymptotic logarithmic regret \cite{lai1985asymptotically} for distributions with bounded rewards. UCB estimates an empirical confidence bound for each arm based on the observations seen so far., then pulls the arm with the highest confidence bound. The confidence interval is derived from various concentration inequalities. The algorithm is in Algorithm 2 and assumes a Beta-Bernoulli Distribution, which matches our assumption of a 0-1 success measure for grasping. 
 
 \begin{algorithm}
  \KwResult{Best Arm, $g^*$ }
@@ -224,9 +230,9 @@ The UCB strategy was the first strategy shown to have asymptotic logarithmic reg
 \end{algorithm}
 
 \subsection{The Gittins Index Method} 
-One possible solution to solve the MAB problem is to treat is as an Markov Decision Process (MDP) and use Markov Decision theory. This solution makes a lot of sense when the distribution is known because the all elements in the standard MDP tuple, $\lbrace S,A,T,R,\gamma \rbrace$, would be known and it is optimal with respect $\gamma$. 
+One possible solution to solve the MAB problem is to treat it as an Markov Decision Process (MDP) and use Markov Decision theory. This solution makes a lot of sense when the distribution is known because the all elements in the standard MDP tuple, $\lbrace S,A,T,R,\gamma \rbrace$, would be known and it is optimal with respect $\gamma$. 
 
-However, the \textit{curse of dimensionality} effects performance because if you have $K$ arms, a finite horizon of $T$ and a Beta-Bernoulli distribution on your arms then your state space is on the order of $T^{2*K}$. Hence the complexity of solving MAB using Markov Decision theory increases exponentially with the number of bandit processes. A key insight though was given by Gittins, who showed that instead of solving the $k$-dimensional MDP one can instead solve a $k$ 1-dimensional optimization problems: for each arm $i$, $i= 1,...,k$, and for each state of $x^i = \lbrace \alpha_0 +S_t, \beta_0 +F_t \rbrace^i$, where $S_t$ and $F_t$ correspond to the number of success and failures at pull $t$. 
+However, the curse of dimensionality effects performance because if you have $K$ arms, a finite horizon of $T$ and a Beta-Bernoulli distribution on your arms then your state space is on the order of $T^{2*K}$. Hence the complexity of solving MAB using Markov Decision theory increases exponentially with the number of bandit processes. A key insight though was given by Gittins, who showed that instead of solving the $k$-dimensional MDP one can instead solve a $k$ 1-dimensional optimization problems: for each arm $i$, $i= 1,...,k$, and for each state of $x^i = \lbrace \alpha_0 +S_t, \beta_0 +F_t \rbrace^i$, where $S_t$ and $F_t$ correspond to the number of success and failures at pull $t$. 
 
 
 \vspace{-2ex}
@@ -259,7 +265,7 @@ The indices can be considered as a computation of the value in choosing an arm c
 Before we present the problem definition, we introduce a way to evaluate the quality of a grasp and our grasping model, the line of action.
 
 \subsection{Grasp Metric}
-In their work over two decades ago Ferrari and Canny \cite{ferrari1992}, demonstrated a method to rank grasps by considering their contact points and surface normals. Importantly the magnitude of Q yields a measurement that allows one to rank grasps by their physical stability and evaluate the property of force-closure. Furthermore, it has wide spread use in grasp packages like GraspIT\cite{miller2004graspit}, OpenGrasp\cite{73} and Simox \cite{vahrenkamp2010simo}, which motivates studying its effect with uncertainties. 
+In their work over two decades ago Ferrari and Canny \cite{ferrari1992}, demonstrated a method to rank grasps by considering their contact points and surface normals. The magnitude of Q allows one to rank grasps by their physical stability and to evaluate the property of force-closure. Furthermore, it has wide spread use in grasp packages like GraspIT\cite{miller2004graspit}, OpenGrasp\cite{73} and Simox \cite{vahrenkamp2010simo}, which motivates studying its effect with uncertainties. 
 
 The $L^1$ version of the metric works by taking as input the contact points $\textbf{c}_1,...,\textbf{c}_m \in \mathcal{R}^2$, surface normals $\textbf{n}_1,...,\textbf{n}_m \in \mathcal{R}^2$, center of mass $\textbf{z}$ and friction coefficient $\mu$. Then constructing a convex hull around the wrenches made up of those parameters and finding the radius of the largest unit ball centered at the origin in wrench space. A wrench is defined as concatenation of a force and torque vector.  If the convex hull does not enclose the origin, the grasp is not in force-closure. Formally, not being in force closure means there exists a wrench for which the grasp is not able to resist against, which occurs if the Quality metric $Q$ is less than zero. Thus a grasp can be parameterized by the following tuple $g = ( \textbf{c}_1,...,\textbf{c}_m,\textbf{n}_1,...,\textbf{n}_m,\mu, \textbf{z} )$.
 
@@ -278,8 +284,16 @@ In this work we consider the following types of uncertainty shape, pose, movemen
 For shape we use a GPIS representation, which is explained in detail in Sec. \ref{sec:Appendix}. Essentially, a GPIS is a Gaussian distribution on a signed distance function that describes the workspace. The GPIS can be sampled from via $N(\mu(x),\Sigma(x))$, where $\mu(x)$ and $\Sigma(x)$ are the mean and covariance functions of the GPIS. For our application we set $x$ to discretized points along each line of action $\gamma_i$ and for each sample see where the sample is equal to zero.  We will furthermore represent the $\mu(x)$ and $\Sigma(x)$ as the tuple $\theta = \rbrace\mu(x), \Sigma(x)\lbrace$. 
 
 \subsubsection{Distribution on Pose}
- \todo{Jeff can you write about Pose}
- 
+In typical robotics applications the pose of objects in the envinroment is determined by registering the object frame-of-reference to the control frame-of-reference used for grasp execution.
+Therefore pose uncertainty may come from two primary sources a) uncertainty about the registration of the robot's grasping frame-of-reference to its sensing frame-of-reference and b) uncertainty about the pose of known object models in the robot's sensor data.
+The effects of pose uncertainty on robotic grasping has been studied by ~\cite{}.
+
+The pose of an object $T$ is a member of the Lie Algebra $SO(3)$ in 3-dimensional space (something analogous holds for 2D).
+This matrix is defined by 3 rotation angles $\bw = (\alpha, \beta, \gamma)$ and 3 translation coordinates $\bt = (t_x, t_y, t_z)$, summarized in parameter vector $\xi = (\bw, \bt)$.
+One challenge with pose is that uncertainty in the pose matrix $T$ used to apply transformations is needed in practice, but uncertainty is mathematically more easily to quantify in terms of the pose parameters $\xi$.
+Thus, the following transformations can be used to quantify uncertainty in the matrix $T$ as a function of Gaussian uncertainty in the parameters $\xi$:
+
+\todo{Jeff: Put equations here. Sorry my internet is too slow to download the paper i need right now}
  
  \subsubsection{Distribution on Movement}
  In practice a robot may not be able to execute a desired

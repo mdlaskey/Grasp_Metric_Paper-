@@ -135,7 +135,7 @@ We use this formulation to rank a set of potential grasps by expected Ferrari-Ca
 We use a budgeted multi-armed bandit model since we would like to execute only one grasp plan after evaluating the expected quality of many potential grasp plans.
 We choose the model of uncertainty to be a Gaussian process implicit surface (GPIS), a Bayesian representation of shape uncertainty that seen recent use in various robotic applications~\cite{dragiev2011, hollinger2013}, however the method applies to any model of uncertainty that can be sampled.
 
-We also show how to estimate distributions on the contact points and surface normals and center of mass using a GPIS shape representation. We then leverage these distributions to reduce the computational complexity of sampling from the GPIS model from $O(n^6)$ to $O(n^3)$, where the workspace is discretized as a $n \times n$ grid. Our experiments demonstrate that using the MAB sampling method improves the time to rank a set of 1000 grasps by 10x, an order of magnitude improvement, over the baseline Monte-Carlo approach. These promising results suggest that our MAB approach could be used on other types of uncertainty, such as pose, friction coefficent or center of mass and provide significant speed improvements. 
+We also show how to estimate distributions on the contact points and surface normals and center of mass using a graphical model to represent uncertainty in motion, shape, pose and friction coefficient. Our experiments demonstrate that using the MAB sampling method improves the time to rank a set of 1000 grasps by 10x, an order of magnitude improvement, over the baseline Monte-Carlo approach. These promising results suggest that our MAB approach could be used on other types of uncertainty, such as pose, friction coefficent or center of mass and provide significant speed improvements. 
 
 \section{Related Work}
 
@@ -275,7 +275,7 @@ In this work we consider the following types of uncertainty shape, pose, movemen
 
 \subsubsection{Distribution on Shape}
 
-For shape we use a GPIS representation, which is explained in detail in Sec. \ref{sec:Appendix}. Essenttialy, a GPIS is a Gaussian distribution on a signed distance function that describes the workspace. The GPIS can be sampled from vian $N(\mu(x),\Sigma(x))$, where $\mu(x)$ and $\Sigma(x)$ are the mean and covariance functions of the GPIS. For our application we set $x$ to discretized points along each line of action $\gamma_i$ and for each sample see where the sample is equal to zero.  We will furthermore represent the $\mu(x)$ and $\Sigma(x)$ as the tuple $\theta = \rbrace\mu(x), \Sigma(x)\lbrace$. 
+For shape we use a GPIS representation, which is explained in detail in Sec. \ref{sec:Appendix}. Essentially, a GPIS is a Gaussian distribution on a signed distance function that describes the workspace. The GPIS can be sampled from via $N(\mu(x),\Sigma(x))$, where $\mu(x)$ and $\Sigma(x)$ are the mean and covariance functions of the GPIS. For our application we set $x$ to discretized points along each line of action $\gamma_i$ and for each sample see where the sample is equal to zero.  We will furthermore represent the $\mu(x)$ and $\Sigma(x)$ as the tuple $\theta = \rbrace\mu(x), \Sigma(x)\lbrace$. 
 
 \subsubsection{Distribution on Pose}
  \todo{Jeff can you write about Pose}
@@ -291,7 +291,7 @@ registration to the object \cite{kehoe2012estimating}. To handle this uncertaini
 As shown in \cite{zheng2005}, uncertainty in friction coefficient can play a large role in grasp quality evaluation. The expected friction coefficient $E(\mu)$ can be derived by means of object classification and a look up table. However, because their could be material in between the objects surface and the robot gripper (i.e. dust, water, moisture). It is important to assume noise.  Thus, we purpose sampling the friction coefficient from a Gaussian around the expected friction coefficient $\mu \sim N(E(\mu),\sigma_{\mu}^2)$. 
  
  
-Thus to evaluate the $P(Q(\Gamma)>0)$, we sample from the graphical model shown in Fig. \ref{fig:graphical_model}. In the naive way sampling from the graphical model could be slow, however our goal is not to actually determine the probability of force closure but instead to determine the best grasp in a set $G$. Thus, our BMAB algorithms can efficiently sample from theses priors on the different types of uncertainty.  
+To evaluate the $P(Q(\Gamma)>0)$, we sample from the graphical model shown in Fig. \ref{fig:graphical_model}. In the naive way sampling from the graphical model could be slow, however our goal is not to actually determine the probability of force closure but instead to determine the best grasp in a set $G$. Thus, our BMAB algorithms can efficiently sample from theses priors on the different types of uncertainty.  
  
  
  
@@ -396,24 +396,23 @@ Since, we have framed the method as a Beta-Bernoulli problem we can use the meth
 
 
 \section{Calculating the Probability of Force Closure}
-Given a proposed grasp plan $\Gamma$ , we draw samples from the shape distribution $P (S )$, the distribution on center of mass $P (z)$ and the distribution on friction coefficient $P (\mu)$. The distribution on force closure can then be estimated as Beta- Bernoulli Process with shape parameters $\alpha$ and $\beta$. Thus, we can write the probability of force closure as follows
+Given a proposed grasp plan $\Gamma$ , we draw samples from the shape distribution $P (\theta )$, the distribution on center of pose $P (\Delta)$, distribution on motion $p(\rho)$ and the distribution on friction coefficient $P (\mu)$. The distribution on force closure can then be estimated as Beta- Bernoulli Process with shape parameters $\alpha$ and $\beta$. Thus, we can write the expected probability of force closure as follows
 
 
 \vspace{-2ex}
 \begin{align}\label{eq:shape_sampling}
-P(Q(\Gamma|S,\mu,z) > 0) = \frac{\alpha}{\alpha + \beta}
+P(Q(\Gamma|\theta,\mu,\Delta,\rho) > 0) = \frac{\alpha}{\alpha + \beta}
 \end{align}
 
+Where $Q(\Gamma|S,\mu,z)$ is the grasp quality that is computed on a shape sample drawn from $p(S)$,$p(\Delta)$,$p(\rho)$ and $p(\mu)$. To compute this we intersect the zero crossing of the level set with the propose grasp plan $\Gamma$ and determine the parameters $g$, this has been the approach taken in previous work  \cite{kehoe2012estimating}, \cite{kehoe2012toward},  \cite{christopoulos2007handling}. Whats interesting in the context of a BMAB problem our complicated graphical model in Fig. \ref{fig:graphical_model}, can now be replaced by \ref{fig:beta_model} and we only need to estimate $\alpha$ and $\beta$ to determine grasp quality. It is this intuition that helps explain the performance of the BMAB algorithm. 
 
-
-Where $Q(\Gamma|S,\mu,z)$ is the grasp quality that is computed on a shape sample drawn from $p(S)$,$p(z)$,$p(\mu)$. To compute this we intersect the zero crossing of the level set with the propose grasp plan $\Gamma$ and determine the parameters $g$, this has been the approach taken in previous work  \cite{kehoe2012estimating}, \cite{kehoe2012toward},  \cite{christopoulos2007handling}. See Fig. \ref{fig:shape_samples} for an example of what samples drawn from $p(S)$ induced by GPIS look like. For computational reasons we approximate the integral via Monte-Carlo Integration. We use importance sampling to draw from the distribution induced by GPIS and  count the number of sucesses of the grasp $S$ and the number of failures $F$ and calculate the following
-
-\vspace{-2ex}
-\begin{align}\label{eq:shape_sampling}
-P(Q(\Gamma|S,\mu,z) > 0) \approx \frac{(S + \alpha_0)}{(\alpha_0 + S) +( \beta_0 + F)}
-\end{align}
-
-Here $\alpha_0$ and $\beta_0$ correspond to the initial shape parameters, we initialize them both to $\alpha_0 = \beta_0 = 1$ to reflect a uniform distribution on the probability of force closure . 
+\begin{figure}[ht!]
+\centering
+\includegraphics[width = 2cm, height = 4cm]{figures/Slide9.jpg}
+\caption{A graphical model that illustrates the relationship between the Bernoulli distribution of the probability force closure and its conjugate prior Beta distribution that has two shape parameters $\alpha$ and $\beta$ }
+\vspace*{-10pt}
+\label{fig:beta_model}
+\end{figure}
 
 
 \section{Experiments}
@@ -426,7 +425,7 @@ We did experiments for the case of two hard contacts in 2-D, however our methods
 
 
 \subsection{Multi-Armed Bandit Experiments}
-
+\todo{Running experiments over break, going to fill this in as results come in}
 We consider the problem of selecting the best grasp plan, $\Gamma^*$ out of a set $G$. For our experiments we look at selecting the best grasp out of a size of $|G| = 1000$. In Fig. \ref{fig:simple_regret}, we plotted the simple regret averaged over 100 of the shapes in our data set and compare the different methods (UCB, Thompson, Gittins and the naive random allocation). We initialize both the Monte-Carlo and bandit technique by sampling each grasp 1 time. We draw samples from our calculated distributions $p(g)$.  Interestingly, Gittins and Thompson converge much faster than random and UCB. In Fig. \ref{fig:pulls_per_grasp}, you can see that Gittins and Thompson allocate grasp samples to only the grasps of high quality, thus it is quickly able to ignore the low quality grasps. UCB takes a more conservative approach to sample allocation, which leads to poor performance in the best arm identification problem \cite{bubeck2009pure}.
 
 
@@ -523,27 +522,8 @@ We construct a GPIS by learning a Gaussian process to fit measurements of a sign
 
 
 
-\subsection{Calculating the Probability of Force Closure}
-Given a proposed grasp plan $\Gamma$ , we draw samples from the shape distribution $P (S )$, the distribution on center of mass $P (z)$ and the distribution on friction coefficient $P (\mu)$. The distribution on force closure can then be estimated as Beta- Bernoulli Process with shape parameters $\alpha$ and $\beta$. Thus, we can write the probability of force closure as follows
-
-
-\vspace{-2ex}
-\begin{align}\label{eq:shape_sampling}
-P(Q(\Gamma|S,\mu,z) > 0) = \frac{\alpha}{\alpha + \beta}
-\end{align}
-
-
-
-Where $Q(\Gamma|S,\mu,z)$ is the grasp quality that is computed on a shape sample drawn from $p(S)$,$p(z)$,$p(\mu)$. To compute this we intersect the zero crossing of the level set with the propose grasp plan $\Gamma$ and determine the parameters $g$, this has been the approach taken in previous work  \cite{kehoe2012estimating}, \cite{kehoe2012toward},  \cite{christopoulos2007handling}. See Fig. \ref{fig:shape_samples} for an example of what samples drawn from $p(S)$ induced by GPIS look like. For computational reasons we approximate the integral via Monte-Carlo Integration. We use importance sampling to draw from the distribution induced by GPIS and  count the number of sucesses of the grasp $S$ and the number of failures $F$ and calculate the following
-
-
-
-\vspace{-2ex}
-\begin{align}\label{eq:shape_sampling}
-P(Q(\Gamma|S,\mu,z) > 0) \approx \frac{(S + \alpha_0)}{(\alpha_0 + S) +( \beta_0 + F)}
-\end{align}
-
-Here $\alpha_0$ and $\beta_0$ correspond to the initial shape parameters, we initialize them both to $\alpha_0 = \beta_0 = 1$ to reflect a uniform distribution on the probability of force closure . To compute the above distribution we must draw samples from $p(S)$. In order to draw shape samples from a GPIS, one needs to sample from signed distance function, $sd$, over the joint on all points in the workspace $\mathcal{W}$ or $p(sd(\mathcal{W}))$. Since this is a GPIS, we know the following 
+\subsection{Sampling Shape from GPIS Distribution }
+To compute the above distribution we must draw samples from $p(\theta)$. In order to draw shape samples from a GPIS, one needs to sample from signed distance function, $sd$, over the joint on all points in the workspace $\mathcal{W}$ or $p(sd(\mathcal{W}))$. Since this is a GPIS, we know the following 
 
 \begin{align}\label{eq:joint_shape}
 p(S) = p(sd(\mathcal{W})) \sim N(\mu(\mathcal{W}),\Sigma(\mathcal{W}))
@@ -578,7 +558,7 @@ p(g) = &\prod_{i=1}^mp\big(\textbf{c}_i,\textbf{n}_i|\gamma_i(t),\mu(x),\Sigma(x
 We will now show how these distributions can be computed and how the computational complexity for sampling from a grasp plan is reduced from $O(n^6)$ to $O(n^3)$ for a GPIS model. 
 
 
-\subsection{Distribution on Contact Points}\label{sec:contact} 
+\subsection{Sampling Line of Action from GPIS Distribution}\label{sec:contact} 
 We would like to find the distribution on contact point $\textbf{c}_i$. A contact point in terms of the GPIS and line of action model can be defined as the point, $t$, when the signed distance function is zero and no points before said point along the line have touched the surface. We express this as the following conditions: 
 
 \vspace{-2ex}

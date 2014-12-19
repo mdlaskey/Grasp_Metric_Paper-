@@ -85,7 +85,6 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {IV-B}Upper Confidence Bound (UCB)}{3}{subsection.4.2}}
 \@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces UCB for Beta-Bernoulli Process\relax }}{3}{algocf.2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {IV-C}The Gittins Index Method}{3}{subsection.4.3}}
-\newlabel{eq:git_indices}{{IV-C}{3}{The Gittins Index Method}{subsection.4.3}{}}
 \citation{katehakis1987multi}
 \citation{ferrari1992}
 \citation{miller2004graspit}
@@ -97,6 +96,7 @@
 \citation{kehoe2012estimating}
 \citation{mooring1986determination}
 \citation{zheng2005}
+\newlabel{eq:git_indices}{{IV-C}{4}{The Gittins Index Method}{subsection.4.3}{}}
 \@writefile{loa}{\contentsline {algocf}{\numberline {3}{\ignorespaces The Gittins Index Method for Beta-Bernoulli Process\relax }}{4}{algocf.3}}
 \@writefile{toc}{\contentsline {section}{\numberline {V}Preliminaries and Problem Definition}{4}{section.5}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {V-A}Grasp Metric}{4}{subsection.5.1}}
@@ -140,16 +140,17 @@
 \newlabel{fig:GPIS_MASS}{{4}{6}{\footnotesize Left: A surface with GPIS construction and expected center of mass (black X) Right: The distribution on the density of each point assuming uniform density\relax }{figure.caption.7}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {VIII}Calculating the Probability of Force Closure}{6}{section.8}}
 \newlabel{eq:shape_sampling}{{6}{6}{Calculating the Probability of Force Closure}{equation.8.6}{}}
-\newlabel{eq:shape_sampling}{{7}{6}{Calculating the Probability of Force Closure}{equation.8.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces A graphical model that illustrates the relationship between the Bernoulli distribution of the probability force closure and its conjugate prior Beta distribution that has two shape parameters $\alpha $ and $\beta $ \relax }}{6}{figure.caption.8}}
+\newlabel{fig:beta_model}{{5}{6}{A graphical model that illustrates the relationship between the Bernoulli distribution of the probability force closure and its conjugate prior Beta distribution that has two shape parameters $\alpha $ and $\beta $ \relax }{figure.caption.8}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {IX}Experiments}{6}{section.9}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {IX-A}Multi-Armed Bandit Experiments}{6}{subsection.9.1}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {IX-B}Sampling from Grasps vs. Shape}{6}{subsection.9.2}}
-\citation{mahler2015opt}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite  {brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite  {best_arm}\relax }}{7}{figure.caption.8}}
-\newlabel{fig:simple_regret}{{5}{7}{\footnotesize Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite {brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite {best_arm}\relax }{figure.caption.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Comparison of sample per grasp for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Silhouette Dataset \cite  {brown} with a set $|G|=1000$ for each shape. The best grasps are ranked 1 and worst are 1000. As you can see the Thompson and Gittins method have a tendency to pull grasps with high ranking, while UCB has a more conservative policy \cite  {best_arm}\relax }}{7}{figure.caption.9}}
-\newlabel{fig:pulls_per_grasp}{{6}{7}{\footnotesize Comparison of sample per grasp for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Silhouette Dataset \cite {brown} with a set $|G|=1000$ for each shape. The best grasps are ranked 1 and worst are 1000. As you can see the Thompson and Gittins method have a tendency to pull grasps with high ranking, while UCB has a more conservative policy \cite {best_arm}\relax }{figure.caption.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite  {brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite  {best_arm}\relax }}{7}{figure.caption.9}}
+\newlabel{fig:simple_regret}{{6}{7}{\footnotesize Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite {brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite {best_arm}\relax }{figure.caption.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Comparison of sample per grasp for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Silhouette Dataset \cite  {brown} with a set $|G|=1000$ for each shape. The best grasps are ranked 1 and worst are 1000. As you can see the Thompson and Gittins method have a tendency to pull grasps with high ranking, while UCB has a more conservative policy \cite  {best_arm}\relax }}{7}{figure.caption.10}}
+\newlabel{fig:pulls_per_grasp}{{7}{7}{\footnotesize Comparison of sample per grasp for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Silhouette Dataset \cite {brown} with a set $|G|=1000$ for each shape. The best grasps are ranked 1 and worst are 1000. As you can see the Thompson and Gittins method have a tendency to pull grasps with high ranking, while UCB has a more conservative policy \cite {best_arm}\relax }{figure.caption.10}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {X}Limitations}{7}{section.10}}
+\citation{mahler2015opt}
 \citation{panahi2014bounding}
 \citation{kehoe2012estimating}
 \citation{christopoulos2007handling}
@@ -172,13 +173,13 @@
 \bibcite{goldberg1990bayesian}{12}
 \bibcite{hollinger2013}{13}
 \bibcite{hsiao2011bayesian}{14}
-\bibcite{kehoe2012estimating}{15}
-\bibcite{kehoe2012toward}{16}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal  {R}))$ or shapes and Red is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }}{8}{figure.caption.10}}
-\newlabel{fig:speed_dif}{{7}{8}{\footnotesize Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal {R}))$ or shapes and Red is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }{figure.caption.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal  {R}))$ or shapes and Red is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }}{8}{figure.caption.11}}
+\newlabel{fig:speed_dif}{{8}{8}{\footnotesize Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal {R}))$ or shapes and Red is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. \relax }{figure.caption.11}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {XI}Conclusion}{8}{section.11}}
 \@writefile{toc}{\contentsline {section}{\numberline {XII}Future Work}{8}{section.12}}
-\@writefile{toc}{\contentsline {section}{References}{8}{section*.11}}
+\@writefile{toc}{\contentsline {section}{References}{8}{section*.12}}
+\bibcite{kehoe2012estimating}{15}
+\bibcite{kehoe2012toward}{16}
 \bibcite{kim2012physically}{17}
 \bibcite{laaksonen2012probabilistic}{18}
 \bibcite{lai1985asymptotically}{19}
@@ -206,31 +207,26 @@
 \citation{solak2003derivative}
 \citation{dragiev2011}
 \citation{williams2007}
-\citation{kehoe2012estimating}
-\citation{kehoe2012toward}
-\citation{christopoulos2007handling}
+\citation{petersen2008matrix}
 \@writefile{toc}{\contentsline {section}{\numberline {XIII}Appendix}{9}{section.13}}
 \newlabel{sec:Appendix}{{XIII}{9}{Appendix}{section.13}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {XIII-A}Gaussian Process (GP) Background}{9}{subsection.13.1}}
 \newlabel{sec:GP}{{XIII-A}{9}{Gaussian Process (GP) Background}{subsection.13.1}{}}
-\newlabel{eq:mean_gradient}{{9}{9}{Gaussian Process (GP) Background}{equation.13.9}{}}
-\newlabel{eq:cov_gradient}{{10}{9}{Gaussian Process (GP) Background}{equation.13.10}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {XIII-B}Calculating the Probability of Force Closure}{9}{subsection.13.2}}
-\newlabel{eq:shape_sampling}{{11}{9}{Calculating the Probability of Force Closure}{equation.13.11}{}}
-\newlabel{eq:shape_sampling}{{12}{9}{Calculating the Probability of Force Closure}{equation.13.12}{}}
-\citation{petersen2008matrix}
+\newlabel{eq:mean_gradient}{{8}{9}{Gaussian Process (GP) Background}{equation.13.8}{}}
+\newlabel{eq:cov_gradient}{{9}{9}{Gaussian Process (GP) Background}{equation.13.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {XIII-B}Sampling Shape from GPIS Distribution }{9}{subsection.13.2}}
+\newlabel{eq:joint_shape}{{10}{9}{Sampling Shape from GPIS Distribution}{equation.13.10}{}}
 \citation{mahler2015opt}
 \citation{mahler2015opt}
-\newlabel{eq:joint_shape}{{13}{10}{Calculating the Probability of Force Closure}{equation.13.13}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Shape samples drawn from Eq. \ref  {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }}{10}{figure.caption.12}}
-\newlabel{fig:shape_samples}{{8}{10}{Shape samples drawn from Eq. \ref {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }{figure.caption.12}{}}
-\newlabel{eq:joint_on_shape}{{14}{10}{Calculating the Probability of Force Closure}{equation.13.14}{}}
-\newlabel{eq:independence}{{15}{10}{Calculating the Probability of Force Closure}{equation.13.15}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {XIII-C}Distribution on Contact Points}{10}{subsection.13.3}}
-\newlabel{sec:contact}{{XIII-C}{10}{Distribution on Contact Points}{subsection.13.3}{}}
-\newlabel{eq:density_cond}{{16}{10}{Distribution on Contact Points}{equation.13.16}{}}
-\newlabel{eq:cdf_cond}{{17}{10}{Distribution on Contact Points}{equation.13.17}{}}
-\newlabel{eq:line_of_act_dist}{{18}{10}{Distribution on Contact Points}{equation.13.18}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Shape samples drawn from Eq. \ref  {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }}{10}{figure.caption.13}}
+\newlabel{fig:shape_samples}{{9}{10}{Shape samples drawn from Eq. \ref {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }{figure.caption.13}{}}
+\newlabel{eq:joint_on_shape}{{11}{10}{Sampling Shape from GPIS Distribution}{equation.13.11}{}}
+\newlabel{eq:independence}{{12}{10}{Sampling Shape from GPIS Distribution}{equation.13.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {XIII-C}Sampling Line of Action from GPIS Distribution}{10}{subsection.13.3}}
+\newlabel{sec:contact}{{XIII-C}{10}{Sampling Line of Action from GPIS Distribution}{subsection.13.3}{}}
+\newlabel{eq:density_cond}{{13}{10}{Sampling Line of Action from GPIS Distribution}{equation.13.13}{}}
+\newlabel{eq:cdf_cond}{{14}{10}{Sampling Line of Action from GPIS Distribution}{equation.13.14}{}}
+\newlabel{eq:line_of_act_dist}{{15}{10}{Sampling Line of Action from GPIS Distribution}{equation.13.15}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {XIII-D}Complexity Analysis on Sampling From Grasps Distributions}{10}{subsection.13.4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Visualization technique comes from \cite  {mahler2015opt}. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma (t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma (t)$ described by equation \ref  {eq:normal_dist}. We plotted the probability mass along the unit circle, to reflect the normalization of the surface normals. \relax }}{11}{figure.caption.13}}
-\newlabel{fig:GraspDist}{{9}{11}{\footnotesize (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Visualization technique comes from \cite {mahler2015opt}. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma (t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma (t)$ described by equation \ref {eq:normal_dist}. We plotted the probability mass along the unit circle, to reflect the normalization of the surface normals. \relax }{figure.caption.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Visualization technique comes from \cite  {mahler2015opt}. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma (t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma (t)$ described by equation \ref  {eq:normal_dist}. We plotted the probability mass along the unit circle, to reflect the normalization of the surface normals. \relax }}{11}{figure.caption.14}}
+\newlabel{fig:GraspDist}{{10}{11}{\footnotesize (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Visualization technique comes from \cite {mahler2015opt}. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma (t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma (t)$ described by equation \ref {eq:normal_dist}. We plotted the probability mass along the unit circle, to reflect the normalization of the surface normals. \relax }{figure.caption.14}{}}

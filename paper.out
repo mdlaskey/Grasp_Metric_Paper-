@@ -16,7 +16,7 @@
 \BOOKMARK [3][-]{subsubsection.5.3.3}{Distribution on Movement}{subsection.5.3}% 16
 \BOOKMARK [3][-]{subsubsection.5.3.4}{Distribution on Friction Coefficient}{subsection.5.3}% 17
 \BOOKMARK [2][-]{subsection.5.4}{Problem Definition}{section.5}% 18
-\BOOKMARK [1][-]{section.6}{Distribution of Grasp Parameters}{}% 19
+\BOOKMARK [1][-]{section.6}{Distributions on Grasp Parameters}{}% 19
 \BOOKMARK [2][-]{subsection.6.1}{Distribution on Surface Normals}{section.6}% 20
 \BOOKMARK [2][-]{subsection.6.2}{Expected Center of Mass}{section.6}% 21
 \BOOKMARK [1][-]{section.7}{Multi-Armed Bandits for Grasp Selection}{}% 22
@@ -31,5 +31,3 @@
 \BOOKMARK [1][-]{section.13}{Appendix}{}% 31
 \BOOKMARK [2][-]{subsection.13.1}{Gaussian Process \(GP\) Background}{section.13}% 32
 \BOOKMARK [2][-]{subsection.13.2}{Sampling Shape from GPIS Distribution }{section.13}% 33
-\BOOKMARK [2][-]{subsection.13.3}{Sampling Line of Action from GPIS Distribution}{section.13}% 34
-\BOOKMARK [2][-]{subsection.13.4}{Complexity Analysis on Sampling From Grasps Distributions}{section.13}% 35

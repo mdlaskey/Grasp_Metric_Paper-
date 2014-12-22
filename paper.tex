@@ -153,7 +153,7 @@ MCMC simplified sampling from a complicated joint distribution on pose and shape
 We chose to study our MAB sampling method for shape uncertainty using a Gaussian process implicit surface representation. Our decision to use this uncertainty model is based on GPIS's ability to combine various modes of noise observations such as tactile, laser and visual~\cite{rasmussen2006, williams2007, dragiev2011} and its recent use in modeling uncertainty for a number of robotic applications.
 Hollinger et al. used GPIS as a model of uncertainty and performed active sensing on the hulls in underwater boats \cite{hollinger2013}.
 Dragiev et al. showed how GPIS can enable a grasp controller on the continuous signed distance function \cite{dragiev2011}.
-Mahler et al. used the GPIS representation to find locally optimal anti-podal grasps by framing grasp planning as an optimization problem \cite{mahler2015opt}. 
+Mahler et al. used the GPIS representation to find locally optimal anti-podal grasps by framing grasp planning as an optimization problem \cite{mahler2015opt}.However, when evaulating his locally optimal grasps they resorted to exhaustive MC sampling over the distributions of grasp quality. We purpose an adaptive sampling approach known as the Multi-Armed Bandit Model. 
 
 
 \section{Multi-Armed Bandit Model}
@@ -188,12 +188,9 @@ In the fixed confidence setting the forecaster seeks to minimize the simple regr
 \subsection{Fixed Budget}
 In the fixed budget setting the algorithm is given a stopping time and needs to return the best arm at that stopping time. Audibert el al. demonstrated an algorithm called Successive Rejects that divides up the total budget into successively shorter phases and discards the worst arm left at the end of each phase. This algorithm can return the best arm with near-optimal probability depending on the hardness of the problem \cite{audibert2010best}. In addition, UCB-like methods have been proposed that measure a confidence gap and then pull the arm with the highest confidence interval \cite{gabillon2012best}. For example in \cite{bubeck2009pure}, they showed a link between simple regret and cumulative regret that allowed for the analysis of the existing bandit algorithms like UCB1.
 
-In  this work we consider a setting in which a robot has a fixed computational time budget to select a grasp and thus the fixed budget setting is more appropriate.
+In  this work we consider a setting in which a robot has a fixed computational time limit to select a grasp and thus the fixed budget setting is more appropriate. The time limit can be chosen via repeatibility experiments on a desire task. In Section \ref{sec:bandit_algorithm}, we will discuss some of the specific budgeted multi-armed bandit algorithms that are used in practice. 
 
-
-
-
-
+\label{sec:bandit_algorithm}
 \section{Bandit Algorithms For Best Arm Identification}\label{sec:algorithms}
 \subsection{Thompson Sampling}
 Thompson Sampling is a Bayesian method for the multi-armed bandit problem. The main idea behind it is to update the conjugate prior for the distribution of the arm recently pulled, then sample from the prior distribution on all arms and pull the arm with the highest sample drawn. The full algorithm is shown in Algorithm 1.  Empirically this method has been shown to outperform frequentist methods like UCB in certain settings \cite{chapelle2011empirical} 
@@ -314,7 +311,7 @@ To evaluate the $P(Q(\Gamma)>0)$, we sample from the graphical model shown in Fi
 
 \begin{figure}[ht!]
 \centering
-\includegraphics[width = 6cm, height = 4cm]{figures/Slide8.jpg}
+\includegraphics[width = 6cm, height = 6cm]{figures/Slide8.jpg}
 \caption{A graphical model that illustrates the relationship between the different types of uncertainty in an object. Center of Mass uncertainty is dependent on the pose and shape of the object, however friction coefficient is independent of all other types. }
 \vspace*{-10pt}
 \label{fig:graphical_model}
@@ -340,18 +337,18 @@ We are interested in determining Eq. \ref{eq:problem_def} with respect to a chos
 \Gamma^* \in \underset{\Gamma \in G}{\mbox{argmax}} P(Q(\Gamma)>0)
 \end{align}
 
-\section{Distribution of Grasp Parameters}
+\section{Distributions on Grasp Parameters}
 \label{sec:distgrasp}
  
- To sample from $p(Q(\Gamma)>0)$, we need to sample from the distributions associated with a line of action $p(\textbf{n}_i,\textbf{c}_i|\gamma_i(t),\theta, \rho)$. Using Bayes rule and our graphical model we can rewrite this as 
+ To sample from $p(Q(\Gamma)>0)$, we need to sample from the distributions associated with a line of action $p(\textbf{n}_i,\textbf{c}_i|\gamma_i(t),\Delta,\theta, \rho)$. Using Bayes rule and our graphical model we can rewrite this as 
  
  \vspace{-2ex}
  \begin{align*}
- &p(\textbf{n}_i,\textbf{c}_i |\gamma_i(t),\theta,\rho)=\\
- &p(\textbf{n}_i|\textbf{c}_i,\gamma_i(t),\theta,\rho)p(\textbf{c}_i|\gamma_i(t),\theta,\rho)
+ &p(\textbf{n}_i,\textbf{c}_i |\gamma_i(t),\theta,\Delta,\rho)=\\
+ &p(\textbf{n}_i|\textbf{c}_i,\theta)p(\textbf{c}_i|\gamma_i(t),\theta,\rho,\Delta)
  \end{align*}
  
- In section \ref{sec:contact}, we look at how to sample from $p(\textbf{c}_i|\gamma_i(t),\mu(x),\Sigma(x))$ from a GPIS model. Then in section \ref{sec:normals}, we look at how to sample from $p(\textbf{n}_i|\textbf{c}_i,\gamma_i(t),\theta,\rho)$ and present a novel visualization technique for the distribution on surface normals. Lastly in section \ref{sec:mass}, we show a way to calculate the expected center of mass assuming a uniform mass distribution. 
+ In section \ref{sec:contact}, we look at how to draw shape sample from a GPIS model, which is used to compute $p(\textbf{c}_i|\gamma_i(t),\theta,\rho,\Delta)$ along with the other sampled distribution on pose ($\Delta$) and motion ($\rho$). Then in section \ref{sec:normals}, we look at how to sample from $p(\textbf{n}_i|\textbf{c}_i,\theta)$ and present a novel visualization technique for the distribution on surface normals. Lastly in section \ref{sec:mass}, we show a way to calculate the expected center of mass assuming a uniform mass distribution. 
  .
 \subsection{Distribution on Surface Normals}\label{sec:normals} 
 Using Eq. \ref{eq:mean_gradient} and Eq. \ref{eq:cov_gradient}, we can compute the mean of the gradient $ \mu_{\nabla}(x)$ and the covariance of the gradient $\Sigma_{\nabla}(x)$ respectively. Thus we can compute the distribution around the surface normal for a given point in $\mathcal{W}$. We can now write 
@@ -539,11 +536,12 @@ We construct a GPIS by learning a Gaussian process to fit measurements of a sign
 \subsection{Sampling Shape from GPIS Distribution }
 To compute the above distribution we must draw samples from $p(\theta)$. In order to draw shape samples from a GPIS, one needs to sample from signed distance function, $sd$, over the joint on all points in the workspace $\mathcal{W}$ or $p(sd(\mathcal{W}))$. Since this is a GPIS, we know the following 
 
+\vspace{-2ex}
 \begin{align}\label{eq:joint_shape}
 p(S) = p(sd(\mathcal{W})) \sim N(\mu(\mathcal{W}),\Sigma(\mathcal{W}))
 \end{align}
 
-Thus if the workspace is an $n \times n$ grid, the joint distribution is an  $n^2$ multi-variate Gaussian, due to $sd:\mathbb{R}^2 \rightarrow \mathbb{R}$.  Sampling from a Gaussian involves inverting the covariance matrix and inversion is in the naive way scales with the cube of the number of input dimensions \cite{petersen2008matrix}. Thus the complexity of this operation is $O(n^6)$ in 2D and $O(n^9)$ in 3D. 
+Thus if the workspace is an $n \times n$ grid, the joint distribution is an  $n^2$ multi-variate Gaussian, due to $sd:\mathbb{R}^2 \rightarrow \mathbb{R}$.  Shape samples drawn from the distribution appear in Fig. \ref{fig:shape_samples}.
 
 
 \begin{figure}[ht!]
@@ -553,59 +551,6 @@ Thus if the workspace is an $n \times n$ grid, the joint distribution is an  $n^
 \vspace*{-10pt}
 \label{fig:shape_samples}
 \end{figure}
-
-
-To reduce complexity we propose sampling not from the shape distributions, but instead from the distributions on the grasps parameters themselves. We recall that a grasp according to our metric is defined as the tuple $g = ( \textbf{c}_1,...,\textbf{c}_m,\textbf{n}_1,...,\textbf{n}_m,\mu, z )$. We are thus interested in calculating $p(g|\Gamma,\mu(x),\Sigma(x))$. The distribution on a grasp is defined then as: 
-
-\begin{align}\label{eq:joint_on_shape}
-p(g) = p\big(\textbf{c}_1,...,\textbf{c}_m,\textbf{n}_1,...,\textbf{n}_m|\Gamma,\mu(x),\Sigma(x)\big)
-\end{align}
-
-We note here that we currently use the friction coefficient $\mu$ and the expected center of mass $\bar{z}$ as deterministic values. For grippers that do not approach along the same line of action (i.e. non-parallel jaw grippers) we make the assumption that each contact and normal pair is independent, or 
-
-\vspace{-2ex}
-\begin{align}\label{eq:independence}
-p(g) = &\prod_{i=1}^mp\big(\textbf{c}_i,\textbf{n}_i|\gamma_i(t),\mu(x),\Sigma(x)\big)
-\end{align}
-
-
-We will now show how these distributions can be computed and how the computational complexity for sampling from a grasp plan is reduced from $O(n^6)$ to $O(n^3)$ for a GPIS model. 
-
-
-\subsection{Sampling Line of Action from GPIS Distribution}\label{sec:contact} 
-We would like to find the distribution on contact point $\textbf{c}_i$. A contact point in terms of the GPIS and line of action model can be defined as the point, $t$, when the signed distance function is zero and no points before said point along the line have touched the surface. We express this as the following conditions: 
-
-\vspace{-2ex}
-\begin{align}
- &sd(\gamma(t)) = 0 \label{eq:density_cond} \\
-&sd(\gamma(\tau)) > 0, \: \forall \tau \in [a,t) \label{eq:cdf_cond}
-\end{align}
-
-We will now demonstrate how to efficiently sample from $p(\textbf{c}_i|\mu{x},\Sigma{x},\gamma_i{t})$
-
-The probability distribution along the line $\gamma(t)$ is given by:
-
-\vspace{-2ex}
-\begin{equation} \label{eq:line_of_act_dist}
-p\big(sd(\gamma(t)) ; \mu(t),\Sigma(t)\big) \ \forall t \in [a,b] 
-\end{equation}
-
-This gives the signed distance function distributions along the entire line of action in the workspace as a multivariate Gaussian. One could think of this as a marginalization of all other points in signed distance field except the line of action. To sample contact points, one can draw samples from Eq. \ref{fig:line_of_action} and iterate from $a$ to $b$ until they reach a point that satisfies  Eq. \ref{eq:density_cond} and Eq. \ref{eq:cdf_cond}. 
-
-\begin{figure*}[ht!]
-\centering
-\includegraphics[width = 17cm, height = 4.5cm]{figures/Slide04.jpg}
-\caption{ \footnotesize (Left to Right): Line of action for a given gripper on an uncertain surface representing a measuring cup. Visualization technique comes from \cite{mahler2015opt}. Distribution $p(c)$ as a function of $t$, the position along the line of action $\gamma(t)$. The two modes correspond to the different potential contact points, either the handle or the base of the cup. Lastly, the distribution on the surface normals (inward pointing) along $\gamma(t)$ described by equation \ref{eq:normal_dist}. We plotted the probability mass along the unit circle, to reflect the normalization of the surface normals. }
-\vspace*{-10pt}
-\label{fig:GraspDist}
-\end{figure*}
-
-
-\subsection{Complexity Analysis on Sampling From Grasps Distributions}
-
-After deriving each distribution,  we can now sample along each line of action $\gamma_i(t)$ from the joint distribution $p(\textbf{c}_i,\textbf{n}_i | \gamma_i(t))$, due to our independence assumption Eq. \ref{eq:independence}. This can be done by drawing samples from the GP for signed distance and normals simultaneously and using our projection technique for the normal distribution. 
-
-Having a distribution along a line of action model allows us to sample from those instead of the joint distribution $p(sd(\mathcal{W}))$. Assuming the number of discretization points along the line of action is $n$, sampling from this distribution for a single grasp is $O(n^3)$. However, each proposed grasp plan $\Gamma$ requires the distribution to be computed, so if we have $T=|G|$ then the complexity is $O(Tn^3)$. In practice, this should be much smaller than $O(n^6)$. 
 
 
 

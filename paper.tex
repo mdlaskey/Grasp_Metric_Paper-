@@ -427,7 +427,7 @@ Where $Q(\Gamma|S,\mu,z)$ is the grasp quality that is computed on a shape sampl
 
 
 \section{Experiments}
-For the experiments below we used common household objects.  The objects used can be found at \url{http://rll.berkeley.edu/grasping/} We manually created a 25 x 25 grid, by tracing a point cloud of the object on a table taken with a Primesense Carmine depth sensor. To accompany the SDF, we created an occupancy map, which holds 1 if the point cloud was observed and 0 if it was not observed, and a measurement noise map, which holds the variance 0-mean noise added to the SDF values. The parameters of the GPIS were selected using maximum likelihood on a held-out set of validation shapes. Our visualization technique follows the approach of \cite{mahler2015opt} and consisted of drawing many shape samples from the distribution and blurring accordingly to a histogram equalization scheme. 
+For the experiments we used the Brown Vision Lab 2D dataset, the same used in \cite{christopoulos2007handling}. We downsampled the image by a factor of 2 to create a 40 x 40 occupancy map, which holds 1 if the point cloud was observed and 0 if it was not observed, and a measurement noise map, which holds the variance 0-mean noise added to the SDF values. The parameters of the GPIS were selected using maximum likelihood on a held-out set of validation shapes. The noise of the motion, position and friction coefficient was set to the following variances $\sigma_{mu} = 0.4$, $\sigma_{rot} = 0.3$ rads,$\sigma_{trans} = 3$. Our visualization technique follows the approach of \cite{mahler2015opt} and consisted of drawing many shape samples from the distribution and blurring accordingly to a histogram equalization scheme. 
 
 We did experiments for the case of two hard contacts in 2-D, however our methods are not limited to this implementation. We drew random lines of actions $\gamma_1(t)$ and $\gamma_2(t)$ by sampling around a circle with radius $\sqrt{2}n$ and sampling the circles origin, then projecting onto the largest inscribing circle in the workspace. 
 
@@ -459,18 +459,11 @@ We consider the problem of selecting the best grasp plan, $\Gamma^*$ out of a se
 \end{figure*}
 
 
-\subsection{Sampling from Grasps vs. Shape}
-We first tested 1000 grasp plans and sampled each one 5000 times  and measured the RMS error between converged expected grasp plan qualities for sampling shape Eq. \ref{eq:shape_sampling} vs. grasps  Eq. \ref{eq:grasp_sampling} was 0.004. After confirming the distributions converged close to the same value, we show the computational complexity in Fig. \ref{fig:speed_dif} of the two methods for evaluating 100 grasps on an $n \times n$ grid. 
+\subsection{Sensitivity Analysis }
+We now will show how well the top two algorithms (Thompson and Gittens) perform under a variation in noise from friction coefficient uncertainty, shape uncertainty, rotational pose and translation pose. The experiments are performed with the same setup as before but now we sweep the variance parameters across a range for each parameter. The results are shown below 
 
 
-
-\begin{figure}[ht!]
-\centering
-\includegraphics[width=5.7cm,height=6cm]{figures/Slide12.jpg}
-\caption{ \footnotesize Time it took to sample from 100 grasp distributions for a given resulution of the workspace. Blue line is sampling from $p(sd(\mathcal{R}))$ or shapes and Red is sampling from $p(g)$ or the calculated distribution on grasps. As you can see sampling from the calculated distributions scales much better. }
-\vspace*{-10pt}
-\label{fig:speed_dif}
-\end{figure}
+\todo{Finish sensitivity analysis}
 
 \section{Limitations} 
 

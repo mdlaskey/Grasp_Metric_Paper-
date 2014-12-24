@@ -23,11 +23,11 @@
 \BOOKMARK [1][-]{section.8}{Calculating the Probability of Force Closure}{}% 23
 \BOOKMARK [1][-]{section.9}{Experiments}{}% 24
 \BOOKMARK [2][-]{subsection.9.1}{Multi-Armed Bandit Experiments}{section.9}% 25
-\BOOKMARK [2][-]{subsection.9.2}{Sampling from Grasps vs. Shape}{section.9}% 26
+\BOOKMARK [2][-]{subsection.9.2}{Sensitivity Analysis }{section.9}% 26
 \BOOKMARK [1][-]{section.10}{Limitations}{}% 27
 \BOOKMARK [1][-]{section.11}{Conclusion}{}% 28
 \BOOKMARK [1][-]{section.12}{Future Work}{}% 29
-\BOOKMARK [1][-]{section*.12}{References}{}% 30
+\BOOKMARK [1][-]{section*.11}{References}{}% 30
 \BOOKMARK [1][-]{section.13}{Appendix}{}% 31
 \BOOKMARK [2][-]{subsection.13.1}{Gaussian Process \(GP\) Background}{section.13}% 32
 \BOOKMARK [2][-]{subsection.13.2}{Sampling Shape from GPIS Distribution }{section.13}% 33

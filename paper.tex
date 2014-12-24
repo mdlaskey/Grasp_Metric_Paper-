@@ -343,18 +343,48 @@ We are interested in determining Eq. \ref{eq:problem_def} with respect to a chos
 \Gamma^* \in \underset{\Gamma \in G}{\mbox{argmax}} P(Q(\Gamma)>0)
 \end{align}
 
+\section{Multi-Armed Bandits for Grasp Selection}
+While a standard approach to solving the problem in Eq. \ref{eq:problem_def} would be to perform Monte-Carlo integration on each $\Gamma_i$ and compute the probability of force closure, we propose treating the problem as a multi-armed bandit model and forming a policy for selecting which grasp to sample. 
+In our setting, we have a probabilistic shape representation and would like to evaluate many potential grasps on that shape model.
+Motivated by limited computational resources we are interested in how to intelligently allocate sampling resources to efficiently find the best grasp plan $\Gamma^*$.
+Here each arm corresponds to a different grasp plan and pulling the arm is sampling from the graphical model in Fig. \ref{fig:graphical_model} and evaluating the arm's grasp plan on the sample.
+The reward for pulling an arm is 1 if the grasp is in force closure on the sample and 0 if the grasp is not in force closure. 
+
+We can now model the distribution on rewards as a Beta-Bernoulli process. Bernoulli distributions are formally the probability $\theta$ that an event has occurred and a Beta distribution is the conjugate prior on the probability of theta or $p(\theta)$. Beta distributions are specified by shape parameters $\alpha$ and $\beta$, to update the prior Beta distribution one simply adds the count of observed successes of the event to $\alpha$ and the count of the observed failures to $\beta$. The default $\alpha =1 $ and $\beta =1$ corresponds to a uniform distribution on $\theta$. 
+
+Given a proposed grasp plan $\Gamma$ , we draw samples from the shape distribution $P (\theta )$, the distribution on center of pose $P (\xi)$, distribution on motion $p(\rho)$ and the distribution on friction coefficient $P (\mu)$. The distribution on force closure can then be estimated as Beta- Bernoulli Process with shape parameters $\alpha$ and $\beta$. Thus, we can write the expected probability of force closure as follows
+
+
+\vspace{-2ex}
+\begin{align}\label{eq:shape_sampling}
+P(Q(\Gamma|\theta,\mu,\xi,\rho) > 0) = \frac{\alpha}{\alpha + \beta}
+\end{align}
+
+Where $Q(\Gamma|\theta,\xi,\mu,z)$ is the grasp quality that is computed on a shape sample drawn from $p(\theta)$,$p(\xi)$,$p(\rho)$ and $p(\mu)$. To compute this we intersect the zero crossing of the level set with the propose grasp plan $\Gamma$ and determine the parameters $g$, this has been the approach taken in previous work  \cite{kehoe2012estimating}, \cite{kehoe2012toward},  \cite{christopoulos2007handling}. Whats interesting in the context of a BMAB problem our complicated graphical model in Fig. \ref{fig:graphical_model}, is now equivalent in terms of inference to \ref{fig:beta_model} and we only need to estimate $\alpha$ and $\beta$ to determine grasp quality. It is this intuition that helps explain the performance of the BMAB algorithm. 
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width = 2cm, height = 4cm]{figures/Slide9.jpg}
+\caption{A graphical model that illustrates the relationship between the Bernoulli distribution of the probability force closure and its conjugate prior Beta distribution that has two shape parameters $\alpha$ and $\beta$ }
+\vspace*{-10pt}
+\label{fig:beta_model}
+\end{figure}
+
+
+
+
 \section{Distributions on Grasp Parameters}
 \label{sec:distgrasp}
  
- To sample from $p(Q(\Gamma)>0)$, we need to sample from the distributions associated with a line of action $p(\textbf{n}_i,\textbf{c}_i|\gamma_i(t),\Delta,\theta, \rho)$. Using Bayes rule and our graphical model we can rewrite this as 
+ To sample from $p(Q(\Gamma)>0)$, we need to sample from the distributions associated with a line of action $p(\textbf{n}_i,\textbf{c}_i|\gamma_i(t),\xi,\theta, \rho)$. Using Bayes rule and our graphical model we can rewrite this as 
  
  \vspace{-2ex}
  \begin{align*}
- &p(\textbf{n}_i,\textbf{c}_i |\gamma_i(t),\theta,\Delta,\rho)=\\
+ &p(\textbf{n}_i,\textbf{c}_i |\gamma_i(t),\theta,\xi,\rho)=\\
  &p(\textbf{n}_i|\textbf{c}_i,\theta)p(\textbf{c}_i|\gamma_i(t),\theta,\rho,\Delta)
  \end{align*}
  
- In section \ref{sec:contact}, we look at how to draw shape sample from a GPIS model, which is used to compute $p(\textbf{c}_i|\gamma_i(t),\theta,\rho,\Delta)$ along with the other sampled distribution on pose ($\Delta$) and motion ($\rho$). Then in section \ref{sec:normals}, we look at how to sample from $p(\textbf{n}_i|\textbf{c}_i,\theta)$ and present a novel visualization technique for the distribution on surface normals. Lastly in section \ref{sec:mass}, we show a way to calculate the expected center of mass assuming a uniform mass distribution. 
+ In section \ref{sec:Appendix}, we look at how to draw shape sample from a GPIS model, which is used to compute $p(\textbf{c}_i|\gamma_i(t),\theta,\rho,\xi)$ along with the other sampled distribution on pose ($\xi$) and motion ($\rho$). Then in section \ref{sec:normals}, we look at how to sample from $p(\textbf{n}_i|\textbf{c}_i,\theta)$ and present a novel visualization technique for the distribution on surface normals. Lastly in section \ref{sec:mass}, we show a way to calculate the expected center of mass assuming a uniform mass distribution. 
  .
 \subsection{Distribution on Surface Normals}\label{sec:normals} 
 Using Eq. \ref{eq:mean_gradient} and Eq. \ref{eq:cov_gradient}, we can compute the mean of the gradient $ \mu_{\nabla}(x)$ and the covariance of the gradient $\Sigma_{\nabla}(x)$ respectively. Thus we can compute the distribution around the surface normal for a given point in $\mathcal{W}$. We can now write 
@@ -397,39 +427,6 @@ Right: The distribution on the density of each point assuming uniform density}
 \end{figure}
 
 
-\section{Multi-Armed Bandits for Grasp Selection}
-While a standard approach to solving the problem in Eq. \ref{eq:problem_def} would be to perform Monte-Carlo integration on each $\Gamma_i$ and compute the expected grasp quality, we propose treating the problem as a multi-armed bandit model and forming a policy for selecting which grasp to sample. 
-In our setting, we have a probabilistic shape representation and would like to evaluate many potential grasps on that shape model.
-Motivated by limited computational resources we are interested in how to intelligently allocate sampling resources to efficiently find the best grasp plan $\Gamma^*$.
-Here each arm corresponds to a different grasp plan and pulling the arm is sampling from the graphical model in Fig. \ref{fig:graphical_model} and evaluating the arm's grasp plan on the sample.
-The reward for pulling an arm is 1 if the grasp is in force closure on the sample and 0 if the grasp is not in force closure. 
-
-We can now model the distribution on rewards as a Beta-Bernoulli process. Bernoulli distributions are formally the probability $\theta$ that an event has occurred and a Beta distribution is the conjugate prior on the probability of theta or $p(\theta)$. Beta distributions are specified by shape parameters $\alpha$ and $\beta$, to update the prior Beta distribution one simply adds the count of observed successes of the event to $\alpha$ and the count of the observed failures to $\beta$. The default $\alpha =1 $ and $\beta =1$ corresponds to a uniform distribution on $\theta$. 
-
-Since, we have framed the method as a Beta-Bernoulli problem we can use the methods in Sec.\ref{sec:algorithms} and obtain guarantees in the convergence properties of regret and overall performance of our policy for grasp allocation. 
-
-
-
-
-
-\section{Calculating the Probability of Force Closure}
-Given a proposed grasp plan $\Gamma$ , we draw samples from the shape distribution $P (\theta )$, the distribution on center of pose $P (\Delta)$, distribution on motion $p(\rho)$ and the distribution on friction coefficient $P (\mu)$. The distribution on force closure can then be estimated as Beta- Bernoulli Process with shape parameters $\alpha$ and $\beta$. Thus, we can write the expected probability of force closure as follows
-
-
-\vspace{-2ex}
-\begin{align}\label{eq:shape_sampling}
-P(Q(\Gamma|\theta,\mu,\Delta,\rho) > 0) = \frac{\alpha}{\alpha + \beta}
-\end{align}
-
-Where $Q(\Gamma|S,\mu,z)$ is the grasp quality that is computed on a shape sample drawn from $p(S)$,$p(\Delta)$,$p(\rho)$ and $p(\mu)$. To compute this we intersect the zero crossing of the level set with the propose grasp plan $\Gamma$ and determine the parameters $g$, this has been the approach taken in previous work  \cite{kehoe2012estimating}, \cite{kehoe2012toward},  \cite{christopoulos2007handling}. Whats interesting in the context of a BMAB problem our complicated graphical model in Fig. \ref{fig:graphical_model}, can now be replaced by \ref{fig:beta_model} and we only need to estimate $\alpha$ and $\beta$ to determine grasp quality. It is this intuition that helps explain the performance of the BMAB algorithm. 
-
-\begin{figure}[ht!]
-\centering
-\includegraphics[width = 2cm, height = 4cm]{figures/Slide9.jpg}
-\caption{A graphical model that illustrates the relationship between the Bernoulli distribution of the probability force closure and its conjugate prior Beta distribution that has two shape parameters $\alpha$ and $\beta$ }
-\vspace*{-10pt}
-\label{fig:beta_model}
-\end{figure}
 
 
 \section{Experiments}
@@ -470,6 +467,32 @@ We now will show how well the top two algorithms (Thompson and Gittens) perform 
 
 
 \todo{Finish sensitivity analysis}
+
+\begin{figure*}[ht!]
+\centering
+\includegraphics[width = 16.5cm, height = 13cm]{matlab_figures/sensitivity_rot.eps}
+\caption{ \footnotesize Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite{brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite{best_arm}}
+\vspace*{-10pt}
+\label{fig:simple_regret}
+\end{figure*}
+
+
+
+\begin{figure*}[ht!]
+\centering
+\includegraphics[width = 16.5cm, height = 13cm]{matlab_figures/sensitivity_trans.eps}
+\caption{ \footnotesize Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite{brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite{best_arm}}
+\vspace*{-10pt}
+\label{fig:simple_regret}
+\end{figure*}
+
+\begin{figure*}[ht!]
+\centering
+\includegraphics[width = 16.5cm, height = 13cm]{matlab_figures/sensitivity_fric.eps}
+\caption{ \footnotesize Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite{brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite{best_arm}}
+\vspace*{-10pt}
+\label{fig:simple_regret}
+\end{figure*}
 
 \section{Limitations} 
 

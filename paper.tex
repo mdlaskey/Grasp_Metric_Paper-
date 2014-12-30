@@ -190,10 +190,17 @@ In typical robotics applications the pose of objects in the envinroment is deter
 Therefore pose uncertainty may come from two primary sources a) uncertainty about the registration of the robot's grasping frame-of-reference to its sensing frame-of-reference and b) uncertainty about the pose of known object models in the robot's sensor data.
 The effects of pose uncertainty on robotic grasping has been studied by ~\cite{}.
 
-The pose of an object $T$ is a member of the Lie Algebra $SO(3)$ in 3-dimensional space (something analogous holds for 2D).
-This matrix is defined by 3 rotation angles $\bw = (\alpha, \beta, \gamma)$ and 3 translation coordinates $\bt = (t_x, t_y, t_z)$, summarized in parameter vector $\xi = (\bw, \bt)$.
+The pose of an object $T$ is a member of the Lie Algebra $SE(3)$ in 3-dimensional space (something analogous holds for 2D).
+This matrix is defined by 3 rotation angles $\bw = (\alpha, \beta, \gamma)$ and 3 translation coordinates $\bt = (t_x, t_y, t_z)$, summarized in parameter vector $\mathbf{\xi} = (\bw, \bt)^T \in \mathbb{R}^6$.
 One challenge with pose is that uncertainty in the pose matrix $T$ used to apply transformations is needed in practice, but uncertainty is mathematically more easily to quantify in terms of the pose parameters $\xi$.
-Thus, to sample a pose matrix $T$ one can sample from a distribution on $\xi$ and compute the poes as:
+Thus given a mean pose matrix $\bar{T} \in SE(3)$ and zero-mean uncertainty on the pose parameters $\mathbf{\xi} \sim \mN \left( \mathbf{0}, \Sigma \right)$ we define the pose random variable $T$ as
+
+\vspace{-2ex}
+\begin{align*}
+	T  &= \exp \left( \mathbf{\xi}^{\wedge} \right) \bar{T}
+\end{align*}
+
+\noindent where the $\wedge$ operator is defined as in \cite{barfoot2014Pose}.
 
 \todo{Jeff: Put equations here. Sorry my internet is too slow to download the paper i need right now}
  

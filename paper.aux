@@ -58,13 +58,46 @@
 \citation{hollinger2013}
 \citation{dragiev2011}
 \citation{mahler2015opt}
+\citation{ferrari1992}
+\citation{miller2004graspit}
+\citation{73}
+\citation{vahrenkamp2010simo}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{2}{section.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {III}Preliminaries and Problem Definition}{2}{section.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-A}}Grasp Metric}{2}{subsection.3.1}}
+\citation{christopoulos2007handling}
+\citation{kehoe2012toward}
+\citation{christopoulos2007handling}
+\citation{mahler}
+\citation{kehoe2012estimating}
+\citation{mooring1986determination}
+\citation{zheng2005}
+\citation{mahler2015gp}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-B}}Line of action}{3}{subsection.3.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-C}}Types of Uncertainty}{3}{subsection.3.3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-C}1}Distribution on Shape}{3}{subsubsection.3.3.1}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-C}2}Distribution on Pose}{3}{subsubsection.3.3.2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-C}3}Distribution on Motion}{3}{subsubsection.3.3.3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {\unhbox \voidb@x \hbox {III-C}4}Distribution on Friction Coefficient}{3}{subsubsection.3.3.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {III-D}}Problem Definition}{3}{subsection.3.4}}
+\newlabel{eq:problem_def}{{1}{3}{Problem Definition}{equation.3.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Multi-Armed Bandits for Grasp Selection}{3}{section.4}}
+\citation{kehoe2012estimating}
+\citation{kehoe2012toward}
+\citation{christopoulos2007handling}
 \citation{robbins1985some}
 \citation{bubeck2009pure}
 \citation{robbins1985some}
 \citation{bergemann2006bandit}
 \citation{barto1998reinforcement}
-\@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{2}{section.2}}
-\@writefile{toc}{\contentsline {section}{\numberline {III}Multi-Armed Bandit Model}{2}{section.3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces A graphical model that illustrates the relationship between the different types of uncertainty in an object. Center of Mass uncertainty is dependent on the pose and shape of the object, however friction coefficient is independent of all other types. \relax }}{4}{figure.caption.2}}
+\newlabel{fig:graphical_model}{{2}{4}{A graphical model that illustrates the relationship between the different types of uncertainty in an object. Center of Mass uncertainty is dependent on the pose and shape of the object, however friction coefficient is independent of all other types. \relax }{figure.caption.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Illustration of a grasp plan $\Gamma $ composed of two lines of action, $\gamma _1(t)$ and $\gamma _2(t)$\relax }}{4}{figure.caption.3}}
+\newlabel{fig:line_of_action}{{3}{4}{Illustration of a grasp plan $\Gamma $ composed of two lines of action, $\gamma _1(t)$ and $\gamma _2(t)$\relax }{figure.caption.3}{}}
+\newlabel{eq:shape_sampling}{{2}{4}{Multi-Armed Bandits for Grasp Selection}{equation.4.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces A graphical model that illustrates the relationship between the Bernoulli distribution of the probability force closure and its conjugate prior Beta distribution that has two shape parameters $\alpha $ and $\beta $ \relax }}{4}{figure.caption.4}}
+\newlabel{fig:beta_model}{{4}{4}{A graphical model that illustrates the relationship between the Bernoulli distribution of the probability force closure and its conjugate prior Beta distribution that has two shape parameters $\alpha $ and $\beta $ \relax }{figure.caption.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Multi-Armed Bandit Model}{4}{section.5}}
 \citation{maron1993hoeffding}
 \citation{mnih2008empirical}
 \citation{gabillon2012best}
@@ -73,67 +106,35 @@
 \citation{bubeck2009pure}
 \citation{chapelle2011empirical}
 \citation{lai1985asymptotically}
-\newlabel{eq:simple_regret}{{1}{3}{Multi-Armed Bandit Model}{equation.3.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {III-A}Fixed Confidence}{3}{subsection.3.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {III-B}Fixed Budget}{3}{subsection.3.2}}
-\newlabel{sec:bandit_algorithm}{{III-B}{3}{Fixed Budget}{subsection.3.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {IV}Bandit Algorithms For Best Arm Identification}{3}{section.4}}
-\newlabel{sec:algorithms}{{IV}{3}{Bandit Algorithms For Best Arm Identification}{section.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {IV-A}Thompson Sampling}{3}{subsection.4.1}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces Thompson Sampling for Beta-Bernoulli Process\relax }}{3}{algocf.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {IV-B}Upper Confidence Bound (UCB)}{3}{subsection.4.2}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces UCB for Beta-Bernoulli Process\relax }}{3}{algocf.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {IV-C}The Gittins Index Method}{3}{subsection.4.3}}
+\newlabel{eq:simple_regret}{{3}{5}{Multi-Armed Bandit Model}{equation.5.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-A}}Fixed Confidence}{5}{subsection.5.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {V-B}}Fixed Budget}{5}{subsection.5.2}}
+\newlabel{sec:bandit_algorithm}{{\unhbox \voidb@x \hbox {V-B}}{5}{Fixed Budget}{subsection.5.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Bandit Algorithms For Best Arm Identification}{5}{section.6}}
+\newlabel{sec:algorithms}{{VI}{5}{Bandit Algorithms For Best Arm Identification}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {VI-A}}Thompson Sampling}{5}{subsection.6.1}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces Thompson Sampling for Beta-Bernoulli Process\relax }}{5}{algocf.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {VI-B}}Upper Confidence Bound (UCB)}{5}{subsection.6.2}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces UCB for Beta-Bernoulli Process\relax }}{5}{algocf.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {VI-C}}The Gittins Index Method}{5}{subsection.6.3}}
 \citation{katehakis1987multi}
-\citation{ferrari1992}
-\citation{miller2004graspit}
-\citation{73}
-\citation{vahrenkamp2010simo}
-\citation{christopoulos2007handling}
-\citation{kehoe2012toward}
-\citation{christopoulos2007handling}
-\newlabel{eq:git_indices}{{IV-C}{4}{The Gittins Index Method}{subsection.4.3}{}}
-\@writefile{loa}{\contentsline {algocf}{\numberline {3}{\ignorespaces The Gittins Index Method for Beta-Bernoulli Process\relax }}{4}{algocf.3}}
-\@writefile{toc}{\contentsline {section}{\numberline {V}Preliminaries and Problem Definition}{4}{section.5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {V-A}Grasp Metric}{4}{subsection.5.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {V-B}Line of action}{4}{subsection.5.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {V-C}Types of Uncertainty}{4}{subsection.5.3}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {V-C.1}Distribution on Shape}{4}{subsubsection.5.3.1}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {V-C.2}Distribution on Pose}{4}{subsubsection.5.3.2}}
-\citation{kehoe2012estimating}
-\citation{mooring1986determination}
-\citation{zheng2005}
-\citation{mahler2015gp}
-\citation{kehoe2012estimating}
-\citation{kehoe2012toward}
-\citation{christopoulos2007handling}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {V-C.3}Distribution on Motion}{5}{subsubsection.5.3.3}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {V-C.4}Distribution on Friction Coefficient}{5}{subsubsection.5.3.4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces A graphical model that illustrates the relationship between the different types of uncertainty in an object. Center of Mass uncertainty is dependent on the pose and shape of the object, however friction coefficient is independent of all other types. \relax }}{5}{figure.caption.5}}
-\newlabel{fig:graphical_model}{{2}{5}{A graphical model that illustrates the relationship between the different types of uncertainty in an object. Center of Mass uncertainty is dependent on the pose and shape of the object, however friction coefficient is independent of all other types. \relax }{figure.caption.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {V-D}Problem Definition}{5}{subsection.5.4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Illustration of a grasp plan $\Gamma $ composed of two lines of action, $\gamma _1(t)$ and $\gamma _2(t)$\relax }}{5}{figure.caption.6}}
-\newlabel{fig:line_of_action}{{3}{5}{Illustration of a grasp plan $\Gamma $ composed of two lines of action, $\gamma _1(t)$ and $\gamma _2(t)$\relax }{figure.caption.6}{}}
-\newlabel{eq:problem_def}{{3}{5}{Problem Definition}{equation.5.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {VI}Multi-Armed Bandits for Grasp Selection}{5}{section.6}}
-\newlabel{eq:shape_sampling}{{4}{5}{Multi-Armed Bandits for Grasp Selection}{equation.6.4}{}}
 \citation{ferrari1992}
 \citation{christopoulos2007handling}
 \citation{mahler2015opt}
-\citation{bubeck2009pure}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces A graphical model that illustrates the relationship between the Bernoulli distribution of the probability force closure and its conjugate prior Beta distribution that has two shape parameters $\alpha $ and $\beta $ \relax }}{6}{figure.caption.7}}
-\newlabel{fig:beta_model}{{4}{6}{A graphical model that illustrates the relationship between the Bernoulli distribution of the probability force closure and its conjugate prior Beta distribution that has two shape parameters $\alpha $ and $\beta $ \relax }{figure.caption.7}{}}
+\newlabel{eq:git_indices}{{\unhbox \voidb@x \hbox {VI-C}}{6}{The Gittins Index Method}{subsection.6.3}{}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {3}{\ignorespaces The Gittins Index Method for Beta-Bernoulli Process\relax }}{6}{algocf.3}}
 \@writefile{toc}{\contentsline {section}{\numberline {VII}Distributions on Grasp Parameters}{6}{section.7}}
 \newlabel{sec:distgrasp}{{VII}{6}{Distributions on Grasp Parameters}{section.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {VII-A}Distribution on Surface Normals}{6}{subsection.7.1}}
-\newlabel{sec:normals}{{VII-A}{6}{Distribution on Surface Normals}{subsection.7.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {VII-A}}Distribution on Surface Normals}{6}{subsection.7.1}}
+\newlabel{sec:normals}{{\unhbox \voidb@x \hbox {VII-A}}{6}{Distribution on Surface Normals}{subsection.7.1}{}}
 \newlabel{eq:normal_dist}{{5}{6}{Distribution on Surface Normals}{equation.7.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {VII-B}Expected Center of Mass}{6}{subsection.7.2}}
-\newlabel{sec:mass}{{VII-B}{6}{Expected Center of Mass}{subsection.7.2}{}}
-\newlabel{eq:mass}{{VII-B}{6}{Expected Center of Mass}{subsection.7.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {VII-B}}Expected Center of Mass}{6}{subsection.7.2}}
+\newlabel{sec:mass}{{\unhbox \voidb@x \hbox {VII-B}}{6}{Expected Center of Mass}{subsection.7.2}{}}
+\newlabel{eq:mass}{{\unhbox \voidb@x \hbox {VII-B}}{6}{Expected Center of Mass}{subsection.7.2}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Left: A surface with GPIS construction and expected center of mass (black X) Right: The distribution on the density of each point assuming uniform density\relax }}{6}{figure.caption.8}}
 \newlabel{fig:GPIS_MASS}{{5}{6}{\footnotesize Left: A surface with GPIS construction and expected center of mass (black X) Right: The distribution on the density of each point assuming uniform density\relax }{figure.caption.8}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {VIII}Experiments}{6}{section.8}}
+\citation{bubeck2009pure}
 \citation{brown}
 \citation{best_arm}
 \citation{brown}
@@ -142,25 +143,26 @@
 \citation{best_arm}
 \citation{brown}
 \citation{best_arm}
-\citation{brown}
-\citation{best_arm}
-\citation{brown}
-\citation{best_arm}
-\citation{brown}
-\citation{best_arm}
-\citation{brown}
-\citation{best_arm}
-\citation{brown}
-\citation{best_arm}
-\citation{brown}
-\citation{best_arm}
-\citation{mahler2015opt}
-\citation{panahi2014bounding}
+\citation{gabillon2012bes}
+\citation{maron1993hoeffding}
+\citation{mnih2008empirical}
+\citation{audibert2010best}
+\citation{ferrari1992}
+\citation{kim2012physically}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {VIII-A}}Multi-Armed Bandit Experiments}{7}{subsection.8.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {\unhbox \voidb@x \hbox {VIII-B}}Sensitivity Analysis }{7}{subsection.8.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {IX}Limitations}{7}{section.9}}
+\@writefile{toc}{\contentsline {section}{\numberline {X}Conclusion}{7}{section.10}}
 \citation{kehoe2012estimating}
 \citation{christopoulos2007handling}
 \citation{73}
 \citation{miller2004graspit}
 \citation{bergemann2006bandit}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite  {brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite  {best_arm}\relax }}{8}{figure.caption.9}}
+\newlabel{fig:simple_regret}{{6}{8}{\footnotesize Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite {brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite {best_arm}\relax }{figure.caption.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Comparison of sample per grasp for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Silhouette Dataset \cite  {brown} with a set $|G|=1000$ for each shape. The best grasps are ranked 1 and worst are 1000. As you can see the Thompson and Gittins method have a tendency to pull grasps with high ranking, while UCB has a more conservative policy \cite  {best_arm}\relax }}{8}{figure.caption.10}}
+\newlabel{fig:pulls_per_grasp}{{7}{8}{\footnotesize Comparison of sample per grasp for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Silhouette Dataset \cite {brown} with a set $|G|=1000$ for each shape. The best grasps are ranked 1 and worst are 1000. As you can see the Thompson and Gittins method have a tendency to pull grasps with high ranking, while UCB has a more conservative policy \cite {best_arm}\relax }{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {XI}Future Work}{8}{section.11}}
 \bibstyle{IEEEtranS}
 \bibdata{references}
 \bibcite{andrieu2003introduction}{1}
@@ -168,22 +170,12 @@
 \bibcite{barto1998reinforcement}{3}
 \bibcite{bergemann2006bandit}{4}
 \bibcite{bubeck2009pure}{5}
-\@writefile{toc}{\contentsline {subsection}{\numberline {VIII-A}Multi-Armed Bandit Experiments}{7}{subsection.8.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {VIII-B}Sensitivity Analysis }{7}{subsection.8.2}}
-\@writefile{toc}{\contentsline {section}{\numberline {IX}Limitations}{7}{section.9}}
-\@writefile{toc}{\contentsline {section}{\numberline {X}Conclusion}{7}{section.10}}
-\@writefile{toc}{\contentsline {section}{\numberline {XI}Future Work}{7}{section.11}}
-\@writefile{toc}{\contentsline {section}{References}{7}{section*.14}}
 \bibcite{caflisch1998monte}{6}
 \bibcite{chapelle2011empirical}{7}
 \bibcite{christopoulos2007handling}{8}
 \bibcite{dragiev2011}{9}
 \bibcite{ferrari1992}{10}
 \bibcite{gabillon2012best}{11}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite  {brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite  {best_arm}\relax }}{8}{figure.caption.9}}
-\newlabel{fig:simple_regret}{{6}{8}{\footnotesize Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite {brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite {best_arm}\relax }{figure.caption.9}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Comparison of sample per grasp for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Silhouette Dataset \cite  {brown} with a set $|G|=1000$ for each shape. The best grasps are ranked 1 and worst are 1000. As you can see the Thompson and Gittins method have a tendency to pull grasps with high ranking, while UCB has a more conservative policy \cite  {best_arm}\relax }}{8}{figure.caption.10}}
-\newlabel{fig:pulls_per_grasp}{{7}{8}{\footnotesize Comparison of sample per grasp for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Silhouette Dataset \cite {brown} with a set $|G|=1000$ for each shape. The best grasps are ranked 1 and worst are 1000. As you can see the Thompson and Gittins method have a tendency to pull grasps with high ranking, while UCB has a more conservative policy \cite {best_arm}\relax }{figure.caption.10}{}}
 \bibcite{goldberg1990bayesian}{12}
 \bibcite{hollinger2013}{13}
 \bibcite{hsiao2011bayesian}{14}
@@ -192,6 +184,9 @@
 \bibcite{kim2012physically}{17}
 \bibcite{laaksonen2012probabilistic}{18}
 \bibcite{lai1985asymptotically}{19}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Sensitivity Analysis for Thompson Sampling under translation uncertainty $\sigma _{fric}$ in the range of $(0.05, 0.4)$ radians from top to bottom on a 40 x 40 unit workspace averaged over 10 shapes from the Brown Vision Lab Data set. The increase in noise has little effect on the convergence of Thompson Sampling in simple regret.\relax }}{9}{figure.caption.11}}
+\newlabel{fig:fric_sens}{{8}{9}{\footnotesize Sensitivity Analysis for Thompson Sampling under translation uncertainty $\sigma _{fric}$ in the range of $(0.05, 0.4)$ radians from top to bottom on a 40 x 40 unit workspace averaged over 10 shapes from the Brown Vision Lab Data set. The increase in noise has little effect on the convergence of Thompson Sampling in simple regret.\relax }{figure.caption.11}{}}
+\@writefile{toc}{\contentsline {section}{References}{9}{section*.15}}
 \bibcite{73}{20}
 \bibcite{madani2004budgeted}{21}
 \bibcite{maron1993hoeffding}{22}
@@ -205,30 +200,32 @@
 \bibcite{rothschild1974two}{30}
 \bibcite{simon1989optimal}{31}
 \bibcite{solak2003derivative}{32}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite  {brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite  {best_arm}\relax }}{9}{figure.caption.11}}
-\newlabel{fig:simple_regret}{{8}{9}{\footnotesize Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite {brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite {best_arm}\relax }{figure.caption.11}{}}
 \bibcite{st2012online}{33}
 \bibcite{stulp2011learning}{34}
 \bibcite{vahrenkamp2010simo}{35}
 \bibcite{weisz2012pose}{36}
 \bibcite{williams2007}{37}
 \bibcite{zheng2005}{38}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Sensitivity Analysis for Thompson Sampling under translation uncertainty $\sigma _{rot}$ in the range of $(0.03, 0.24)$ radians from top to bottom on a 40 x 40 unit workspace averaged over 10 shapes from the Brown Vision Lab Data set. As you can see the increase in noise effects performance, however the 5500 samples needed for convergence at the the highest level of noise (which is over half the workspace) is much less that the samples needed for uniform allocation to converge in Fig. \ref  {fig:simple_regret}\relax }}{10}{figure.caption.12}}
+\newlabel{fig:rot_sens}{{9}{10}{\footnotesize Sensitivity Analysis for Thompson Sampling under translation uncertainty $\sigma _{rot}$ in the range of $(0.03, 0.24)$ radians from top to bottom on a 40 x 40 unit workspace averaged over 10 shapes from the Brown Vision Lab Data set. As you can see the increase in noise effects performance, however the 5500 samples needed for convergence at the the highest level of noise (which is over half the workspace) is much less that the samples needed for uniform allocation to converge in Fig. \ref {fig:simple_regret}\relax }{figure.caption.12}{}}
+\@writefile{toc}{\contentsline {section}{Appendix: Gaussian Process Implicit Surface for Representing Shape Uncertainty}{10}{section*.16}}
+\newlabel{sec:Appendix}{{A}{10}{\appendixname \nobreakspace \\* Gaussian Process Implicit Surface for Representing Shape Uncertainty}{section*.16}{}}
 \citation{mahler2015opt}
 \citation{rasmussen2010gaussian}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Two shapes shown from the Brown Visual Lab Dataset,from Left to Right the variance on rotation $\sigma _{rot}$ is increased from $2^{\qopname  \relax o{deg}}$ to $13^{\qopname  \relax o{deg}}$. As you can see the overall variance increase effects the quality of the top grasp in the set of possible grasps. Furthermore for Shape 2, the grasp with low rotational variance is different than that for higher variance because the original grasp is more likely to touch the area of higher shape uncertainty when subjected to high variance in rotation. \relax }}{11}{figure.caption.13}}
+\newlabel{fig:rot_shapes}{{10}{11}{Two shapes shown from the Brown Visual Lab Dataset,from Left to Right the variance on rotation $\sigma _{rot}$ is increased from $2^{\deg }$ to $13^{\deg }$. As you can see the overall variance increase effects the quality of the top grasp in the set of possible grasps. Furthermore for Shape 2, the grasp with low rotational variance is different than that for higher variance because the original grasp is more likely to touch the area of higher shape uncertainty when subjected to high variance in rotation. \relax }{figure.caption.13}{}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {lTop Grasps Shown for Shape 1}}}{11}{subfigure.10.1}}
+\@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Top Grasps Shown for Shape 2}}}{11}{subfigure.10.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Sensitivity Analysis for Thompson Sampling under translation uncertainty $\sigma _{trans}$ in the range of $(3,24)$ units from top to bottom on a 40 x 40 unit workspace. As you can see the increase in noise effects performance, however the 4200 samples needed for convergence at the the highest level of noise (which is over half the workspace) is much less that the samples needed for uniform allocation to converge in Fig. \ref  {fig:simple_regret}\relax }}{11}{figure.caption.14}}
+\newlabel{fig:trans_sens}{{11}{11}{\footnotesize Sensitivity Analysis for Thompson Sampling under translation uncertainty $\sigma _{trans}$ in the range of $(3,24)$ units from top to bottom on a 40 x 40 unit workspace. As you can see the increase in noise effects performance, however the 4200 samples needed for convergence at the the highest level of noise (which is over half the workspace) is much less that the samples needed for uniform allocation to converge in Fig. \ref {fig:simple_regret}\relax }{figure.caption.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A}Gaussian Process (GP) Background}{11}{subsection.Appendix.A.1}}
+\newlabel{sec:GP}{{A}{11}{Gaussian Process (GP) Background}{subsection.Appendix.A.1}{}}
 \citation{solak2003derivative}
 \citation{dragiev2011}
 \citation{williams2007}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite  {brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite  {best_arm}\relax }}{10}{figure.caption.12}}
-\newlabel{fig:simple_regret}{{9}{10}{\footnotesize Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite {brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite {best_arm}\relax }{figure.caption.12}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {XII}Appendix}{10}{section.12}}
-\newlabel{sec:Appendix}{{XII}{10}{Appendix}{section.12}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {XII-A}Gaussian Process (GP) Background}{10}{subsection.12.1}}
-\newlabel{sec:GP}{{XII-A}{10}{Gaussian Process (GP) Background}{subsection.12.1}{}}
-\newlabel{eq:mean_gradient}{{8}{10}{Gaussian Process (GP) Background}{equation.12.8}{}}
-\newlabel{eq:cov_gradient}{{9}{10}{Gaussian Process (GP) Background}{equation.12.9}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite  {brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite  {best_arm}\relax }}{11}{figure.caption.13}}
-\newlabel{fig:simple_regret}{{10}{11}{\footnotesize Comparison of Simple Regret convergence for the four sequential decision methods (Random, UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite {brown} with a set $|G|=1000$ for each shape. As you can see the Thompson and Gittins method converge almost a magnitude faster than random allocation. UCB does poorly on simple regret which is expected \cite {best_arm}\relax }{figure.caption.13}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {XII-B}Sampling Shape from GPIS Distribution }{11}{subsection.12.2}}
-\newlabel{eq:joint_shape}{{10}{11}{Sampling Shape from GPIS Distribution}{equation.12.10}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Shape samples drawn from Eq. \ref  {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }}{11}{figure.caption.15}}
-\newlabel{fig:shape_samples}{{11}{11}{Shape samples drawn from Eq. \ref {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }{figure.caption.15}{}}
+\newlabel{eq:mean_gradient}{{8}{12}{Gaussian Process (GP) Background}{equation.Appendix.A.8}{}}
+\newlabel{eq:cov_gradient}{{9}{12}{Gaussian Process (GP) Background}{equation.Appendix.A.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B}Sampling Shape from GPIS Distribution }{12}{subsection.Appendix.A.2}}
+\newlabel{eq:joint_shape}{{10}{12}{Sampling Shape from GPIS Distribution}{equation.Appendix.A.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Shape samples drawn from Eq. \ref  {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }}{12}{figure.caption.17}}
+\newlabel{fig:shape_samples}{{12}{12}{Shape samples drawn from Eq. \ref {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }{figure.caption.17}{}}

@@ -1,22 +1,22 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
 \BOOKMARK [1][-]{section.2}{Related Work}{}% 2
-\BOOKMARK [1][-]{section.3}{Multi-Armed Bandit Model}{}% 3
-\BOOKMARK [2][-]{subsection.3.1}{Fixed Confidence}{section.3}% 4
-\BOOKMARK [2][-]{subsection.3.2}{Fixed Budget}{section.3}% 5
-\BOOKMARK [1][-]{section.4}{Bandit Algorithms For Best Arm Identification}{}% 6
-\BOOKMARK [2][-]{subsection.4.1}{Thompson Sampling}{section.4}% 7
-\BOOKMARK [2][-]{subsection.4.2}{Upper Confidence Bound \(UCB\)}{section.4}% 8
-\BOOKMARK [2][-]{subsection.4.3}{The Gittins Index Method}{section.4}% 9
-\BOOKMARK [1][-]{section.5}{Preliminaries and Problem Definition}{}% 10
-\BOOKMARK [2][-]{subsection.5.1}{Grasp Metric}{section.5}% 11
-\BOOKMARK [2][-]{subsection.5.2}{Line of action}{section.5}% 12
-\BOOKMARK [2][-]{subsection.5.3}{Types of Uncertainty}{section.5}% 13
-\BOOKMARK [3][-]{subsubsection.5.3.1}{Distribution on Shape}{subsection.5.3}% 14
-\BOOKMARK [3][-]{subsubsection.5.3.2}{Distribution on Pose}{subsection.5.3}% 15
-\BOOKMARK [3][-]{subsubsection.5.3.3}{Distribution on Motion}{subsection.5.3}% 16
-\BOOKMARK [3][-]{subsubsection.5.3.4}{Distribution on Friction Coefficient}{subsection.5.3}% 17
-\BOOKMARK [2][-]{subsection.5.4}{Problem Definition}{section.5}% 18
-\BOOKMARK [1][-]{section.6}{Multi-Armed Bandits for Grasp Selection}{}% 19
+\BOOKMARK [1][-]{section.3}{Preliminaries and Problem Definition}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{Grasp Metric}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{Line of action}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.3}{Types of Uncertainty}{section.3}% 6
+\BOOKMARK [3][-]{subsubsection.3.3.1}{Distribution on Shape}{subsection.3.3}% 7
+\BOOKMARK [3][-]{subsubsection.3.3.2}{Distribution on Pose}{subsection.3.3}% 8
+\BOOKMARK [3][-]{subsubsection.3.3.3}{Distribution on Motion}{subsection.3.3}% 9
+\BOOKMARK [3][-]{subsubsection.3.3.4}{Distribution on Friction Coefficient}{subsection.3.3}% 10
+\BOOKMARK [2][-]{subsection.3.4}{Problem Definition}{section.3}% 11
+\BOOKMARK [1][-]{section.4}{Multi-Armed Bandits for Grasp Selection}{}% 12
+\BOOKMARK [1][-]{section.5}{Multi-Armed Bandit Model}{}% 13
+\BOOKMARK [2][-]{subsection.5.1}{Fixed Confidence}{section.5}% 14
+\BOOKMARK [2][-]{subsection.5.2}{Fixed Budget}{section.5}% 15
+\BOOKMARK [1][-]{section.6}{Bandit Algorithms For Best Arm Identification}{}% 16
+\BOOKMARK [2][-]{subsection.6.1}{Thompson Sampling}{section.6}% 17
+\BOOKMARK [2][-]{subsection.6.2}{Upper Confidence Bound \(UCB\)}{section.6}% 18
+\BOOKMARK [2][-]{subsection.6.3}{The Gittins Index Method}{section.6}% 19
 \BOOKMARK [1][-]{section.7}{Distributions on Grasp Parameters}{}% 20
 \BOOKMARK [2][-]{subsection.7.1}{Distribution on Surface Normals}{section.7}% 21
 \BOOKMARK [2][-]{subsection.7.2}{Expected Center of Mass}{section.7}% 22
@@ -26,7 +26,7 @@
 \BOOKMARK [1][-]{section.9}{Limitations}{}% 26
 \BOOKMARK [1][-]{section.10}{Conclusion}{}% 27
 \BOOKMARK [1][-]{section.11}{Future Work}{}% 28
-\BOOKMARK [1][-]{section*.14}{References}{}% 29
-\BOOKMARK [1][-]{section.12}{Appendix}{}% 30
-\BOOKMARK [2][-]{subsection.12.1}{Gaussian Process \(GP\) Background}{section.12}% 31
-\BOOKMARK [2][-]{subsection.12.2}{Sampling Shape from GPIS Distribution }{section.12}% 32
+\BOOKMARK [1][-]{section*.15}{References}{}% 29
+\BOOKMARK [1][-]{section*.16}{Appendix: Gaussian Process Implicit Surface for Representing Shape Uncertainty}{}% 30
+\BOOKMARK [2][-]{subsection.Appendix.A.1}{Gaussian Process \(GP\) Background}{section*.16}% 31
+\BOOKMARK [2][-]{subsection.Appendix.A.2}{Sampling Shape from GPIS Distribution }{section*.16}% 32

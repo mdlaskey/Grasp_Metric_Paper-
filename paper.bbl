@@ -21,6 +21,10 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
+\bibitem{agrawal2011analysis}
+S.~Agrawal and N.~Goyal, ``Analysis of thompson sampling for the multi-armed
+  bandit problem,'' \emph{arXiv preprint arXiv:1111.1797}, 2011.
+
 \bibitem{andrieu2003introduction}
 C.~Andrieu, N.~De~Freitas, A.~Doucet, and M.~I. Jordan, ``An introduction to
   mcmc for machine learning,'' \emph{Machine learning}, vol.~50, no. 1-2, pp.
@@ -29,6 +33,11 @@ C.~Andrieu, N.~De~Freitas, A.~Doucet, and M.~I. Jordan, ``An introduction to
 \bibitem{audibert2010best}
 J.-Y. Audibert, S.~Bubeck \emph{et~al.}, ``Best arm identification in
   multi-armed bandits,'' \emph{COLT 2010-Proceedings}, 2010.
+
+\bibitem{barfoot2014Pose}
+T.~Barfoot and P.~Furgale, ``Associating uncertainty with three-dimensional
+  poses for use in estimation problems,'' \emph{Robotics, IEEE Transactions
+  on}, vol.~30, no.~3, pp. 679--693, June 2014.
 
 \bibitem{barto1998reinforcement}
 A.~G. Barto, \emph{Reinforcement learning: An introduction}.\hskip 1em plus
@@ -88,6 +97,16 @@ K.~Hsiao, M.~Ciocarlie, and P.~Brook, ``Bayesian grasp planning,'' in
   \emph{ICRA 2011 Workshop on Mobile Manipulation: Integrating Perception and
   Manipulation}, 2011.
 
+\bibitem{katehakis1987multi}
+M.~N. Katehakis and A.~F. Veinott~Jr, ``The multi-armed bandit problem:
+  decomposition and computation,'' \emph{Mathematics of Operations Research},
+  vol.~12, no.~2, pp. 262--268, 1987.
+
+\bibitem{kaufmann2012bayesian}
+E.~Kaufmann, O.~Capp{\'e}, and A.~Garivier, ``On bayesian upper confidence
+  bounds for bandit problems,'' in \emph{International Conference on Artificial
+  Intelligence and Statistics}, 2012, pp. 592--600.
+
 \bibitem{kehoe2012estimating}
 B.~Kehoe, D.~Berenson, and K.~Goldberg, ``Estimating part tolerance bounds
   based on adaptive cloud-based grasp planning with slip,'' in \emph{Automation
@@ -129,6 +148,11 @@ O.~Madani, D.~J. Lizotte, and R.~Greiner, ``The budgeted multi-armed bandit
   problem,'' in \emph{Learning Theory}.\hskip 1em plus 0.5em minus 0.4em\relax
   Springer, 2004, pp. 643--645.
 
+\bibitem{mahler2015gp}
+J.~Mahler, S.~Patil, B.~Kehoe, J.~van~den Berg, M.~Ciocarlie, P.~Abbeel, and
+  K.~Goldberg, ``Gp-gpis-opt: Grasp planning under shape uncertainty using
+  gaussian process implicit surfaces and sequential convex programming.''
+
 \bibitem{maron1993hoeffding}
 O.~Maron and A.~W. Moore, ``Hoeffding races: Accelerating model selection
   search for classification and function approximation,'' \emph{Robotics
@@ -145,13 +169,11 @@ V.~Mnih, C.~Szepesv{\'a}ri, and J.-Y. Audibert, ``Empirical bernstein
   Machine learning}.\hskip 1em plus 0.5em minus 0.4em\relax ACM, 2008, pp.
   672--679.
 
-\bibitem{panahi2014bounding}
-F.~Panahi and A.~F. van~der Stappen, ``Bounding the locus of the center of mass
-  for a part with shape variation,'' \emph{Computational Geometry}, vol.~47,
-  no.~8, pp. 847--855, 2014.
-
-\bibitem{petersen2008matrix}
-K.~B. Petersen, ``The matrix cookbook.''
+\bibitem{pokorny2013classical}
+F.~T. Pokorny and D.~Kragic, ``Classical grasp quality evaluation: New
+  algorithms and theory,'' in \emph{Intelligent Robots and Systems (IROS), 2013
+  IEEE/RSJ International Conference on}.\hskip 1em plus 0.5em minus 0.4em\relax
+  IEEE, 2013, pp. 3493--3500.
 
 \bibitem{rasmussen2006}
 C.~Rasmussen and C.~Williams, \emph{Gaussian processes for machine

@@ -1,14 +1,14 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
 \BOOKMARK [1][-]{section.2}{Related Work}{}% 2
 \BOOKMARK [1][-]{section.3}{Preliminaries and Problem Definition}{}% 3
-\BOOKMARK [2][-]{subsection.3.1}{Grasp Metric}{section.3}% 4
-\BOOKMARK [2][-]{subsection.3.2}{Line of action}{section.3}% 5
-\BOOKMARK [2][-]{subsection.3.3}{Types of Uncertainty}{section.3}% 6
-\BOOKMARK [3][-]{subsubsection.3.3.1}{Distribution on Shape}{subsection.3.3}% 7
-\BOOKMARK [3][-]{subsubsection.3.3.2}{Distribution on Pose}{subsection.3.3}% 8
-\BOOKMARK [3][-]{subsubsection.3.3.3}{Distribution on Motion}{subsection.3.3}% 9
-\BOOKMARK [3][-]{subsubsection.3.3.4}{Distribution on Friction Coefficient}{subsection.3.3}% 10
-\BOOKMARK [2][-]{subsection.3.4}{Problem Definition}{section.3}% 11
+\BOOKMARK [2][-]{subsection.3.1}{Candidate Grasp Model}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{Sources of Uncertainty}{section.3}% 5
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Shape Uncertainty}{subsection.3.2}% 6
+\BOOKMARK [3][-]{subsubsection.3.2.2}{Pose Uncertainty}{subsection.3.2}% 7
+\BOOKMARK [3][-]{subsubsection.3.2.3}{Motion Uncertainty}{subsection.3.2}% 8
+\BOOKMARK [3][-]{subsubsection.3.2.4}{Friction Uncertainty}{subsection.3.2}% 9
+\BOOKMARK [2][-]{subsection.3.3}{Grasp Quality}{section.3}% 10
+\BOOKMARK [2][-]{subsection.3.4}{Objective}{section.3}% 11
 \BOOKMARK [1][-]{section.4}{Multi-Armed Bandits for Grasp Selection}{}% 12
 \BOOKMARK [2][-]{subsection.4.1}{Fixed Confidence}{section.4}% 13
 \BOOKMARK [2][-]{subsection.4.2}{Fixed Budget}{section.4}% 14

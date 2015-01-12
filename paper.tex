@@ -116,7 +116,7 @@ Efficient Planar Sample-Based Grasp Planning with Uncertainty Using Budgeted Mul
 
 Consider a robot processing orders in a warehouse, where it frequently encounters new consumer products and must process them quickly.
 The robot may need to rapidly plan grasps for these objects without prior knowledge of object shape, pose and material properties like friction coefficient or center of mass. 
-Furthermore, the robot may not be able to measure these quantities exactly due to sensor imprecision and missing data, which may result from occlusions or surface properties such as transparency or reflective surfaces.
+Furthermore, the robot may not be able to measure these quantities exactly due to sensor imprecision and missing data, which could result from occlusions or surface properties such as transparency or reflective surfaces.
 
 \begin{figure}%
     \centering
@@ -131,11 +131,11 @@ Furthermore, the robot may not be able to measure these quantities exactly due t
 \end{figure}
 
 Analytic grasp quality metrics have been developed to determine the stability of a grasp when all the parameters of the object and robot manipulator are exactly known.
-A common measure of stabliity in the literature is force closure, the abliity to resist external forces and torques in arbitrary directions~\cite{}.
-Grasps in force closure can be further ranked by the relative magnitude of forces and torques that must be exterted by the gripper to resist external perturbations~\cite{ferrari1992}.
+One common measure of stability is force closure, the ability to resist external forces and torques in arbitrary directions~\cite{}.
+Grasps in force closure can be further ranked by the relative magnitude of forces and torques that must be exerted by the gripper to resist external perturbations~\cite{ferrari1992}.
 Recent works have explored computing the probability of a grasp achieving the force closure condition given uncertainty in parameters such as pose~\cite{christopoulos2007handling, weisz2012pose, kim2012physically} and object shape~\cite{kehoe2012estimating, mahler2015gp}.
-Most methods for evaluating grasp quality in the presence of uncertainty use exhaustive Monte-Carlo sampling over the possible values of uncertain quantities~\cite{christopoulos2007handling, kim2012physically, weisz2012pose, kehoe2012estimating, kehoe2012towards} which can be very time consuming..
-However, in many cases we may be able to rule out grasps with a low probability in only a few samples and allocate more sampling effort to grasps that are likely to be high quality.
+Many methods for evaluating grasp quality in the presence of uncertainty use exhaustive Monte-Carlo sampling over the possible values of uncertain quantities~\cite{christopoulos2007handling, kim2012physically, weisz2012pose, kehoe2012estimating, kehoe2012towards} which can be very time consuming.
+We are interested in ruling out grasps with a low probability in only a few samples and allocate more sampling effort to grasps that are likely to be high quality.
 
 The multi-armed bandit (MAB) model for sequential decision making problems~\cite{barto1998reinforcement, lai1985asymptotically, robbins1952some} provides a formal way to reason about allocating sampling effort to grasps such that the grasp(s) with highest quality can be determined in as few samples as possible.
 In a standard MAB there are a set of possible options (or `arms' in the literature~\cite{barto1998reinforcement}) that each return a numeric reward from a stationary distribution.
@@ -150,10 +150,11 @@ We model shape uncertainty using Gaussian process implicit surfaces (GPISs), a B
 Uncertainty in pose is represented as a normal distributions around the orientation and translation of the object.
 Uncertainity in motion is represented as a normal distribution around the end point of a planned gripper trajectory and uncertainty in friction coefficient is a normal distribution around an expected friction coefficient.
 \todo{Jeff: I personally think the above 3 statements may be too much detail for an intro}
-However, our approach of treating grasp selection as a BMAB only requires the ability to sample from a given representation of uncertainty and is not restricted to aforementioned representations.
-We compare the performance of several popular algorithms for solving the BMAB problem: Bayes UCB, Thompson sampling, and Gittins indices.
-Our experiments demonstrate that solutions to the MAB problem can find the grasp with highest probabilty of force closure from a set of 1000 grasps 5x faster than the baseline Monte-Carlo approach and ...
-\todo{Going to get a table with results. Make comparison to Ben's method}
+Our approach of using BMAB is applicable to any distributions that can be sampled from, however performance could potentially vary. 
+We compare the performance of several popular algorithms for solving the BMAB problem: Bayes UCB, Thompson sampling, and Gittins indices. 
+\todo{Going to fill bottom paragraph in later}
+Initial results suggest a promising avenue with a Xx improvement over  the traditional Monte-Carlo integration and Xx improvement in the experiments that we tried. 
+
 
 \section{Related Work}
 
@@ -222,14 +223,14 @@ Together these form the set of grasp parameters $g = (\bc_1, ..., \bc_m, \bn_1, 
 In this work we consider uncertainty in shape, pose, robot motion, and friction coefficient.
 Fig. \ref{fig:graphical_model} illustrates a graphical model of the relationship between these sources of uncertainty.
 In this section we describe each source of uncertainty and our model of the uncertainty.
-We wish to emphasize that the models of uncertainty described in this work are not the only models that may be used with MAB algorithms and that the reader may choose parameters and distributions that best fit their needs. 
+We wish to emphasize that the models of uncertainty described in this work are not the only models that may be used with MAB algorithms and that the reader may choose parameters and distributions that best fit their needs, however performance is subject to vary on empirical results. 
 
 \subsubsection{Shape Uncertainty}
 
-Uncertainty in object shape results from sensor noise and missing sensor data, which can occur due to transparency, specularity, and occlusions~\cite{mahler2015opt}.
-Following ~\cite{laskey2015bandits, mahler2015opt} we represent the distribution over possible surfaces given sensing noise using a Gaussian process implicit surface (GPIS).
+Uncertainty in object shape results from sensor noise and missing sensor data, which can occur due to transparency, specularity, and occlusions~\cite{mahler2015gp}.
+Following ~\cite{laskey2015bandits, mahler2015gp} we represent the distribution over possible surfaces given sensing noise using a Gaussian process implicit surface (GPIS).
 A GPIS represents a distribution over signed distance functions (SDFs), a surface representation commonly used in 3D reconstruction and SLAM \cite{}.
-An SDF is a real-valued function $f: \mathbb{R}^d \rightarrow \mathbb{R}$ that is greater than 0 outside the object, 0 on the surface and less than 0 inside the object.
+A SDF is a real-valued function $f: \mathbb{R}^d \rightarrow \mathbb{R}$ that is greater than 0 outside the object, 0 on the surface and less than 0 inside the object.
 A GPIS is a gaussian distribution over SDF values at a fixed set of query points $\mX = \{\bx_1, ... \bx_n\}, \bx_i \in \mathbb{R}^d$, $f(\bx_i) \sim \mN(\mu_{f}(\bx_i),\Sigma_{f}(\bx_i))$, where $\mu_{f}(\cdot)$ and $\Sigma_{f}(\cdot)$ are the mean and covariance functions of the GPIS.
 See Appendix A for detail on how to train a mean and covariance function for a GPIS.
 In this work, we set $\mX$ to a uniform $M \times M$ grid of points with square cells.
@@ -275,18 +276,18 @@ For shorthand in the remainder of this paper we will refer to the random motion 
 In practice $\Sigma_{y}^2$ and $\sigma_{\psi}^2$ might be set from repeatibility measurements for a robot \cite{mooring1986determination}.
 
  \subsubsection{Friction Uncertainty}
-As shown in \cite{zheng2005}, uncertainty in friction coefficient can play a large role in grasp quality evaluation.
+As shown in \cite{zheng2005}, uncertainty in friction coefficient can cause grasp quality to significantly vary.
 The expected friction coefficient $\hat{\mu}$ could be derived by means of object classification and a look up table~\cite{}.
 However, friction coefficients may be uncertain due to factors such as material between a gripper and an object (e.g. dust, water, moisture), variations in the gripper material due to manufacturing tolerances, or misclassification of the object surface to be grasped.
 We model uncertainty in friction coefficient as Gaussian noise, $\mu \sim \mN(\hat{\mu},\sigma_{\mu}^2)$. 
  
-\subsection{Grasp Quality}
+\subsection{Grasp Quality}\label{sec:grasp_sample}
 We measure the quality of grassp using the probability of force closure~\cite{weisz2012pose, kim2012physically, kehoe2012estimating, kehoe2012toward} given a grasp plan $\Gamma$, which we denote $P_F(\Gamma)$.
 Force closure measures the ability to resist external wrenches, or force and torques vectors, assuming the grasp can apply infinite force.
 
-Formally, force closure is a binary-valued quanity $F$ that is 1 if a grasp can resist wrenches in arbitrary directions and 0 otherwise.
+Formally, force closure is a binary-valued quantity $F$ that is 1 if a grasp can resist wrenches in arbitrary directions and 0 otherwise.
 Let $\mW \in \mathbb{R}^6$ denote the contact wrenches derived from contact locations $\bc_1, ... \bc_m$, normals $\bn_1, .., \bn_m$, friction coefficient $\mu$, and center of mass $\bz$ for a given grasp and shape.
-If the origin lies within the convex hull of $\mW$, then the grasp is in force closure\cite{}.
+If the origin lies within the convex hull of $\mW$, then the grasp is in force closure\cite{li1988task}.
 In this work we rank grasps using the probability of force closure given uncertainty in shape, pose, robot motion, and friction coefficient~\cite{christopoulos2007handling, kehoe2012toward}:
 %\vspace{-2ex}
 \begin{align*}
@@ -294,12 +295,7 @@ In this work we rank grasps using the probability of force closure given uncerta
 \end{align*}
 \todo{Jeff: revise above symbols for clarity} 
  
-To estimate $P_F(\Gamma)$, we generate  samples from each of the above distributions in sequence using the relationships defined by the graphical model in Fig. \ref{fig:graphical_model}.
-We first generate a sample of the object shape, pose, grasp plan, and friction coefficient using standard methods for sampling from a Gaussian distribution~\cite{}.
-Then we use these quantities to determine the grasp parameters $g$. 
-Finally, we compute the forces and torques that can be applied by $g$ to form the contact wrench set $\mW$ and evaluate the force closure condition.
-
-To sample from $p(Q(\Gamma)>0)$, we need to sample from the distributions associated with a line of action $p(\textbf{n}_i,\textbf{c}_i|\gamma_i(t),\xi,\theta, \rho)$. Using Bayes rule  we can rewrite this as 
+To estimate $P_F(\Gamma)$, we generate  samples from each of the above distributions in sequence using the relationships defined by the graphical model in Fig. \ref{fig:graphical_model}.To sample from $p_F(\Gamma)$, we need to sample from the distributions associated with a line of action $p(\textbf{n}_i,\textbf{c}_i|\gamma_i(t),\xi,\theta, \rho)$. Using Bayes rule  we can rewrite this as 
  
  \vspace{-2ex}
  \begin{align*}
@@ -308,8 +304,8 @@ To sample from $p(Q(\Gamma)>0)$, we need to sample from the distributions associ
  \end{align*}
 
  
-Appendix \ref{sec:Appendix}, describes how to draw shape sample from a GPIS model, which is used to compute $p(\textbf{c}_i|\gamma_i(t),\theta,\rho,\xi)$ along with the other sampled distribution on pose ($\xi$) and motion ($\rho$). Appendix \ref{sec:normals}, describes how to sample from $p(\textbf{n}_i|\textbf{c}_i,\theta)$ and presents a novel visualization technique for the distribution on surface normals.  Appendix \ref{sec:mass}, describes a way to calculate the expected center of mass assuming a uniform mass distribution. 
- \todo{Jeff: Not sure that the above two paragraphs are actually necessary}
+Appendix \ref{sec:Appendix}, describes how to draw shape sample from a GPIS model, which is used to compute $p(\textbf{c}_i|\gamma_i(t),\theta,\rho,\xi)$ along with the other sampled distribution on pose ($\xi$) and motion ($\rho$). Appendix \ref{sec:normals}, describes how to sample from $p(\textbf{n}_i|\textbf{c}_i,\theta)$ and presents a novel visualization technique for the distribution on surface normals.  Appendix \ref{sec:mass}, describes a way to calculate the expected center of mass assuming a uniform mass distribution. Then we use these quantities to determine the grasp parameters $g$. Finally, we compute the forces and torques that can be applied by $g$ to form the contact wrench set $\mW$ and evaluate the force closure condition.
+
 
 %Let Q be the $L^1$ version of the metric depends on the contact points $\textbf{c}_1,...,\textbf{c}_m \in \mathcal{R}^2$, surface normals $\textbf{n}_1,...,\textbf{n}_m \in \mathcal{R}^2$, center of mass $\textbf{z}$ and friction coefficient $\mu$. The metric is evaluated by constructing a convex hull around the wrenches made up of those parameters and finding the radius of the largest unit ball centered at the origin in wrench space. If the convex hull  encloses the origin then the grasp is in ``force-closure,'' meaning the grasp can resist any external wrenches if enough force is used. A grasp can be parameterized by the following tuple $g = ( \textbf{c}_1,...,\textbf{c}_m,\textbf{n}_1,...,\textbf{n}_m,\mu, \textbf{z} )$\cite{pokorny2013classical}.
 %
@@ -343,12 +339,9 @@ In this work we show that this objective can be framed as a budgeted multi-armed
 We propose framing the problem in the multi-armed bandit (MAB) model and forming a policy for iteratively selecting which grasp to evaluate based on the probability of force closure estimate from the samples so far.
 The goal of the MAB approach is to allocate more sampling effort to grasps that appear to have higher quality based on the evaluation performed so far.
 
-The multi-armed bandit model, originally described by Robbins \cite{robbins1985some}, is a statistical model of an agent attempting to make a sequence of correct decisions while concurrently gathering information about each possible decision.
-Solutions to the multi-armed bandit model have been used in applications for which evaluating all possible options is expensive or impossible, such as the optimal design of clinical trials~\cite{simon1989optimal}, market pricing~\cite{rothschild1974two}, and choosing strategies for games~\cite{st2012online}. 
-
-In a traditional MAB problem, a gambler has $K$ independent slot machines, or ``arms'' to play.
-When an arm is played (or ``pulled'' in the literature), it returns an amount of money from a fixed reward distribution $P_k, k = 1, ..., K$ that is unknown to the gambler.
-The goal of the gambler is to come up with a method for determining which arms to pull, how many times to pull each arm, and what order to pull them in such that the average cumulative rewards are maximized over many pulls.
+The multi-armed bandit model, originally described by Robbins \cite{robbins1985some}, is a statistical model of an agent attempting to make a sequence of correct decisions while concurrently gathering information about each possible decision. In a traditional MAB problem, a gambler has $K$ independent slot machines, or ``arms'' to play.
+When an arm is played (or ``pulled'' in the literature), it returns an amount of money from a fixed reward distribution, $P_k, k = 1, ..., K$, that is unknown to the gambler.
+The goal of the gambler is to come up with a method for determining which arms to pull, how many times to pull each arm, and what order to pull them in such that the average cumulative rewards is maximized over many pulls.
 If the gambler knew the machine with the highest expected reward, the gambler would only pull that arm.
 However, since the reward distributions are unknown, a successful gambler needs to trade off exploiting the arms that currently yields the highest reward and exploring new arms to see if they give better rewards on average.
 Developing a policy that successfully trades between exploration and exploitation to maximize average reward has been the focus of extensive research since the problem formulation \cite{bubeck2009pure}, \cite{robbins1985some}, \cite{bergemann2006bandit}.
@@ -363,7 +356,7 @@ Since then a several other algorithms have been shown to achieve this bound, suc
 
 Our grasp selection problem is similar in that we would like to find the grasp with the highest quality while conserving computational resources.
 %Motivated by limited computational resources we allocate sampling resources to efficiently find the best arm.
-However, in our problem one only cares about the suboptimality when the final grasp is selected for execution (called ``simple regret'' in the literature) rather than the cumulative regret as studied in the standard MAB problem.
+However, in our problem one only usually cares about the quality when the final grasp is selected for execution ( the difference between the expected quality of the optimal arm and the arm selected is known as ``simple regret'' in the literature) rather than the cumulative regret as studied in the standard MAB problem.
 This is an instance of the Pure Exploration multi-armed bandit problem\cite{bubeck2009pure}, in which an agent attempts to recommend the best arm at the end of an exploration phase but is not penalized for making exploratory arm pulls during this phase.
 Hence, the exploration and exploitation stage are decoupled. 
 The end of the exploration phase, or ``stopping time,'' may not be known to the agent ahead of time.
@@ -426,21 +419,18 @@ The mean of the Beta distribution is given by $\alpha/(\alpha+\beta)$.
 To update the prior Beta distribution one adds the count of observed successes of the event to $\alpha$ and the count of the observed failures to $\beta$
 Often the prior $\alpha =1 $ and $\beta =1$ is used before any rewards are observed, which leads to a uniform distribution on $\theta$. 
 
-Given a proposed grasp plan $\Gamma$ , we draw samples from the shape distribution $P(\theta)$, the distribution on pose $P(\xi)$, distribution on motion $P(\rho)$ and the distribution on friction coefficient $P(\mu)$.
+Given a proposed grasp plan $\Gamma$ , we draw samples from the shape distribution $p(\theta)$, the distribution on pose $p(\xi)$, distribution on motion $p(\rho)$ and the distribution on friction coefficient $p(\mu)$.
 The distribution on force closure can then be estimated as Beta- Bernoulli Process with shape parameters $\alpha$ and $\beta$.
 Thus, we can write the expected probability of force closure as follows
 
 \vspace{-2ex}
 \begin{align}\label{eq:shape_sampling}
-P(Q(\Gamma|\theta,\mu,\xi,\rho) > 0) = \frac{\alpha}{\alpha + \beta}
+P_F(\Gamma) = \frac{\alpha}{\alpha + \beta}
 \end{align}
 
-Where $Q(\Gamma|\theta,\xi,\mu,z)$ is the grasp quality that is computed on a shape sample drawn from $p(\theta)$,$p(\xi)$,$p(\rho)$ and $p(\mu)$.
-Whats interesting in the context of a Bayesian BMAB problem our graphical model in Fig. \ref{fig:graphical_model}, is now equivalent in terms of inference to \ref{fig:beta_model} and we only need to estimate $\alpha$ and $\beta$ to determine grasp quality.
-\todo{Jeff: I see what you're trying to say here, but this is somewhat misleading. Alpha and beta constitue estimates of the probability of force closure but do not themselves determine grasp quality}
-Regardless of the distributions in Fig. \ref{fig:graphical_model}, we are still able to maintain the theoretical guarantees given by the Bayesian MAB algorithms because the probability of force closure is a Beta-Bernoulli Process \cite{agrawal2011analysis} \cite{kaufmann2012bayesian} 
-\cite{weber1992gittins}. 
-\todo{Jeff: This is a strong statement but is pretty vague. What are these guarantees?} 
+Whats interesting in the context of a Bayesian BMAB problem our graphical model in Fig. \ref{fig:graphical_model}, is now equivalent in terms of inference to \ref{fig:beta_model} and we only need to estimate $\alpha$ and $\beta$ to determine grasp quality. Regardless of the distributions in Fig. \ref{fig:graphical_model}, we are still able to maintain the theoretical guarantees given by the Bayesian MAB algorithms because the probability of force closure is a Beta-Bernoulli Process \cite{agrawal2011analysis} \cite{kaufmann2012bayesian} 
+\cite{weber1992gittins}, which we will now discuss for each of the three proposed algorithms in detail. 
+\todo{Michael: The above statement is true and I want to convey this message, however it might take some work to convey} 
 
 
 \begin{figure}[ht!]
@@ -535,56 +525,79 @@ The indices can be considered as a computation of the value in choosing an arm c
 
  .
 \section{Experiments}
-For the experiments we used the Brown Vision Lab 2D dataset, the same used in \cite{christopoulos2007handling}. We downsampled the image by a factor of 2 to create a 40 x 40 occupancy map, which holds 1 if the point cloud was observed and 0 if it was not observed, and a measurement noise map, which holds the variance 0-mean noise added to the SDF values. The parameters of the GPIS were selected using maximum likelihood on a held-out set of validation shapes. The noise of the motion, position and friction coefficient was set to the following variances $\sigma_{mu} = 0.4$, $\sigma_{rot} = 0.3$ rads,$\sigma_{trans} = 3$. Our visualization technique follows the approach of \cite{mahler2015gp} and consisted of drawing many shape samples from the distribution and blurring accordingly to a histogram equalization scheme. 
+For the experiments we used the Brown Vision Lab 2D dataset \cite{brown}, the same used in \cite{christopoulos2007handling}. We downsampled the image by a factor of 2 to create a 40 x 40 occupancy map, which holds 1 if the point cloud was observed and 0 if it was not observed, and a measurement noise map, which holds the variance 0-mean noise added to the SDF values. The parameters of the GPIS were selected using maximum likelihood on a held-out set of validation shapes. The noise of the motion, position and friction coefficient was set to the following variances $\sigma_{mu} = 0.4$, $\sigma_{rot} = 0.3$ rads,$\sigma_{trans} = 3$. Our visualization technique follows the approach of \cite{mahler2015gp} and consisted of drawing many shape samples from the distribution and blurring accordingly to a histogram equalization scheme. 
 
-We did experiments for the case of two hard contacts in 2-D, however our methods are not limited to this implementation. We drew random lines of actions $\gamma_1(t)$ and $\gamma_2(t)$ by sampling around a circle with radius $\sqrt{2}n$ and sampling the circles origin, then projecting onto the largest inscribing circle in the workspace. 
+We did experiments for the case of two hard contacts in 2-D. We drew random lines of actions $\gamma_1(t)$ and $\gamma_2(t)$ by sampling around a circle with radius $\sqrt{2}n$ and sampling the circles origin, then projecting onto the largest inscribing circle in the workspace. 
 
 \subsection{Multi-Armed Bandit Experiments}
 \todo{add Bayes and Kehoe results}
-We consider the problem of selecting the best grasp plan, $\Gamma^*$ out of a set $G$. For our experiments we look at selecting the best grasp out of a size of $|G| = 1000$. In Fig. \ref{fig:simple_regret}, we plotted the simple regret averaged over 100 randomly drawn shapes in our data set and compare the different methods (UCB, Thompson, Gittins and the naive random allocation). We initialize both the Monte-Carlo and bandit technique by sampling each grasp 1 time. We draw samples from our calculated distributions $p(g)$.  Interestingly, Gittins and Thompson converge much faster than random and UCB. In Fig. \ref{fig:pulls_per_grasp}, you can see that Gittins and Thompson allocate grasp samples to only the grasps of high quality, thus they are quickly able to ignore the low quality grasps. UCB takes a more conservative approach to sample allocation, which leads to poor performance in the best arm identification problem \cite{bubeck2009pure}.
+We consider the problem of selecting the best grasp plan, $\Gamma^*$ out of a set $G$. For our experiments we look at selecting the best grasp out of a size of $|G| = 1000$. We initialize all algorithms by sampling each grasp 1 time. We draw samples from our graphical model using the technique described in Sec.  \ref{sec:grasp_sample}. In Fig. \ref{fig:simple_regret}, we plotted the simple regret averaged over 100 randomly selected shapes in the Brown Vision Lab 2D dataset and compare the different methods (Bayes-UCB, Thompson, Gittins, Kehoe et al. \cite{kehoe2012toward} and Monte-Carlo Integration).  In Fig. \ref{fig:grasp_quality}, we plot the current grasp quality the algorithm selects vs. samples drawn.  We then show the grasps selected for five shapes at a stopping time of $T = 9000$ for all the methods listed in Fig. \ref{fig:shape_samples}.
+
+  Interestingly in Fig \ref{fig:grasp_quality}, Gittins and Thompson suggest on average higher quality grasps with  than Monte-Carlo integration and the method listed in Kehoe et al \cite{kehoe2012toward} with the same number of samples drawn . In Fig. \ref{fig:pulls_per_grasp} we plot samples per grasp quality, Gittins and Thompson appear to allocate significantly more grasp samples to grasps of high quality, thus they are quickly able to ignore the low quality grasps. Kehoe et al. and Monte-Carlo integration take a more evenly distributed approach to sample allocation, which could explain the performance difference in Fig. \ref{fig:simple_regret} and Fig. \ref{fig:grasp_quality}.
+
+
+
+
 
 \begin{figure*}[ht!]
 \centering
-\includegraphics[width = 16.5cm, height = 9cm]{matlab_figures/simple_regret.eps}
-\caption{ \footnotesize Comparison of Simple Regret convergence for the four sequential decision methods (Monte-Carlo, Bayes -UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite{brown} with a set $|G|=1000$ for each shape. As you can see the BMAB methods converge almost a magnitude faster than random allocation. It is worth noting that Gittins outperform the other two algorithms, which is useful when choosing which one to implement }
+\includegraphics[width = 16.5cm, height = 9cm]{matlab_figures/simp_regret.eps}
+\caption{ \footnotesize Comparison of Simple Regret convergence for the four sequential decision methods (Monte-Carlo, Bayes -UCB, Thompson and Gittins). Graph is averaged over 100 shapes from the Brown Sillohoute Dataset \cite{brown} with a set $|G|=1000$ for each shape. As you can see the BMAB methods converge almost a magnitude faster than random allocation. It is worth noting that Gittins outperform the other two algorithms, which is useful when choosing which one to implement }
 \vspace*{-10pt}
 \label{fig:simple_regret}
 \end{figure*}
+
+\begin{figure*}[ht!]
+\centering
+\includegraphics[width = 16.5cm, height = 9cm]{matlab_figures/pfc.eps}
+\caption{ \footnotesize Comparison of the current average probability of force closure vs. the number of samples pulled.Graph is averaged over 100 shapes randomly drawn from the Brown Vision 2D Lab Dataset \cite{brown} with a set $|G|=1000$ for each shape.  We demonstrate this for Thompson, Gittins, Monte-Carlo and the approach taking in Kehoe et al \cite{kehoe2012toward}. We also demonstrate what the average probability of force closure for the approximate optimal policy. Emperically, it appears that Thompson and Gittins converge at a faster rate to the optimal solution, which is desired for an anytime algorithm  }
+\vspace*{-10pt}
+\label{fig:grasp_quality}
+\end{figure*}
+
+
+
 
 
 \begin{figure*}[ht!]
 \centering
 \includegraphics[width = 16.5cm, height = 9cm]{matlab_figures/pulls_per_grasp.eps}
-\caption{ \footnotesize Comparison of sample per grasp for the four sequential decision methods (Random, Bayes - UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Silhouette Dataset \cite{brown} with a set $|G|=1000$ for each shape. The best grasps are ranked 1 and worst are 1000. As you can see the MAB algorithm intelligently allocate samples towards high quality grasps based on past observations, where Monte-Carlo Integration takes a uniform approach to allocation. \cite{best_arm}}
+\caption{ \footnotesize Comparison of sample per grasp for the four sequential decision methods (Random, Bayes - UCB, Thompson, Gittins). Graph is averaged over 100 shapes from the Brown Silhouette Dataset \cite{brown} with a set $|G|=1000$ for each shape. The best grasps are ranked 1 and worst are 1000. As you can see the MAB algorithm intelligently allocate samples towards high quality grasps based on past observations, where Monte-Carlo Integration takes a uniform approach to allocation. }
+
 \vspace*{-10pt}
 \label{fig:pulls_per_grasp}
 \end{figure*}
+
 \begin{figure*}%
     \centering
-    \subfloat{{\includegraphics[width=16.5cm]{matlab_figures/shapes_1.eps} }}%
+    \subfloat{{\includegraphics[width=16.5cm]{matlab_figures/shape_1.eps} }}%
     \qquad
     \subfloat]{{\includegraphics[width=16.5cm]{matlab_figures/shapes_2.eps} }}%
        \subfloat]{{\includegraphics[width=16.5cm]{matlab_figures/shapes_3.eps} }}%
           \subfloat]{{\includegraphics[width=16.5cm]{matlab_figures/shapes_4.eps} }}%
              \subfloat]{{\includegraphics[width=16.5cm]{matlab_figures/shapes_5.eps} }}%
     
-    \caption{Five shapes shown from the Brown Visual Lab Dataset with induced shape uncertainity and visualized according to the method described in \cite{mahler2015gp}. The four methods (Monte-Carlo, Kehoe's, Thompson and Gittins) were all run until a stopping time of 9000 evaluations with a uniformly initialized grasp set of $|G|=1000$. The grasps and the quality each one found is shown above. The Gittins Index Method in all cases shown found the best grasp among the methods.  }%
-    \label{fig:rot_shapes}%
+    \caption{Five shapes shown from the Brown Visual Lab Dataset with induced shape uncertainity and visualized according to the method described in \cite{mahler2015gp}. The four methods (Monte-Carlo, Kehoe's, Thompson and Gittins) were all run until a stopping time of 9000 evaluations with a uniformly initialized grasp set of $|G|=1000$. We also showed the estimated best grasp in the set.  The grasps and the quality each one found is shown above.  In the four out of five cases, Thompson sampling is able to find the best grasp in the set at the stopping interval of $9000$, however at the last shape there is a difference of $2\%$ grasp quality.   }%
+    \label{fig:shape_samples}%
 \end{figure*}
 
+\todo{Michael: Need to discuss how to implement worst case scenario, adversial applies changing distributions online (which would not model the problem).}
+
+
 \subsection{Sensitivity Analysis }
-We now will show how well the top two algorithms Thompson Sampling and the Gittens Index Method perform under a variation in noise from friction coefficient uncertainty, shape uncertainty, rotational pose and translation pose. The experiments are performed with the same setup as before but now we increase the variance parameters across a set range for each parameter to simulate low, medium and high levels of noise. All experiments were averaged across 10 shapes with a set size $|G| = 1000$. 
+We now will show how well the top two algorithms Thompson Sampling and the Gittens Index Method perform under a variation in noise from friction coefficient uncertainty, shape uncertainty, rotational pose and translation pose. The experiments are performed with the same setup as before but now we increase the variance parameters across a set range for each parameter to simulate low, medium and high levels of noise. All experiments were averaged across 10 shapes randomly selected with from the Brown dataset with a set size $|G| = 1000$. 
 
-For friction coefficient we varied the variance across the following values $\sigma_{\mu} = \lbrace 0.05, 0.2, 0.4$. As illustrated in Fig. \ref{fig:fric_sens}, the performance of the bandit algorithm remains largely unchanged, with typical convergence to zero in simple regret less than 2000 evaluations.
+For friction coefficient we varied the variance across the following values $\sigma_{\mu} = \lbrace 0.05, 0.2, 0.4 \rbrace$. As illustrated in Fig. \ref{fig:fric_sens}, the performance of the bandit algorithm remains largely unchanged, with typical convergence to zero in simple regret less than 2000 evaluations.
 
-For rotational uncertainity in pose, we varied $\sigma_{rot}$ over the set of $\lbrace 0.03, 0.12,0.24\rbrace$ radians. As you can see in Fig. \ref{fig:rot_sens}, the performance of the bandit algorithms is effected by the change in rotation, increase in variance to $0.24$ radians or $13^{\deg}$  causes the convergence in simple regret to not be reached until 5500 samples or an average of 5.5 samples per grasp. This can be explained because such a large variance causes a a drop in quality across all grasps and makes it harder to separate the outliers \cite{gabillon2012bes}. The quality of the best grasp along with the grasp for each round is shown in \ref{fig:rot_shapes}. 
+For rotational uncertainty in pose, we varied $\sigma_{rot}$ over the set of $\lbrace 0.03, 0.12,0.24\rbrace$ radians. As illustrated in Fig. \ref{fig:rot_sens}, the performance of the bandit algorithms is effected by the change in rotation, increase in variance to $0.24$ radians or $13^{\deg}$  causes the convergence in simple regret to not be reached until 5500 samples or an average of 5.5 samples per grasp. This can be explained because such a large variance causes a a drop in quality across all grasps and makes it harder to separate the outliers \cite{gabillon2012bes}. The quality of the best grasp along with the grasp for each round is shown in \ref{fig:rot_shapes}. 
 
 
 For translational uncertainty in pose, we varied $\sigma_{trans}$ in the range of $\lbrace 3,12, 24 \rbrace$ units (on a 40 x 40 unit workspace). As you can see in Fig. \ref{fig:rot_sens}, the performance of the bandit algorithms is effected by the change in rotation, increase noise of $\sigma_{trans} = 24$ causes the convergence to not be reached until around 5000 samples for the Gittens Method and  8200 evaluations for Thompson Sampling.
 
 
 
-
+\subsection{Worst Case Scenario}
+\todo{running experiments today on this}
 
 
 
@@ -631,7 +644,8 @@ For translational uncertainty in pose, we varied $\sigma_{trans}$ in the range o
 
 Our budgeted multi-armed bandit approach appears promising, but we still do not know how well it will perform on 3D shapes and large scale grids. Future work will be building an efficient construction of GPIS to scale to 3D and test the bandit method there. 
 
-The methods we showed (UCB, Thompson and Gittins) are guranteed to find the best grasp as the stopping time approaches infinity \cite{kaufmann2012bayesian,grawal2011analysis,weber1992gittins} but when do you terminate the algorithm is still an open question. Fixed confidence methods do exist that terminate when a certain confidence interval is reached \cite{maron1993hoeffding} \cite{mnih2008empirical}. However, a known problem is that if two grasps have very similar quality it could greatly increase the time for needed to reach the statistical confidence interval \cite{audibert2010best}. We proposed treating the BMAB as anytime algorithm and have demonstrated empirically that the grasps at a given stopping time are better than prior methods of Monte-Carlo sampling or the approach of Kehoe et al. However, this has a hyper parameter that has to be user-defined, which is not ideal.  
+Of the BMAB algorithms we showed, Thompson Sampling is guaranteed to find the best grasp as the stopping time approaches infinity \cite{agrawal2011analysis} but when do you terminate the algorithm is still an open question. Fixed confidence methods do exist that terminate when a certain confidence interval is reached \cite{maron1993hoeffding} \cite{mnih2008empirical}. However, a known problem is that if two grasps have very similar quality it could greatly increase the time for needed to reach the statistical confidence interval \cite{audibert2010best}. We proposed treating the BMAB as anytime algorithm and initial results in Fig. \ref{fig:grasp_quality} suggest that on average grasps at a given stopping time are better than prior methods of Monte-Carlo sampling or the approach of Kehoe et al. However, as shown in \todo{worst case results here} there can exists pathological cases that can change this. Fortunately, though these cases occur with a small probability, however it is important for a practitioner to be aware of them. 
+
 
 Another problem that was revealed in our analysis was that our current grasp metric, probability of force closure, is not dependent on the center of mass \cite{ferrari1992}. It only measure the probability that a grasp controller can resist any force provided it can exert an infinite force.  One can assume that the grasp controller on a robot hand is powerful enough to apply the proper resistance, but that assumption might be invalid in some applications. A similar metric that is still from Beta-Bernoulli and takes center of mass into account, would be ideal for both accurate grasp quality prediction under uncertainty and the utilization of MAB algorithms.  Recent work by Kim et al. developed a physics based simulator that could potentially achieve this goal \cite{kim2012physically}. 
 

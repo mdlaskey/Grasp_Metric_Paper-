@@ -10,21 +10,20 @@
 \BOOKMARK [2][-]{subsection.3.3}{Grasp Quality}{section.3}% 10
 \BOOKMARK [2][-]{subsection.3.4}{Objective}{section.3}% 11
 \BOOKMARK [1][-]{section.4}{Multi-Armed Bandits for Grasp Selection}{}% 12
-\BOOKMARK [2][-]{subsection.4.1}{Fixed Confidence}{section.4}% 13
-\BOOKMARK [2][-]{subsection.4.2}{Fixed Budget}{section.4}% 14
-\BOOKMARK [1][-]{section.5}{Bandit Algorithms For Best Arm Identification}{}% 15
-\BOOKMARK [2][-]{subsection.5.1}{Bayes-UCB}{section.5}% 16
-\BOOKMARK [2][-]{subsection.5.2}{Thompson Sampling}{section.5}% 17
-\BOOKMARK [2][-]{subsection.5.3}{The Gittins Index Method}{section.5}% 18
-\BOOKMARK [1][-]{section.6}{Experiments}{}% 19
-\BOOKMARK [2][-]{subsection.6.1}{Multi-Armed Bandit Experiments}{section.6}% 20
-\BOOKMARK [2][-]{subsection.6.2}{Sensitivity Analysis }{section.6}% 21
-\BOOKMARK [1][-]{section.7}{Limitations}{}% 22
-\BOOKMARK [1][-]{section.8}{Conclusion}{}% 23
-\BOOKMARK [1][-]{section.9}{Future Work}{}% 24
-\BOOKMARK [1][-]{section*.15}{References}{}% 25
-\BOOKMARK [1][-]{section*.16}{Appendix: Gaussian Process Implicit Surface for Representing Shape Uncertainty}{}% 26
-\BOOKMARK [2][-]{subsection.Appendix.A.1}{Gaussian Process \(GP\) Background}{section*.16}% 27
-\BOOKMARK [2][-]{subsection.Appendix.A.2}{Sampling Shape from GPIS Distribution }{section*.16}% 28
-\BOOKMARK [2][-]{subsection.Appendix.A.3}{Distribution on Surface Normals}{section*.16}% 29
-\BOOKMARK [2][-]{subsection.Appendix.A.4}{Expected Center of Mass}{section*.16}% 30
+\BOOKMARK [1][-]{section.5}{Bandit Algorithms}{}% 13
+\BOOKMARK [2][-]{subsection.5.1}{Bayes-UCB}{section.5}% 14
+\BOOKMARK [2][-]{subsection.5.2}{Thompson Sampling}{section.5}% 15
+\BOOKMARK [2][-]{subsection.5.3}{The Gittins Index Method}{section.5}% 16
+\BOOKMARK [1][-]{section.6}{Experiments}{}% 17
+\BOOKMARK [2][-]{subsection.6.1}{Multi-Armed Bandit Experiments}{section.6}% 18
+\BOOKMARK [2][-]{subsection.6.2}{Sensitivity Analysis }{section.6}% 19
+\BOOKMARK [2][-]{subsection.6.3}{Worst Case Scenario}{section.6}% 20
+\BOOKMARK [1][-]{section.7}{Limitations}{}% 21
+\BOOKMARK [1][-]{section.8}{Conclusion}{}% 22
+\BOOKMARK [1][-]{section.9}{Future Work}{}% 23
+\BOOKMARK [1][-]{section*.16}{References}{}% 24
+\BOOKMARK [1][-]{section*.17}{Appendix: Gaussian Process Implicit Surface for Representing Shape Uncertainty}{}% 25
+\BOOKMARK [2][-]{subsection.Appendix.A.1}{Gaussian Process \(GP\) Background}{section*.17}% 26
+\BOOKMARK [2][-]{subsection.Appendix.A.2}{Sampling Shape from GPIS Distribution }{section*.17}% 27
+\BOOKMARK [2][-]{subsection.Appendix.A.3}{Distribution on Surface Normals}{section*.17}% 28
+\BOOKMARK [2][-]{subsection.Appendix.A.4}{Expected Center of Mass}{section*.17}% 29

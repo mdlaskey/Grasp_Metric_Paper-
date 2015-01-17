@@ -87,6 +87,12 @@ K.~Y. Goldberg and M.~T. Mason, ``Bayesian grasping,'' in \emph{Robotics and
   Automation, 1990. Proceedings., 1990 IEEE International Conference on}.\hskip
   1em plus 0.5em minus 0.4em\relax IEEE, 1990, pp. 1264--1269.
 
+\bibitem{graepel2010web}
+T.~Graepel, J.~Q. Candela, T.~Borchert, and R.~Herbrich, ``Web-scale bayesian
+  click-through rate prediction for sponsored search advertising in microsoft's
+  bing search engine,'' in \emph{Proceedings of the 27th International
+  Conference on Machine Learning (ICML-10)}, 2010, pp. 13--20.
+
 \bibitem{hollinger2013}
 G.~A. Hollinger, B.~Englot, F.~S. Hover, U.~Mitra, and G.~S. Sukhatme, ``Active
   planning for underwater inspection and the benefit of adaptivity,''
@@ -143,6 +149,11 @@ B.~Le{\'o}n, S.~Ulbrich, R.~Diankov, G.~Puche, M.~Przybylski, A.~Morales,
   Science.\hskip 1em plus 0.5em minus 0.4em\relax Springer Berlin / Heidelberg,
   2010, vol. 6472, pp. 109--120.
 
+\bibitem{li1988task}
+Z.~Li and S.~S. Sastry, ``Task-oriented optimal grasping by multifingered robot
+  hands,'' \emph{Robotics and Automation, IEEE Journal of}, vol.~4, no.~1, pp.
+  32--44, 1988.
+
 \bibitem{madani2004budgeted}
 O.~Madani, D.~J. Lizotte, and R.~Greiner, ``The budgeted multi-armed bandit
   problem,'' in \emph{Learning Theory}.\hskip 1em plus 0.5em minus 0.4em\relax
@@ -169,11 +180,11 @@ V.~Mnih, C.~Szepesv{\'a}ri, and J.-Y. Audibert, ``Empirical bernstein
   Machine learning}.\hskip 1em plus 0.5em minus 0.4em\relax ACM, 2008, pp.
   672--679.
 
-\bibitem{pokorny2013classical}
-F.~T. Pokorny and D.~Kragic, ``Classical grasp quality evaluation: New
-  algorithms and theory,'' in \emph{Intelligent Robots and Systems (IROS), 2013
-  IEEE/RSJ International Conference on}.\hskip 1em plus 0.5em minus 0.4em\relax
-  IEEE, 2013, pp. 3493--3500.
+\bibitem{mooring1986determination}
+B.~Mooring and T.~Pack, ``Determination and specification of robot
+  repeatability,'' in \emph{Robotics and Automation. Proceedings. 1986 IEEE
+  International Conference on}, vol.~3.\hskip 1em plus 0.5em minus 0.4em\relax
+  IEEE, 1986, pp. 1017--1023.
 
 \bibitem{rasmussen2006}
 C.~Rasmussen and C.~Williams, \emph{Gaussian processes for machine
@@ -213,9 +224,10 @@ F.~Stulp, E.~Theodorou, J.~Buchli, and S.~Schaal, ``Learning to grasp under
   International Conference on}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE,
   2011, pp. 5703--5708.
 
-\bibitem{vahrenkamp2010simo}
-N.~Vahrenkamp, T.~Asfour, and R.~Dillmann, ``Simo: A simulation and motion
-  planning toolbo for c+.''
+\bibitem{weber1992gittins}
+R.~Weber \emph{et~al.}, ``On the gittins index for multiarmed bandits,''
+  \emph{The Annals of Applied Probability}, vol.~2, no.~4, pp. 1024--1033,
+  1992.
 
 \bibitem{weisz2012pose}
 J.~Weisz and P.~K. Allen, ``Pose error robust grasping from contact wrench

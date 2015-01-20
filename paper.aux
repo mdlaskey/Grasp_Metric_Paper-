@@ -184,18 +184,19 @@
 \newlabel{fig:fric_sens}{{9}{9}{\footnotesize Sensitivity Analysis for Thompson Sampling and the Gittens Index Method under friction coefficient uncertainty $\sigma _{fric} = \lbrace 0.05,0.2, 0.4 \rbrace $ from top to bottom on a 40 x 40 unit workspace averaged over 10 shapes from the Brown Vision Lab Data set. The increase in noise has little effect on the convergence of the two algorithms in simple regret.\relax }{figure.caption.12}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Five shapes shown from the Brown Visual Lab Dataset with induced shape uncertainity and visualized according to the method described in \cite  {mahler2015gp}. The four methods (Monte-Carlo, Kehoe's, Thompson and Gittins) were all run until a stopping time of 9000 evaluations with a uniformly initialized grasp set of $|G|=1000$. We also showed the estimated best grasp in the set. The grasps and the quality each one found is shown above. In the four out of five cases, Thompson sampling is able to find the best grasp in the set at the stopping interval of $9000$, however at the last shape there is a difference of $2\%$ grasp quality. \relax }}{10}{figure.caption.11}}
 \newlabel{fig:shape_samples}{{8}{10}{Five shapes shown from the Brown Visual Lab Dataset with induced shape uncertainity and visualized according to the method described in \cite {mahler2015gp}. The four methods (Monte-Carlo, Kehoe's, Thompson and Gittins) were all run until a stopping time of 9000 evaluations with a uniformly initialized grasp set of $|G|=1000$. We also showed the estimated best grasp in the set. The grasps and the quality each one found is shown above. In the four out of five cases, Thompson sampling is able to find the best grasp in the set at the stopping interval of $9000$, however at the last shape there is a difference of $2\%$ grasp quality. \relax }{figure.caption.11}{}}
+\citation{agrawal2011analysis}
 \citation{kehoe2012estimating}
-\citation{kehoe2012estimating}
-\citation{christopoulos2007handling}
-\citation{73}
-\citation{miller2004graspit}
-\citation{bergemann2006bandit}
+\citation{bubeck2009pure}
 \@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Two shapes shown from the Brown Visual Lab Dataset,from Left to Right the variance on rotation $\sigma _{rot}$ is increased $0.03$, $0.12$ to $0.24$ radians. As you can see the overall variance increase effects the quality of the top grasp in the set of possible grasps. Furthermore for Shape 2, the grasp with low rotational variance is different than that for higher variance because the original grasp is more likely to touch the area of higher shape uncertainty when subjected to high variance in rotation. {\relax \fontsize  {10}{12.00pt}\selectfont  \color  {red} \textsc  {\MakeLowercase  {[todo:\nobreakspace  {}find better shapes in the brown dataset]}}} \relax }}{11}{figure.caption.14}}
 \newlabel{fig:rot_shapes}{{11}{11}{Two shapes shown from the Brown Visual Lab Dataset,from Left to Right the variance on rotation $\sigma _{rot}$ is increased $0.03$, $0.12$ to $0.24$ radians. As you can see the overall variance increase effects the quality of the top grasp in the set of possible grasps. Furthermore for Shape 2, the grasp with low rotational variance is different than that for higher variance because the original grasp is more likely to touch the area of higher shape uncertainty when subjected to high variance in rotation. \todo {find better shapes in the brown dataset} \relax }{figure.caption.14}{}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {lTop Grasps Shown for Shape 1}}}{11}{subfigure.11.1}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Top Grasps Shown for Shape 2}}}{11}{subfigure.11.2}}
 \@writefile{toc}{\contentsline {section}{\numberline {VIII}Conclusion}{11}{section.8}}
 \@writefile{toc}{\contentsline {section}{\numberline {IX}Future Work}{11}{section.9}}
+\citation{reverdy2014modeling}
+\citation{andrieu2003introduction}
+\citation{miller2004graspit}
+\citation{bergemann2006bandit}
 \bibstyle{IEEEtranS}
 \bibdata{references}
 \bibcite{agrawal2011analysis}{1}
@@ -214,16 +215,16 @@
 \bibcite{goldberg1990bayesian}{14}
 \bibcite{graepel2010web}{15}
 \bibcite{hollinger2013}{16}
-\bibcite{hsiao2011bayesian}{17}
-\bibcite{katehakis1987multi}{18}
-\bibcite{kaufmann2012bayesian}{19}
-\bibcite{kehoe2012estimating}{20}
-\bibcite{kehoe2012toward}{21}
 \@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Sensitivity Analysis for Thompson Sampling and the Gittens Index Method under coefficient of friction uncertainty $\sigma _{rot} = \delimiter "4266308 0.03,0.12, 0.24 \delimiter "5267309 $ radians from top to bottom on a 40 x 40 unit workspace averaged over 10 shapes from the Brown Vision Lab Data set. The increase in noise has little effect on the convergence of the two algorithms in simple regret. {\relax \fontsize  {10}{12.00pt}\selectfont  \color  {red} \textsc  {\MakeLowercase  {[todo:\nobreakspace  {}Going to rerun with more shapes to be sure about this]}}}\relax }}{12}{figure.caption.13}}
 \newlabel{fig:rot_sens}{{10}{12}{\footnotesize Sensitivity Analysis for Thompson Sampling and the Gittens Index Method under coefficient of friction uncertainty $\sigma _{rot} = \lbrace 0.03,0.12, 0.24 \rbrace $ radians from top to bottom on a 40 x 40 unit workspace averaged over 10 shapes from the Brown Vision Lab Data set. The increase in noise has little effect on the convergence of the two algorithms in simple regret. \todo {Going to rerun with more shapes to be sure about this}\relax }{figure.caption.13}{}}
 \@writefile{toc}{\contentsline {section}{References}{12}{section*.16}}
 \@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Sensitivity Analysis for Thompson Sampling under translation uncertainty $\sigma _{trans} = \delimiter "4266308 3, 12, 24 \delimiter "5267309 $ units from top to bottom on a 40 x 40 unit workspace. As you can see the increase in noise effects performance, however the 5000 samples needed for Gittins to converge at the the highest level of noise (which is a variance of over half the workspace) is much less that the samples needed for uniform allocation to converge in Fig. \ref  {fig:simple_regret}\relax }}{12}{figure.caption.15}}
 \newlabel{fig:trans_sens}{{12}{12}{\footnotesize Sensitivity Analysis for Thompson Sampling under translation uncertainty $\sigma _{trans} = \lbrace 3, 12, 24 \rbrace $ units from top to bottom on a 40 x 40 unit workspace. As you can see the increase in noise effects performance, however the 5000 samples needed for Gittins to converge at the the highest level of noise (which is a variance of over half the workspace) is much less that the samples needed for uniform allocation to converge in Fig. \ref {fig:simple_regret}\relax }{figure.caption.15}{}}
+\bibcite{hsiao2011bayesian}{17}
+\bibcite{katehakis1987multi}{18}
+\bibcite{kaufmann2012bayesian}{19}
+\bibcite{kehoe2012estimating}{20}
+\bibcite{kehoe2012toward}{21}
 \bibcite{kim2012physically}{22}
 \bibcite{laaksonen2012probabilistic}{23}
 \bibcite{lai1985asymptotically}{24}
@@ -252,7 +253,6 @@
 \citation{solak2003derivative}
 \citation{dragiev2011}
 \citation{williams2007}
-\citation{ferrari1992}
 \@writefile{toc}{\contentsline {section}{Appendix: Gaussian Process Implicit Surface for Representing Shape Uncertainty}{13}{section*.17}}
 \newlabel{sec:Appendix}{{A}{13}{\appendixname \nobreakspace \\* Gaussian Process Implicit Surface for Representing Shape Uncertainty}{section*.17}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {A}Gaussian Process (GP) Background}{13}{subsection.Appendix.A.1}}
@@ -261,11 +261,12 @@
 \newlabel{eq:cov_gradient}{{7}{13}{Gaussian Process (GP) Background}{equation.Appendix.A.7}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {B}Sampling Shape from GPIS Distribution }{13}{subsection.Appendix.A.2}}
 \newlabel{eq:joint_shape}{{8}{13}{Sampling Shape from GPIS Distribution}{equation.Appendix.A.8}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {C}Distribution on Surface Normals}{13}{subsection.Appendix.A.3}}
-\newlabel{sec:normals}{{C}{13}{Distribution on Surface Normals}{subsection.Appendix.A.3}{}}
-\newlabel{eq:normal_dist}{{9}{13}{Distribution on Surface Normals}{equation.Appendix.A.9}{}}
+\citation{ferrari1992}
 \@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Shape samples drawn from Eq. \ref  {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }}{14}{figure.caption.18}}
 \newlabel{fig:shape_samples}{{13}{14}{Shape samples drawn from Eq. \ref {eq:joint_shape} on the object in the upper left corner. Given a shape sample we highlight the zero-crossing of the level set in black\relax }{figure.caption.18}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {C}Distribution on Surface Normals}{14}{subsection.Appendix.A.3}}
+\newlabel{sec:normals}{{C}{14}{Distribution on Surface Normals}{subsection.Appendix.A.3}{}}
+\newlabel{eq:normal_dist}{{9}{14}{Distribution on Surface Normals}{equation.Appendix.A.9}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {D}Expected Center of Mass}{14}{subsection.Appendix.A.4}}
 \newlabel{sec:mass}{{D}{14}{Expected Center of Mass}{subsection.Appendix.A.4}{}}
 \newlabel{eq:mass}{{D}{14}{Expected Center of Mass}{subsection.Appendix.A.4}{}}

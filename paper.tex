@@ -657,17 +657,18 @@ A key insight from our work is that uniformly allocating samples to grasps is in
 A pre-requisite for applying a bandit approach is to formulate a representation  of how uncertainty affects grasp parameters and thus grasp quality.
 We purpose treating this as a graphical model and use model the parameters as stochastic noise. Our choice of distributions though is not the focus of the paper. The MAB algorithm is applicable in any context of bounded reward distributions and all the theoretical results we mentioned will transfer to the Beta-Bernoulli case, or the estimation of probability of force closure. 
 
-Our anytime BMAB approach is guaranteed to find the best grasp in a given proposal set in the limit of an infinite time and has empirically been shown to outperform the methods of prior work Monte-Carlo and the method purposed by Kehoe et al. \cite{kehoe2012estimating}. 
+One of the BMAB algorithms that works well in practice, Thompson Sampling, is guaranteed to find the best grasp in a given proposal set in the limit of an infinite time \cite{agrawal2011analysis} and initial results have shown it to outperform the methods of prior work Monte-Carlo and the method purposed by Kehoe et al. \cite{kehoe2012estimating}. 
 
 
 
 \section{Future Work}
-Our results are promising and they suggest many avenues of future work. By utilizing the BMAB model, we can encode uncertainty in the grasp parameters and then leverage the existing algorithms to efficiently find the best grasp. 
 
-In principle, our method can be applied to other representations of shape uncertainty such as perturbations on polygonal vertices \cite{kehoe2012estimating} or splines \cite{christopoulos2007handling}.
-It can further be applied to other grasp quality metrics or simulation based evaluation methods \cite{73}. 
+As we scale to larger 3D objects the possible number of grasp candidates will be substantially larger, the more options a MAB algorithm has leads to generally a harder problem \cite{bubeck2009pure}. The MAB algorithms presented above though assumed that each option is independent. In the grasping context though spatial information about grasps could provide information about the quality of similar grasps. For example, if grasp $A$ is very similar with respect to some metric to grasp $B$ and grasp $B$ appears promising based on samples observed, we might be able use this information and update the prior Beta distribution of grasp $A$.
+
+MAB methods with correlated options do exist and have even been shown to achieve sub-logarithmic regret in some cases \cite{reverdy2014modeling}. However, there is an assumption that the correlation between the different options is known or estimated  a priori to running the algorithm. In the grasping context, one way to achieve this would be to learn correlations based on an offline training method \cite{andrieu2003introduction}, this might require a feature based representation though of both the proposed grasps and the object itself which could lead to many interesting research questions.
 
 Future work will also consider applying BMAB approach to grasp planners like GraspIt! \cite{miller2004graspit} to see if our method can handle uncertainty while working under the time constraints needed for most real time applications. While our results are promising, it remains to be seen how well it deals with the increased complexity of 3D models over 2D models and larger scale experiments. However, the BMAB model has a large amount of literature to draw from as we encounter new and more challenging problems \cite{bergemann2006bandit}.
+
 
 \bibliographystyle{IEEEtranS}
 \bibliography{references}

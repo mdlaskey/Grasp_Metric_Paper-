@@ -335,13 +335,18 @@ More recent works have considered adaptive sampling to discard grasp plans that 
 In this work we show that this objective can be framed as a budgeted multi-armed bandit (BMAB) problem.
 
 \section{Multi-Armed Bandits for Grasp Selection}
+\label{sec:MAB}
 %While a standard approach to solving the problem in Eq. \ref{eq:problem_def} would be to perform Monte-Carlo integration on each $\Gamma_i$ and compute the probability of force closure, we
 We propose framing the problem in the multi-armed bandit (MAB) model and forming a policy for iteratively selecting which grasp to evaluate based on the probability of force closure estimate from the samples so far.
 The goal of the MAB approach is to allocate more sampling effort to grasps that appear to have higher quality based on the evaluation performed so far.
 
-The multi-armed bandit model, originally described by Robbins \cite{robbins1985some}, is a statistical model of an agent attempting to make a sequence of correct decisions while concurrently gathering information about each possible decision. In a traditional MAB problem, a gambler has $K$ independent slot machines, or ``arms'' to play.
-When an arm is played (or ``pulled'' in the literature), it returns an amount of money from a fixed reward distribution, $P_k, k = 1, ..., K$, that is unknown to the gambler.
-The goal of the gambler is to come up with a method for determining which arms to pull, how many times to pull each arm, and what order to pull them in such that the average cumulative rewards is maximized over many pulls.
+\subsection{Standard MAB Model}
+The multi-armed bandit model, originally described by Robbins \cite{robbins1985some}, is a statistical model of an agent attempting to make a sequence of correct decisions while concurrently gathering information about each possible decision.
+Solutions to the multi-armed bandit model have been used in applications for which evaluating all possible options is expensive or impossible, such as the optimal design of clinical trials~\cite{simon1989optimal}, market pricing~\cite{rothschild1974two}, and choosing strategies for games~\cite{st2012online}. 
+
+In a traditional MAB problem, a gambler has $K$ independent slot machines, or ``arms'' to play.
+When an arm is played (or ``pulled'' in the literature), it returns an amount of money from a fixed reward distribution $P_k, k = 1, ..., K$ that is unknown to the gambler.
+The goal of the gambler is to come up with a method for determining which arms to pull, how many times to pull each arm, and what order to pull them in such that the average cumulative rewards are maximized over many pulls.
 If the gambler knew the machine with the highest expected reward, the gambler would only pull that arm.
 However, since the reward distributions are unknown, a successful gambler needs to trade off exploiting the arms that currently yields the highest reward and exploring new arms to see if they give better rewards on average.
 Developing a policy that successfully trades between exploration and exploitation to maximize average reward has been the focus of extensive research since the problem formulation \cite{bubeck2009pure}, \cite{robbins1985some}, \cite{bergemann2006bandit}.
@@ -354,17 +359,18 @@ The algorithm maintains a confidence bound on the distribution of reward based o
 Many variants of UCB have thus been proposed~\cite{}. \todo{Jeff: cite a lot of the literature here}
 Since then a several other algorithms have been shown to achieve this bound, such as the Gittins index policy~\cite{} and Thompson sampling for certain reward distributions~\cite{}.
 
+\subsection{Pure Exploration MAB Models}
 Our grasp selection problem is similar in that we would like to find the grasp with the highest quality while conserving computational resources.
 %Motivated by limited computational resources we allocate sampling resources to efficiently find the best arm.
 However, in our problem one only usually cares about the quality when the final grasp is selected for execution ( the difference between the expected quality of the optimal arm and the arm selected is known as ``simple regret'' in the literature) rather than the cumulative regret as studied in the standard MAB problem.
 This is an instance of the Pure Exploration multi-armed bandit problem\cite{bubeck2009pure}, in which an agent attempts to recommend the best arm at the end of an exploration phase but is not penalized for making exploratory arm pulls during this phase.
 Hence, the exploration and exploitation stage are decoupled. 
 The end of the exploration phase, or ``stopping time,'' may not be known to the agent ahead of time.
-Therefore, solutions to the Pure Exploration problem can be thought of as anytime algorithms, meaning they must return a valid solution whenever they are stopped.
+Therefore, unless otherwise noted, solutions to the Pure Exploration problem are anytime algorithms; they must return a valid solution whenever they are stopped.
 
 Formally, given arms $\lbrace \Gamma_1, ..., \Gamma_K \rbrace$ with respective mean rewards $\mu_1, ..., \mu_K$, the goal in the Pure Exploration problem is to find the optimal arm $\mu^* = \underset{k\in\lbrace 1, ..., K \rbrace}{\mbox{max}} \mu_k$.
 The expected simple regret, or suboptimality, at time $t$ is given by
-\vspace{-2ex}
+%\vspace{-2ex}
 \begin{align}\label{eq:simple_regret}
 E[r_t] = \mu^* - \mu_t
 \end{align}
@@ -372,9 +378,12 @@ E[r_t] = \mu^* - \mu_t
 
 Several recent works have studied Pure Exploration algorithms that lead to upper bounds on the expected regret.
 Audibert el al. demonstrated an algorithm called Successive Rejects that divides up the total budget into successively shorter phases and discards the worst arm left at the end of each phase.
-This algorithm can return the best arm with near-optimal probability depending on the hardness of the problem \cite{audibert2010best}.
+This algorithm can return the best arm with near-optimal probability depending on the hardness of the problem and the number of allocated time steps \cite{audibert2010best}, but requires knowledge of the stopping time.
 In addition, UCB-like methods have been proposed that measure a confidence gap and then pull the arm with the highest confidence interval \cite{gabillon2012best}.
 For example, Bubeck et al. showed that the simple regret at any time for the UCB algorithm is bounded by a polynomial function of the number of timesteps~\cite{bubeck2009pure}.
+Several works have showed the relationship between number of timesteps and simple regret for Probably Approximately Correct (PAC) bandit algorithms~\cite{even2006action, mannor2004sample}.
+More recently, Bachman and Precup showed that algorithms based on Bayesian posterior sampling outperformed UCB and PAC algorithms in terms of minimizing simple regret~\cite{bachman2013greedy}.
+%Even-dar et al. showed that for Probably Approximately Correct (PAC) algorithms, the number of pulls needed to 
 
 
 %Best arm identification has a wide variety of literature that largely falls into two camps: one where the algorithm terminates once a fixed confidence interval around the best arm is met and the Budgeted Multi-Armed Bandit (BMAB) model, in which the algorithm must make a decision at the end of a fixed ``budget'' number of arm pulls.
@@ -391,37 +400,56 @@ For example, Bubeck et al. showed that the simple regret at any time for the UCB
 %This algorithm can return the best arm with near-optimal probability depending on the hardness of the problem \cite{audibert2010best}.
 %In addition, UCB-like methods have been proposed that measure a confidence gap and then pull the arm with the highest confidence interval \cite{gabillon2012best}. For example in \cite{bubeck2009pure}, they showed a link between simple regret and cumulative regret that allowed for the analysis of the existing bandit algorithms like UCB1.
 
+\subsection{Grasp Planning as Pure Exploration}
 In this work, we frame the grasp selection problem of \secref{objective} as a Pure Exploration multi-armed bandit problem.
 Each arm corresponds to a different grasp plan and pulling an arm corresponds to sampling from the graphical model in Fig. \ref{fig:graphical_model} and evaluating the force closure condition.
 Since force closure is a binary value, we can think of each grasp plan $\Gamma_i$ as having a Bernoulli reward distribution with probability of success $P_F(\Gamma_i)$.
-Thus, the expected value of the force closure condition is equal to $P_F(\Gamma_i)$, and algorithms that seek to minimize the expected simple regret will also minimize the suboptimiality of the grasp plan chosen.
+Thus, the expected value of the force closure condition for grasp $\Gamma_i$ is $\mu_i = E[F | \Gamma_i, \theta, \xi, \rho, \mu] = P_F(\Gamma_i)$.
+Then minimizing the expected simple regret is equivalent to maximizing $P_F$ over the set of candidate grasp plans:
+
+\vspace{-2ex}
+\begin{align*}
+	\underset{\Gamma_i \in \mG}{\text{argmin }}\mu^{*} - \mu_{i} &= \underset{\Gamma_i \in \mG}{\text{argmax }}\mu_{i} \\
+	&=  \underset{\Gamma_i \in \mG}{\text{argmax }} P_F(\Gamma_i) \\
+	&= \Gamma^{*}
+\end{align*}
 
 In Section \ref{sec:bandit_algorithm}, we will discuss some of the most popular algorithms for solving the multi-armed bandit problem in detail. 
 
-\section{Bandit Algorithms}\label{sec:bandit_algorithm}
+\section{Bayesian Algorithms for MAB}\label{sec:bandit_algorithm}
 
-\todo{Jeff: I find this transition a bit awkward but I'm not sure how to reorg right now}.
-The algorithms discussed in Section ~\secref{} are frequentist, meaning the algorithms treat unknown parameters as fixed and use confidence intervals to score the arms. 
-However, recently Bayesian approachs have gained interest in the MAB community due to their empirical success on real world problems such as ad suggestions \cite{kaufmann2012bayesian} \cite{agrawal2011analysis}.
-In Bayesian algorithms, the agent maintains a belief distribution over the reward distribution on the arms.
-The belief distribution enables a trade off between exploration and exploitation by naturally increasing confidence around the true reward distribution as more rewards are observed for an arms.
-Theoretical results have shown that these methods are capable of achieving the lower bound described by Lai and Robbin \cite{agrawal2011analysis} \cite{kaufmann2012bayesian}.
-Furthermore in an empirical study Bayesian methods have been shown to outperform the UCB family \cite{chapelle2011empirical}. 
-See \cite{} for a review of bayesian methods in multi-armed bandit problems. 
+\todo{Jeff: I find this transition a bit awkward but I'm not sure how to reorg right now. I almost feel like Bayesian methods should come sooner}.
+Most of the algorithms discussed in Section~\ref{sec:MAB} are frequentist, meaning the algorithms treat unknown parameters as fixed and use confidence intervals to score the arms. 
+In this work, we are particularly interested in Bayesian algorithms that use previous samples to form a belief distribution on the likelihood of achieving force closure \cite{weber1992gittins,agrawal2011analysis}, as these methods have been shown empirically to outperform frequentist algorithms (e.g., UCB) on real datasets such as ad placement~\cite{chapelle2011empirical, bachman2013greedy}.
+%However, recently Bayesian approachs have gained interest in the MAB community due to their empirical success on real world problems such as ad suggestions \cite{kaufmann2012bayesian} \cite{agrawal2011analysis}.
+%In Bayesian algorithms, the agent maintains a belief distribution over the reward distribution on the arms.
 
-In the context of grasping, the reward for achieving force close on a sample from the uncertain parameters is a Bernoulli random variable with probabilty of success $\theta$.
-%The distribution that describes whether an event is $\lbrace 0, 1 \rbrace$ is known as a Bernoulli distribution and can be described by the parameter $\theta$ or the probability an event occurs.
-In the Bayesian setting we treat $\theta$ as belonging to a distribution.
-A common choice for such a distribution is the Beta distribution, which is the conjugate prior of the Bernoulli distribution.
-One benefit of a conjugate prior is that the posterior update of the belief distribution is of the same form as the original prior, simplifying sampling and analysis.
-Beta distributions are specified by shape parameters $\alpha$ and $\beta$, where $\alpha >0$ and $\beta >0$.
-The mean of the Beta distribution is given by $\alpha/(\alpha+\beta)$.
-To update the prior Beta distribution one adds the count of observed successes of the event to $\alpha$ and the count of the observed failures to $\beta$
-Often the prior $\alpha =1 $ and $\beta =1$ is used before any rewards are observed, which leads to a uniform distribution on $\theta$. 
+Bayesian algorithms maintain a belief distribution on the grasp quality distributions for each of the candidate grasps to rank.
+The belief distribution enables a trade off between exploration and exploitation by increasing confidence around the true reward distribution as more rewards are observed for an arms.
+In the case of using force closure $F$ to measure quality, $P_F$ for each candidate grasp is a Bernoulli random variable and the Bayesian conjugate prior is a Beta distribution. 
+Beta distributions are specified by shape parameters $\alpha$ and $\beta$, where ($\alpha >0$ and $\beta >0$).
+Typically the uniform prior distribution on probability of force closure for each grasp $i$ at time $t = 0$, $\alpha_{i, 0} =1 $ and $\beta_{i, 0} = 1$, would be used used to initialize the algorithm~\cite{}. 
+Theoretical results have shown that several algorithms for Beta-Bernoulli reward distributions are capable of achieving the lower bound described by Lai and Robbins~\cite{gittins1983dynamic, agrawal2011analysis, kaufmann2012bayesian}.
+%Furthermore in an empirical study Bayesian methods have been shown to outperform the UCB family \cite{chapelle2011empirical}. 
+%See \cite{} for a review of bayesian methods in multi-armed bandit problems. 
 
-Given a proposed grasp plan $\Gamma$ , we draw samples from the shape distribution $p(\theta)$, the distribution on pose $p(\xi)$, distribution on motion $p(\rho)$ and the distribution on friction coefficient $p(\mu)$.
-The distribution on force closure can then be estimated as Beta- Bernoulli Process with shape parameters $\alpha$ and $\beta$.
-Thus, we can write the expected probability of force closure as follows
+%In the context of grasping, the reward for achieving force close on a sample from the uncertain parameters is a Bernoulli random variable with probabilty of success $\theta$.
+%%The distribution that describes whether an event is $\lbrace 0, 1 \rbrace$ is known as a Bernoulli distribution and can be described by the parameter $\theta$ or the probability an event occurs.
+%In the Bayesian setting we treat $\theta$ as belonging to a distribution.
+%A common choice for such a distribution is the Beta distribution, which is the conjugate prior of the Bernoulli distribution.
+%One benefit of a conjugate prior is that the posterior update of the belief distribution is of the same form as the original prior, simplifying sampling and analysis.
+%Beta distributions are specified by shape parameters $\alpha$ and $\beta$, where $\alpha >0$ and $\beta >0$.
+%The mean of the Beta distribution is given by $\alpha/(\alpha+\beta)$.
+%To update the prior Beta distribution one adds the count of observed successes of the event to $\alpha$ and the count of the observed failures to $\beta$
+%Often the prior $\alpha =1 $ and $\beta =1$ is used before any rewards are observed, which leads to a uniform distribution on $\theta$. 
+
+One benefit of the Beta prior on Bernoulli reward distributions is the elegant updates to the belief distribution after observing rewards from arm pulls.
+Let $n_i$ denote the number of times grasp plan $\Gamma_i$ has been sampled.
+Then after observing $S_i$ force closure conditions for grasp $\Gamma_i$, the posterior of the Beta can be computed as $\alpha_{i, n_i} = \alpha_{i, 0} + S_i, \beta_{i, n_i} = \beta_{i, 0} + n_i - S_i$, where $\alpha_{i,0}$ and $\beta_{i,0}$ are the prior shape parameters for $\Gamma_i$ before any samples are evaluated.
+%Given a proposed grasp plan $\Gamma_i$ with current posterior belief $\alpha_i, \beta_i$, , we draw samples from the shape distribution $P(\theta)$, the distribution on pose $P(\xi)$, distribution on motion $P(\rho)$ and the distribution on friction coefficient $P(\mu)$.
+%The distribution on force closure can then be estimated as Beta- Bernoulli Process with shape parameters $\alpha$ and $\beta$.
+Given the current belief $\alpha_{i, n_i}, \beta_{i, n_i}$ on $P_F$ for a grasp plan $\Gamma_i$, the algorithm can predict the probability of force closure on the next iteration by taking the expected value:
+%Thus, we can write the expected probability of force closure as follows
 
 \vspace{-2ex}
 \begin{align}\label{eq:shape_sampling}
@@ -430,7 +458,7 @@ P_F(\Gamma) = \frac{\alpha}{\alpha + \beta}
 
 Whats interesting in the context of a Bayesian BMAB problem our graphical model in Fig. \ref{fig:graphical_model}, is now equivalent in terms of inference to \ref{fig:beta_model} and we only need to estimate $\alpha$ and $\beta$ to determine grasp quality. Regardless of the distributions in Fig. \ref{fig:graphical_model}, we are still able to maintain the theoretical guarantees given by the Bayesian MAB algorithms because the probability of force closure is a Beta-Bernoulli Process \cite{agrawal2011analysis} \cite{kaufmann2012bayesian} 
 \cite{weber1992gittins}, which we will now discuss for each of the three proposed algorithms in detail. 
-\todo{Michael: The above statement is true and I want to convey this message, however it might take some work to convey} 
+\todo{Michael: The above statement is true and I want to convey this message, however it might take some work to convey. Jeff: "We only need to estimate $\alpha$ and $\beta$ to determine grasp quality" is not true. determine -> estimate might fix it} 
 
 
 \begin{figure}[ht!]
@@ -446,10 +474,11 @@ Whats interesting in the context of a Bayesian BMAB problem our graphical model 
 
 %In our case we only care about the regret at the time our decision of the optimal grasp needs to be made, decoupling the exploration and exploitation stages.
 
+We describe three popular Bayesian MAB algorithms below for the Beta belief distribution.
 
-
+\todo{Jeff: Revise below sections for clarity}
 \subsection{Bayes-UCB}
-Bayes UCB, detailed in Algorithm 1, is a version of the UCB algorithm that uses a Bayesian posterior update to get a confidence bound instead of  the frequentist concentration inequality approach. To get an upper confidence bound from the posterior, the Bayes UCB algorithm uses the quantile of the Beta distribution up to a specified probability which depends on the timestep and horizon. TAt each time step the arm with the highest quantile is chosen and the Beta distribution is updated based on the observed reward.  For binary rewards (i.e. Bernoulli distributions) the expected number of pulls of suboptimal arms is bounded and experimentally this algorithm has been shown to outperform UCB for binary rewards \cite{kaufmann2012bayesian}.
+Bayes UCB, detailed in Algorithm 1, is a version of the UCB algorithm that uses a Bayesian posterior update to get a confidence bound instead of  the frequentist concentration inequality approach. To get an upper confidence bound from the posterior, the Bayes UCB algorithm uses the quantile of the Beta distribution up to a specified probability which depends on the timestep and horizon. At each time step the arm with the highest quantile is chosen and the Beta distribution is updated based on the observed reward.  For binary rewards (i.e. Bernoulli distributions) the expected number of pulls of suboptimal arms is bounded and experimentally this algorithm has been shown to outperform UCB for binary rewards \cite{kaufmann2012bayesian}.
 
 \begin{algorithm}
  \KwResult{Current Best Arm, $\Gamma^*$ }
@@ -494,6 +523,7 @@ The randomness of Thompson sampling allows for it to quickly explore the more ar
 
 \subsection{The Gittins Index Method} 
 \todo{Let me know how clear this is, Gittins can be hard to describe in general}
+\todo{Jeff: Needs some work. We will have to think about how to get this across intuitively.}
 One possible solution to solve the MAB problem is to treat it as an Markov Decision Process (MDP) and use Markov Decision theory. This solution makes a lot of sense when the distribution is known because the all elements in the standard MDP tuple, $\lbrace S,A,T,R,\gamma \rbrace$, would be known and it is optimal with respect $\gamma$ \cite{weber1992gittins}. 
 
 However, the curse of dimensionality effects performance because if you have $K$ arms, a finite horizon of $T$ and a Beta-Bernoulli distribution on your arms then your state space is on the order of $T^{2*K}$. Hence the complexity of solving MAB using Markov Decision theory increases exponentially with the number of bandit processes. A key insight though was given by Gittins, who showed that instead of solving the $k$-dimensional MDP one can instead solve $k$ 1-dimensional optimization problems: for each arm $i$, $i= 1,...,k$, and for each state of $x^i = \lbrace \alpha_0 +S_t, \beta_0 +F_t \rbrace^i$, where $S_t$ and $F_t$ correspond to the number of success and failures at pull $t$. 

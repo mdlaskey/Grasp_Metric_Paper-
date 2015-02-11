@@ -10,23 +10,16 @@
 \BOOKMARK [2][-]{subsection.3.3}{Grasp Quality}{section.3}% 10
 \BOOKMARK [2][-]{subsection.3.4}{Objective}{section.3}% 11
 \BOOKMARK [1][-]{section.4}{Multi-Armed Bandits for Grasp Selection}{}% 12
-\BOOKMARK [2][-]{subsection.4.1}{Standard MAB Model}{section.4}% 13
-\BOOKMARK [2][-]{subsection.4.2}{Pure Exploration MAB Models}{section.4}% 14
-\BOOKMARK [2][-]{subsection.4.3}{Grasp Planning as Pure Exploration}{section.4}% 15
-\BOOKMARK [1][-]{section.5}{Bayesian Algorithms for MAB}{}% 16
-\BOOKMARK [2][-]{subsection.5.1}{Bayes-UCB}{section.5}% 17
-\BOOKMARK [2][-]{subsection.5.2}{Thompson Sampling}{section.5}% 18
-\BOOKMARK [2][-]{subsection.5.3}{The Gittins Index Method}{section.5}% 19
-\BOOKMARK [1][-]{section.6}{Experiments}{}% 20
-\BOOKMARK [2][-]{subsection.6.1}{Multi-Armed Bandit Experiments}{section.6}% 21
-\BOOKMARK [2][-]{subsection.6.2}{Sensitivity Analysis }{section.6}% 22
-\BOOKMARK [2][-]{subsection.6.3}{Worst Case Scenario}{section.6}% 23
-\BOOKMARK [1][-]{section.7}{Limitations}{}% 24
-\BOOKMARK [1][-]{section.8}{Conclusion}{}% 25
-\BOOKMARK [1][-]{section.9}{Future Work}{}% 26
-\BOOKMARK [1][-]{section*.16}{References}{}% 27
-\BOOKMARK [1][-]{section*.17}{Appendix: Gaussian Process Implicit Surface for Representing Shape Uncertainty}{}% 28
-\BOOKMARK [2][-]{subsection.Appendix.A.1}{Gaussian Process \(GP\) Background}{section*.17}% 29
-\BOOKMARK [2][-]{subsection.Appendix.A.2}{Sampling Shape from GPIS Distribution }{section*.17}% 30
-\BOOKMARK [2][-]{subsection.Appendix.A.3}{Distribution on Surface Normals}{section*.17}% 31
-\BOOKMARK [2][-]{subsection.Appendix.A.4}{Expected Center of Mass}{section*.17}% 32
+\BOOKMARK [2][-]{subsection.4.1}{MAB Model}{section.4}% 13
+\BOOKMARK [2][-]{subsection.4.2}{Grasp Planning as a Multi-Armed Bandit}{section.4}% 14
+\BOOKMARK [1][-]{section.5}{Algorithms for MAB}{}% 15
+\BOOKMARK [2][-]{subsection.5.1}{The Gittins Index Method}{section.5}% 16
+\BOOKMARK [2][-]{subsection.5.2}{Thompson Sampling}{section.5}% 17
+\BOOKMARK [1][-]{section.6}{Experiments}{}% 18
+\BOOKMARK [2][-]{subsection.6.1}{Multi-Armed Bandit Experiments}{section.6}% 19
+\BOOKMARK [2][-]{subsection.6.2}{Sensitivity Analysis }{section.6}% 20
+\BOOKMARK [2][-]{subsection.6.3}{Worst Case Scenario}{section.6}% 21
+\BOOKMARK [1][-]{section.7}{Limitations}{}% 22
+\BOOKMARK [1][-]{section.8}{Conclusion}{}% 23
+\BOOKMARK [1][-]{section.9}{Future Work}{}% 24
+\BOOKMARK [1][-]{section*.12}{References}{}% 25

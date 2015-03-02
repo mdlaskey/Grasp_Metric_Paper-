@@ -2,9 +2,9 @@
 %2345678901234567890123456789012345678901234567890123456789012345678901234567890
 %        1         2         3         4         5         6         7         8
 
-\documentclass[journal,transmag]{IEEEtran}% Comment this line out if you need a4paper
+%\documentclass[journal,transmag]{IEEEtran}% Comment this line out if you need a4paper
 
-%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
+\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
 
 \IEEEoverridecommandlockouts                              % This command is only needed if 
                                                           % you want to use the \thanks command
@@ -30,6 +30,7 @@
 \usepackage{subfig}
 \usepackage{benktools}
 \usepackage{caption}
+\usepackage{epstopdf}
 \renewcommand{\captionfont}{\footnotesize}
 \usepackage{sidecap,wrapfig}
 \usepackage[ruled,vlined]{algorithm2e}
@@ -43,6 +44,8 @@
 \newcommand{\bb}{\mathbf{b}}
 \newcommand{\bc}{\mathbf{c}}
 \newcommand{\bd}{\mathbf{d}}
+\newcommand{\bg}{\mathbf{g}}
+\newcommand{\bj}{\mathbf{j}}
 \newcommand{\bn}{\mathbf{n}}
 \newcommand{\bp}{\mathbf{p}}
 \newcommand{\bw}{\mathbf{w}}
@@ -137,7 +140,7 @@ Consider a robot fulfilling orders in a warehouse, where it encounters new consu
 \begin{figure}%
     \centering
      \subfloat{{\includegraphics[width=8.5cm, height=7cm]{matlab_figures/pfc.eps} }}%
-   
+
     \caption{ Illustration of the effects of pose and shape uncertainty on parallel-jaw grasps planned for a mechanical switch. Left: An RGBD camera observing the switch cannot detect the specular metal toggle and screw regions (black) and the average shape segmentation is rectangular. Middle: Optimizing the Ferrari-Canny quality on the estimated mean shape and pose results in an unstable grasp (red arrows) on the true object. Right: Selecting the grasp with the highest probability of force closure given shape and pose distributions chooses a stable grasp for the true object. \todo{Keep this new image or revert to old? Florian favored stronger motivation for uncertainty} }%
     \label{fig:motivation}%
 \end{figure}
@@ -168,14 +171,39 @@ The number of samples required to get within $5\%$ of the estimated best grasp q
 
 \section{Related Work}
 
-Past work on grasping under uncertainty has considered shape uncertainty \cite{goldberg1990bayesian, stulp2011learning}, uncertainty in contact locations with an object \cite{zheng2005}, and uncertainty in object pose \cite{christopoulos2007handling, weisz2012pose, kim2012physically}. One method to represent pose uncertainty is to place a normal distribution around the location of the center of the object as well as the rotational component of the object \cite{barfoot2014Pose}. This approach is easy to sample from in the planar case, since each sample is from a fixed 3D Multivariate Gaussian. 
+Many works on grasp planning focus on finding grasps by maximizing a measure of grasp quality metric when object shape, object pose, and locations of contact with an object are precisely known~\cite{cheong2011output, ciocarlie2007dimensionality}.
+Grasp quality is often measured by the ability to resist external perturbations to the object in wrench space~\cite{ferrari1992planning, miller2004graspit}.
+Past work on grasping under uncertainty has considered uncertainty in the state of a robtic gripper~\cite{goldberg1990bayesian, stulp2011learning}, uncertainty in contact locations with an object~\cite{zheng2005}.
 
-For shape uncertainty we used a Gaussian process implicit surface representation. 
-Hollinger et al. used GPIS as a model of uncertainty to perform active sensing on the hulls in underwater boats \cite{hollinger2013}.
-Dragiev et al. showed how GPIS can enable a grasp controller on the continuous signed distance function \cite{dragiev2011}.
-Mahler et al. used the GPIS representation to find locally optimal anti-podal grasps by framing grasp planning as an optimization problem \cite{mahler2015gp}. 
+Recent works have studied the effects of uncertainty in object pose and gripper positioning.%, motivated by part tolerancing from manufacturing and the use of low-cost sensors such as the Kinect.
+Brook, Ciocarlie, and Hsiao~\cite{brook2011collaborative, hsiao2011bayesian} studied a Bayesian framework to evaluate the probability of grasp success given uncertainty in object identity, gripper positioning, and pose by simulating grasps on deterministic mesh and point cloud models.
+Weisz et al.~\cite{weisz2012pose} found that grasps ranked by probability of force closure subject to uncertainty in object pose were empirically more successful on a physical robot grasps planned using determinstic wrench space metrics on shapes from the Columbia Grasp Database.
+Kim et al.~\cite{kim2012physically} planned grasps using dynamic simulations over perturbations in object pose, and also found that the planned grasps were more successful on a physical robot than classical grasp metrics.
 
-One common method for evaluating a probabilistic grasp quality measure is to use Monte-Carlo sampling~\cite{christopoulos2007handling, kehoe2012estimating, kehoe2012toward}, which involves sampling from distributions on random quantities and averaging the quality over these samples to empirically estimate a probability distribution\cite{caflisch1998monte}. It can be computationally expensive though to sample all proposed grasps to convergence.  To  address the computational cost, Kehoe et al.~\cite{kehoe2012estimating} proposed an adaptive sampling procedure for finding a minimum bound on expected grasp quality given shape uncertainty, which reduced the number of samples needed in Monte-Carlo sampling to choose the highest quality grasps. However, the proposed adaptive sampling approach pruned grasps using only the sample mean and did not utilize any estimates variance around the current estimate, which in practice could lead to good grasps being thrown away. We propose treating the problem as an Multi-Armed Bandit, which instead of pruning grasps away decide based on past observations what grasp to sample next \cite{barto1998reinforcement}.
+Many recent works have also studied uncertainty in object shape, motivated by the use of uncertain low-cost sensors and tolerances in part manufacturing.
+Christopoulos et al.~\cite{christopoulos2007handling} sampled spline fits for 2-dimensional planar objects and ranked a set of randomly generated grasps by probability of force closure.
+Kehoe et al.~\cite{kehoe2012estimating, kehoe2012toward} sampled perturbations in object shape for extruded polygonal shapes to plan push grasps for parallel-jaw grippers.
+Several recent works have also studied using Gaussian process implicit surfaces (GPISs) to represent shape uncertainty due to its ability to represent arbitrary topologies and correlations between shape uncertainty over spatial locations~\cite{dragiev2011, dragiev2011uncertainty, hollinger2013, mahler2015opt}.
+Dragiev et al.~\cite{dragiev2011} used the mean GPIS to control a grasp to reach a desired location, and extended this work to use GPIS for active tactile shape exploration during grasping~\cite{dragiev2013uncertainty}.
+Mahler et al. used the GPIS representation to find locally optimal anti-podal grasps by framing grasp planning as an optimization problem~\cite{mahler2015gp}. 
+
+
+%ecently uncertainty in object pose~\cite{weisz2012pose, kim2012physically} and object shape~\cite{christopoulos2007handling, kehoe2012toward, mahler2015opt}.
+
+%Pose uncer
+%One method to represent pose uncertainty is to place a normal distribution around the location of the center of the object as well as the rotational component of the object \cite{barfoot2014Pose}. This approach is easy to sample from in the planar case, since each sample is from a fixed 3D Multivariate Gaussian. 
+
+%For shape uncertainty, we used a Gaussian process implicit surface representation. 
+%Hollinger et al. used GPIS as a model of uncertainty to perform active sensing on the hulls in underwater boats \cite{hollinger2013}.
+%Dragiev et al. showed how GPIS can enable a grasp controller on the continuous signed distance function \cite{dragiev2011}.
+%Mahler et al. used the GPIS representation to find locally optimal anti-podal grasps by framing grasp planning as an optimization problem \cite{mahler2015gp}. 
+
+Many works on probabilistic grasp quality measures, such as probabilty of force closure, use Monte-Carlo sampling to evaluate grasp quality~\cite{christopoulos2007handling, kehoe2012estimating, kehoe2012toward}.
+This involves sampling from distributions on random quantities and averaging the quality over these samples to empirically estimate a probability distribution~\cite{caflisch1998monte}.
+It can be computationally expensive though to sample all proposed grasps to convergence.
+To address the computational cost, Kehoe et al.~\cite{kehoe2012estimating} proposed an adaptive sampling procedure for finding a minimum bound on expected grasp quality given shape uncertainty, which reduced the number of samples needed in Monte-Carlo sampling to choose the highest quality grasps.
+However, the proposed adaptive sampling approach pruned grasps using only the sample mean and did not utilize any estimates variance around the current estimate, which in practice could lead to good grasps being thrown away.
+We propose modeling the problem as a Multi-Armed Bandit, which selects the next grasp to sample based on past observations~\cite{barto1998reinforcement, lai1985asymptotically}.
 
 \subsection{MAB Model}
 The MAB model, originally described by Robbins \cite{robbins1985some}, is a statistical model of an agent attempting to make a sequence of correct decisions while concurrently gathering information about each possible decision.
@@ -310,9 +338,9 @@ Together these form the set of grasp parameters $g = (\bc_1,\bc_2, \bn_1, \bn_2,
 
 \begin{figure}[t!]
 \centering
-\includegraphics[width = 8cm, height = 6.5cm]{figures/grasp_model.jpg}
-\caption{llustration of our grasping model for parallel jaw grippers on a GPIS model of a marker with shape uncertainty near the object center. Jaw placements are illustrated by a red direction arrow and line. The grasp plan consists of a line of action $\gamma(t)$ with endpoints $\ba$ and $\bb$. When following the grasp plan, the jaws contact the shape at locations $\bc_1$ and $\bc_2$ with outward pointing unit surface normals $\bn_1$ and $\bn_2$. Together with the center of mass of the object $\bz$, these values can be used to determine the forces and torques that a grasp can apply to an object.}
-\vspace*{-4ex}
+\includegraphics[width = 8.5cm, height = 5.25cm]{figures/bandit_grasp_model.jpg}
+\caption{llustration of our grasping model for parallel jaw grippers on a mechanical switch. Jaw placements are illustrated by a red direction arrow and line. A grasp plan consists of 2D locations for each of the parallel-jaws $\bj_1$ and $\bj_2$. When following the grasp plan, the jaws contact the shape at locations $\bc_1$ and $\bc_2$, and the object has outward pointing unit surface normals $\bn_1$ and $\bn_2$ at these locations. Together with the center of mass of the object $\bz$, these values can be used to determine the forces and torques that a grasp can apply to an object.}
+\vspace*{-2ex}
 \label{fig:grasp_model}
 \end{figure}
 
@@ -518,13 +546,13 @@ As illustrated in Fig. \ref{fig:worst_case}, all the methods are affected by wor
 
 
 
-\begin{figure}[ht!]
+\begin{figure*}[ht!]
 \centering
-\includegraphics[width = 8.5cm, height = 9cm]{matlab_figures/worst_case.eps}
+\includegraphics[width = 20cm, height = 20cm]{figures/Slide02.jpg}
 \caption{ \footnotesize Comparison of the current average probability of force closure vs. the stopping time $T_s$ for the pathological case where the samples are sorted to be misleading. The graph is averaged over 100 shapes randomly drawn from the Brown Vision 2D Lab Dataset \cite{brown} with a set $|G|=1000$ for each shape.  We demonstrate this for Thompson, Gittins, Monte-Carlo and the approach taking in Kehoe et al \cite{kehoe2012toward}. We also demonstrate what the average probability of force closure for the approximate optimal policy. Empirically, it appears that when samples are misleading the best policy is uniform allocation. However, it also illustrated that Thompson sampling can recover from this situation where Gittins and Kehoe et al.  are not able to and get stuck in local solutions. }
 \vspace*{-10pt}
 \label{fig:worst_case}
-\end{figure}
+\end{figure*}
 
 
 \begin{table*}[t]

@@ -146,7 +146,7 @@ Analytic grasp quality metrics have been developed to plan grasps when all the p
 One common measure of quality is force closure, the ability to resist external forces and torques in arbitrary directions~\cite{li1988task}.
 Grasps in force closure can be further ranked by the relative magnitude of forces and torques that must be exerted by the gripper to resist external perturbations~\cite{ferrari1992}.
 Recent works have explored computing the probability of  force closure given uncertainty in pose~\cite{christopoulos2007handling, kim2012physically, weisz2012pose} and object shape~\cite{kehoe2012estimating, mahler2015gp}.
- One way to compute this probability is Monte-Carlo integration over the possible values of uncertain quantities to evaluate the probability of force closure for a grasp~\cite{christopoulos2007handling, kim2012physically, weisz2012pose, kehoe2012estimating, kehoe2012towards}. Monte-Carlo methods are computationally expensive though because it requires exhaustive sampling for each grasp candidate. 
+One option is using Monte-Carlo integration over the possible values of uncertain quantities to evaluate the probability of force closure for a grasp~\cite{christopoulos2007handling, kim2012physically, weisz2012pose, kehoe2012estimating, kehoe2012toward}, but this can be computationally expensive.
 In this work, we show that by using a Multi-Armed Bandit model it is possible to rule out grasps with low probability of force closure and to allocate more sampling effort to grasps that are likely to be high quality.
 
 The multi-armed bandit (MAB) model for sequential decision making~\cite{barto1998reinforcement, lai1985asymptotically, robbins1985some} provides a formal way to reason about allocating sampling effort. In a standard MAB there are a set of possible options, or `arms'~\cite{barto1998reinforcement}, that each return a numeric reward from a stationary distribution.The goal in a MAB problem is to  select a sequence of options to maximize expected reward. The MAB algorithm can be interpreted as an anytime algorithm, where at a provided stopping time the algorithm terminates and returns the estimated best grasp, with respect to a chosen metric, or continues running until a user defined confidence level is met. 
@@ -164,8 +164,8 @@ In simulation, initial results  showed that given 1000 randomly selected paralle
 
 \section{Related Work}
 
-Many works on grasp planning focus on finding grasps by maximizing a measure of grasp quality metric when object shape, object pose, and locations of contact with an object are precisely known~\cite{cheong2011output, ciocarlie2007dimensionality}.
-Grasp quality is often measured by the ability to resist external perturbations to the object in wrench space~\cite{ferrari1992planning, miller2004graspit}.
+Many works on grasp planning focus on finding grasps by maximizing a measure of grasp quality metric when object shape, object pose, and locations of contact with an object are precisely known~\cite{cheong2011output, ciocarlie2009}.
+Grasp quality is often measured by the ability to resist external perturbations to the object in wrench space~\cite{ferrari1992, miller2004graspit}.
 Past work on grasping under uncertainty has considered uncertainty in the state of a robtic gripper~\cite{goldberg1990bayesian, stulp2011learning}, uncertainty in contact locations with an object~\cite{zheng2005}.
 
 Recent works have studied the effects of uncertainty in object pose and gripper positioning.%, motivated by part tolerancing from manufacturing and the use of low-cost sensors such as the Kinect.
@@ -176,7 +176,7 @@ Kim et al.~\cite{kim2012physically} planned grasps using dynamic simulations ove
 Many recent works have also studied uncertainty in object shape, motivated by the use of uncertain low-cost sensors and tolerances in part manufacturing.
 Christopoulos et al.~\cite{christopoulos2007handling} sampled spline fits for 2-dimensional planar objects and ranked a set of randomly generated grasps by probability of force closure.
 Kehoe et al.~\cite{kehoe2012estimating, kehoe2012toward} sampled perturbations in object shape for extruded polygonal shapes to plan push grasps for parallel-jaw grippers.
-Several recent works have also studied using Gaussian process implicit surfaces (GPISs) to represent shape uncertainty due to its ability to represent arbitrary topologies and correlations between shape uncertainty over spatial locations~\cite{dragiev2011, dragiev2011uncertainty, hollinger2013, mahler2015opt}.
+Several recent works have also studied using Gaussian process implicit surfaces (GPISs) to represent shape uncertainty due to its ability to represent arbitrary topologies and correlations between shape uncertainty over spatial locations~\cite{dragiev2011, dragiev2013uncertainty, hollinger2013, mahler2015gp}.
 Dragiev et al.~\cite{dragiev2011} used the mean GPIS to control a grasp to reach a desired location, and extended this work to use GPIS for active tactile shape exploration during grasping~\cite{dragiev2013uncertainty}.
 Mahler et al. used the GPIS representation to find locally optimal anti-podal grasps by framing grasp planning as an optimization problem~\cite{mahler2015gp}. 
 

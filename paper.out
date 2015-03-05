@@ -1,22 +1,22 @@
-\BOOKMARK [1][-]{section.1}{Introduction}{}
-\BOOKMARK [1][-]{section.2}{Related Work}{}
-\BOOKMARK [2][-]{subsection.2.1}{MAB Model}{section.2}
-\BOOKMARK [2][-]{subsection.2.2}{Algorithms for MAB}{section.2}
-\BOOKMARK [3][-]{subsubsection.2.2.1}{The Gittins Index Method}{subsection.2.2}
-\BOOKMARK [3][-]{subsubsection.2.2.2}{Thompson Sampling}{subsection.2.2}
-\BOOKMARK [1][-]{section.3}{Grasp Planning Problem Definition}{}
-\BOOKMARK [2][-]{subsection.3.1}{Candidate Grasp Model}{section.3}
-\BOOKMARK [2][-]{subsection.3.2}{Sources of Uncertainty}{section.3}
-\BOOKMARK [3][-]{subsubsection.3.2.1}{Shape Uncertainty}{subsection.3.2}
-\BOOKMARK [3][-]{subsubsection.3.2.2}{Pose Uncertainty}{subsection.3.2}
-\BOOKMARK [3][-]{subsubsection.3.2.3}{Approach Uncertainty}{subsection.3.2}
-\BOOKMARK [3][-]{subsubsection.3.2.4}{Friction Uncertainty}{subsection.3.2}
-\BOOKMARK [2][-]{subsection.3.3}{Grasp Quality}{section.3}
-\BOOKMARK [2][-]{subsection.3.4}{Objective}{section.3}
-\BOOKMARK [1][-]{section.4}{Grasp Planning as a Multi-Armed Bandit}{}
-\BOOKMARK [1][-]{section.5}{Simulation Experiments}{}
-\BOOKMARK [2][-]{subsection.5.1}{Multi-Armed Bandit Experiments}{section.5}
-\BOOKMARK [2][-]{subsection.5.2}{Sensitivity Analysis }{section.5}
-\BOOKMARK [2][-]{subsection.5.3}{Worst Case}{section.5}
-\BOOKMARK [1][-]{section.6}{Limitations}{}
-\BOOKMARK [1][-]{section.7}{Conclusion}{}
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.2}{Related Work}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{MAB Model}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Algorithms for MAB}{section.2}% 4
+\BOOKMARK [3][-]{subsubsection.2.2.1}{The Gittins Index Method}{subsection.2.2}% 5
+\BOOKMARK [3][-]{subsubsection.2.2.2}{Thompson Sampling}{subsection.2.2}% 6
+\BOOKMARK [1][-]{section.3}{Grasp Planning Problem Definition}{}% 7
+\BOOKMARK [2][-]{subsection.3.1}{Candidate Grasp Model}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.2}{Sources of Uncertainty}{section.3}% 9
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Shape Uncertainty}{subsection.3.2}% 10
+\BOOKMARK [3][-]{subsubsection.3.2.2}{Pose Uncertainty}{subsection.3.2}% 11
+\BOOKMARK [3][-]{subsubsection.3.2.3}{Approach Uncertainty}{subsection.3.2}% 12
+\BOOKMARK [3][-]{subsubsection.3.2.4}{Friction Uncertainty}{subsection.3.2}% 13
+\BOOKMARK [2][-]{subsection.3.3}{Grasp Quality}{section.3}% 14
+\BOOKMARK [2][-]{subsection.3.4}{Objective}{section.3}% 15
+\BOOKMARK [1][-]{section.4}{Grasp Planning as a Multi-Armed Bandit}{}% 16
+\BOOKMARK [1][-]{section.5}{Simulation Experiments}{}% 17
+\BOOKMARK [2][-]{subsection.5.1}{Multi-Armed Bandit Experiments}{section.5}% 18
+\BOOKMARK [2][-]{subsection.5.2}{Sensitivity Analysis }{section.5}% 19
+\BOOKMARK [2][-]{subsection.5.3}{Worst Case}{section.5}% 20
+\BOOKMARK [1][-]{section.6}{Discussion and Future Work }{}% 21
+\BOOKMARK [1][-]{section*.12}{References}{}% 22

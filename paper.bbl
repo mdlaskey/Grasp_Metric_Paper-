@@ -48,6 +48,12 @@ A.~G. Barto, \emph{Reinforcement learning: An introduction}.\hskip 1em plus
 D.~Bergemann and J.~V{\"a}lim{\"a}ki, ``Bandit problems,'' Cowles Foundation
   for Research in Economics, Yale University, Tech. Rep., 2006.
 
+\bibitem{brook2011collaborative}
+P.~Brook, M.~Ciocarlie, and K.~Hsiao, ``Collaborative grasp planning with
+  multiple object representations,'' in \emph{{Proc. {IEEE} Int. Conf. Robotics
+  and Automation (ICRA)}}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2011,
+  pp. 2851--2858.
+
 \bibitem{bubeck2009pure}
 S.~Bubeck, R.~Munos, and G.~Stoltz, ``Pure exploration in multi-armed bandits
   problems,'' in \emph{Algorithmic Learning Theory}.\hskip 1em plus 0.5em minus
@@ -62,12 +68,22 @@ O.~Chapelle and L.~Li, ``An empirical evaluation of thompson sampling,'' in
   \emph{Advances in Neural Information Processing Systems}, 2011, pp.
   2249--2257.
 
+\bibitem{cheong2011output}
+J.-S. Cheong, H.~Kruger, and A.~F. van~der Stappen, ``Output-sensitive
+  computation of force-closure grasps of a semi-algebraic object,'' vol.~8,
+  no.~3, pp. 495--505, 2011.
+
 \bibitem{christopoulos2007handling}
 V.~N. Christopoulos and P.~Schrater, ``Handling shape and contact location
   uncertainty in grasping two-dimensional planar objects,'' in
   \emph{Intelligent Robots and Systems, 2007. IROS 2007. IEEE/RSJ International
   Conference on}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2007, pp.
   1557--1563.
+
+\bibitem{ciocarlie2009}
+M.~T. Ciocarlie and P.~K. Allen, ``Hand posture subspaces for dexterous robotic
+  grasping,'' \emph{Int. J. Robotics Research (IJRR)}, vol.~28, no.~7, pp.
+  851--867, 2009.
 
 \bibitem{dragiev2011}
 S.~Dragiev, M.~Toussaint, and M.~Gienger, ``Gaussian process implicit surfaces
@@ -184,6 +200,11 @@ M.~Rothschild, ``A two-armed bandit theory of market pricing,'' \emph{Journal
 \bibitem{simon1989optimal}
 R.~Simon, ``Optimal two-stage designs for phase ii clinical trials,''
   \emph{Controlled clinical trials}, vol.~10, no.~1, pp. 1--10, 1989.
+
+\bibitem{srinivas2009gaussian}
+N.~Srinivas, A.~Krause, S.~M. Kakade, and M.~Seeger, ``Gaussian process
+  optimization in the bandit setting: No regret and experimental design,''
+  \emph{arXiv preprint arXiv:0912.3995}, 2009.
 
 \bibitem{st2012online}
 D.~L. St-Pierre, Q.~Louveaux, and O.~Teytaud, ``Online sparse bandit for card

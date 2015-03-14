@@ -35,11 +35,6 @@ P.~Bachman and D.~Precup, ``Greedy confidence pursuit: A pragmatic approach to
   Discovery in Databases}.\hskip 1em plus 0.5em minus 0.4em\relax Springer,
   2013, pp. 241--256.
 
-\bibitem{barfoot2014Pose}
-T.~Barfoot and P.~Furgale, ``Associating uncertainty with three-dimensional
-  poses for use in estimation problems,'' \emph{Robotics, IEEE Transactions
-  on}, vol.~30, no.~3, pp. 679--693, June 2014.
-
 \bibitem{barto1998reinforcement}
 A.~G. Barto, \emph{Reinforcement learning: An introduction}.\hskip 1em plus
   0.5em minus 0.4em\relax MIT press, 1998.
@@ -99,11 +94,6 @@ S.~Dragiev, M.~Toussaint, and M.~Gienger, ``Gaussian process implicit surfaces
 C.~Ferrari and J.~Canny, ``Planning optimal grasps,'' in \emph{{Proc. {IEEE}
   Int. Conf. Robotics and Automation (ICRA)}}, 1992, pp. 2290--2295.
 
-\bibitem{gittins1983dynamic}
-J.~Gittins, ``Dynamic allocation indices for bayesian bandits,'' in
-  \emph{Mathematical Learning Models—Theory and Algorithms}.\hskip 1em plus
-  0.5em minus 0.4em\relax Springer, 1983, pp. 50--67.
-
 \bibitem{goetschalckx2011continuous}
 R.~Goetschalckx, P.~Poupart, and J.~Hoey, ``Continuous correlated beta
   processes.''\hskip 1em plus 0.5em minus 0.4em\relax Citeseer.
@@ -112,6 +102,14 @@ R.~Goetschalckx, P.~Poupart, and J.~Hoey, ``Continuous correlated beta
 K.~Y. Goldberg and M.~T. Mason, ``Bayesian grasping,'' in \emph{Robotics and
   Automation, 1990. Proceedings., 1990 IEEE International Conference on}.\hskip
   1em plus 0.5em minus 0.4em\relax IEEE, 1990, pp. 1264--1269.
+
+\bibitem{hang2013a}
+\BIBentryALTinterwordspacing
+K.~Hang, F.~T. Pokorny, and D.~Kragic, ``Friction coefficients and grasp
+  synthesis,'' in \emph{IEEE/RSJ International Conference on Intelligent Robots
+  and Systems (IROS)}, Tokyo, Japan, 2013. [Online]. Available:
+  \url{http://www.csc.kth.se/~fpokorny/static/publications/hang2013a.pdf}
+\BIBentrySTDinterwordspacing
 
 \bibitem{hollinger2013}
 G.~A. Hollinger, B.~Englot, F.~S. Hover, U.~Mitra, and G.~S. Sukhatme, ``Active
@@ -128,11 +126,6 @@ M.~N. Katehakis and A.~F. Veinott~Jr, ``The multi-armed bandit problem:
   decomposition and computation,'' \emph{Mathematics of Operations Research},
   vol.~12, no.~2, pp. 262--268, 1987.
 
-\bibitem{kaufmann2012bayesian}
-E.~Kaufmann, O.~Capp{\'e}, and A.~Garivier, ``On bayesian upper confidence
-  bounds for bandit problems,'' in \emph{International Conference on Artificial
-  Intelligence and Statistics}, 2012, pp. 592--600.
-
 \bibitem{kehoe2012estimating}
 B.~Kehoe, D.~Berenson, and K.~Goldberg, ``Estimating part tolerance bounds
   based on adaptive cloud-based grasp planning with slip,'' in \emph{Automation
@@ -144,6 +137,11 @@ B.~Kehoe, D.~Berenson, and K.~Goldberg, ``Estimating part tolerance bounds
   lower bounds on achieving force closure with zero-slip push grasps,'' in
   \emph{Robotics and Automation (ICRA), 2012 IEEE International Conference
   on}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2012, pp. 576--583.
+
+\bibitem{kelly1981multi}
+F.~Kelly \emph{et~al.}, ``Multi-armed bandits with discount factor near one:
+  The bernoulli case,'' \emph{The Annals of Statistics}, vol.~9, no.~5, pp.
+  987--1001, 1981.
 
 \bibitem{kim2012physically}
 J.~Kim, K.~Iwamoto, J.~J. Kuffner, Y.~Ota, and N.~S. Pollard,

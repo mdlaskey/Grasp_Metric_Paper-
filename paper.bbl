@@ -94,6 +94,15 @@ S.~Dragiev, M.~Toussaint, and M.~Gienger, ``Gaussian process implicit surfaces
 C.~Ferrari and J.~Canny, ``Planning optimal grasps,'' in \emph{{Proc. {IEEE}
   Int. Conf. Robotics and Automation (ICRA)}}, 1992, pp. 2290--2295.
 
+\bibitem{gittins2011multi}
+J.~Gittins, K.~Glazebrook, and R.~Weber, \emph{Multi-armed bandit allocation
+  indices}.\hskip 1em plus 0.5em minus 0.4em\relax John Wiley \& Sons, 2011.
+
+\bibitem{glazebrook2000index}
+K.~Glazebrook and D.~Wilkinson, ``Index-based policies for discounted
+  multi-armed bandits on parallel machines,'' \emph{Annals of Applied
+  Probability}, pp. 877--896, 2000.
+
 \bibitem{goetschalckx2011continuous}
 R.~Goetschalckx, P.~Poupart, and J.~Hoey, ``Continuous correlated beta
   processes.''\hskip 1em plus 0.5em minus 0.4em\relax Citeseer.

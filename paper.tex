@@ -134,7 +134,16 @@ However, a robot may not be able to measure these quantities exactly due to sens
     \centering
      \subfloat{{\includegraphics[scale=0.25]{matlab_figures/pfc.eps} }}%
 
-    \caption{Normalized grasp quality over time of the returned grasp for 4 sample-based planning methods.  Normalization divides the current quality of grasp, $P_F(\Gamma_{\bar{k}})$ returned by the highest probability of force closure in the candidate grasp set $P_F(\Gamma^*)$. The highest quality grasp was determined by brute force search over all candidate grasps (which required 10x  more time than any of these methods \cite{kehoe2012toward}).  Data is based on 100 objects randomly selected from from the Brown Vision 2D Lab Dataset \cite{brown} with 1000 uniformly distributed candidate grasp plans. Monte Carlo methods such as Uniform sampling and iterative pruning (eliminating candidates that perform poorly on initial samples) eventually converge to within 3$\%$ of the optimal (the dashed grey line), requiring approximately 40,000 and 20,000 iterations.  Two Multi-Arm Bandit methods perform significantly better, converging after only 4000 iterations.. }%
+    \caption{Iterations versus the normalized probability of force closure $P_F$ for the best estimated grasp at iteration $k$, $P_F(\Gamma_{\bar{k}})$, out of 1000 candidate grasps using uniform allocation, iterative pruning (eliminating candidates that perform poorly on initial samples), and our proposed Multi-Armed Bandit (MAB) algorithms (Gittins indices and Thompson Sampling).
+    %We evaluated performance on 100 objects randomly selected from from the Brown Vision 2D Lab Dataset \cite{brown} with 1000 uniformly distributed candidate grasp plans.
+    The normalized $P_F$ is the ratio of the best estimated grasp at iteration $k$, $P_F(\Gamma_{\bar{k}})$, to the highest $P_F$ in the candidate grasp set $P_F(\Gamma^*)$ averaged over 100 independent runs on randomly selected objects from the Brown Vision 2D Dataset \cite{brown}.
+    The highest quality grasp was determined by brute force search over all candidate grasps~\cite{kehoe2012toward}.
+    Uniform allocation and iterative pruning converge to within 3$\%$ of the optimal (the dashed grey line) in approximately 40,000 and 20,000 iterations, respectively.
+    In comparison, the MAB methods both converge in approxmately 4,000 iterations. 
+%    $P_F(\Gamma_{\bar{k}})$ (ratio of $P_F(\Gamma_{\bar{k}})$ to $P_F(\Gamma^*)$)
+%    
+%    Normalized grasp quality over time of the returned grasp for 4 sample-based planning methods.  Normalization divides the current quality of grasp, $P_F(\Gamma_{\bar{k}})$ returned by the highest probability of force closure in the candidate grasp set $P_F(\Gamma^*)$. The highest quality grasp was determined by brute force search over all candidate grasps (which required 10x  more time than any of these methods \cite{kehoe2012toward}).  Data is based on 100 objects randomly selected from from the Brown Vision 2D Lab Dataset \cite{brown} with 1000 uniformly distributed candidate grasp plans. Monte Carlo methods such as Uniform sampling and iterative pruning (eliminating candidates that perform poorly on initial samples) eventually converge to within 3$\%$ of the optimal (the dashed grey line), requiring approximately 40,000 and 20,000 iterations.  Two Multi-Arm Bandit methods perform significantly better, converging after only 4000 iterations..
+	}
     \label{fig:grasp_quality}
 \end{figure}
 
@@ -293,7 +302,7 @@ We also refer to the unit outward pointing surface normals at the contact points
 \begin{figure}[t!]
 \centering
 \includegraphics[width = 8.5cm, height = 5.25cm]{figures/bandit_grasp_model.jpg}
-\caption{llustration of our grasping model for parallel jaw grippers on a mechanical switch. Jaw placements are illustrated by a red direction arrow and line. A grasp plan consists of 2D locations for each of the parallel-jaws $\bj_1$ and $\bj_2$. When following the grasp plan, the jaws contact the object at locations $\bc_1$ and $\bc_2$, and the object has outward pointing unit surface normals $\bn_1$ and $\bn_2$ at these locations. Together with the center of mass of the object $\bz$, these values can be used to determine the forces and torques that a grasp can apply to an object.}
+\caption{Illustration of our grasping model for parallel jaw grippers on a mechanical switch. Jaw placements are illustrated by a red direction arrow and line. A grasp plan centered at $\by$ (plus symbol) at angle $\psi$ consists of 2D locations for each of the parallel jaws $\bj_1$ and $\bj_2$. When following the grasp plan, the jaws contact the object at locations $\bc_1$ and $\bc_2$, and the object has outward pointing unit surface normals $\bn_1$ and $\bn_2$ at these locations. Together with the center of mass of the object $\bz$, these values can be used to determine the forces and torques that a grasp can apply to an object.}
 \vspace*{-2ex}
 \label{fig:grasp_model}
 \end{figure}
@@ -306,7 +315,7 @@ In this section, we describe our model of each source of uncertainty.
 \begin{figure}[ht!]
 \centering
 \includegraphics[width = 6cm, height = 6cm]{figures/Graphical_Model.jpg}
-\caption{A graphical model that illustrates the relationship between the different types of uncertainty in an object. As illustrated uncertainty in pose, motion and shape affect the contacts and surface normals that makes up the grasp. Friction coefficient is independent of this relationship.  }
+\caption{A graphical model that illustrates the relationship between the different types of uncertainty in an object. As illustrated uncertainty in pose, approach, and shape affect the contacts and surface normals that makes up the grasp. Friction coefficient is independent of this relationship.  }
 \vspace*{-10pt}
 \label{fig:graphical_model}
 \end{figure}
@@ -329,7 +338,7 @@ In 2-dimensional space, the pose of an object $T$ is defined by a rotation angle
  \subsubsection{Approach Uncertainty}
 In practice a robot may not be able to execute a desired grasp $\Gamma = \lbrace \bj_i,\bj_2\rbrace$ exactly due to errors in actuation or feedback measurements used for trajectory following~\cite{kehoe2012estimating}.
 We model approach uncertainty as Gaussian uncertainty around the angle of approach and centroid of a straight line grasp $\Gamma$.
-Formally, let $\hat{\by} = \frac{1}{2} (\bj_1 + \bj_2)$ denote the center of a planned grasp axis and $\hat{\psi}$ denote the angle that the planned axis $\bj_1 - \bj_2$ makes with the x-axis of the 2D coordinate system on our shape representation.
+Formally, let $\hat{\by} = \frac{1}{2} (\bj_1 + \bj_2)$ denote the center of a planned grasp axis and $\hat{\psi}$ denote the clockwise angle that the planned axis $\bj_1 - \bj_2$ makes with the y-axis of the 2D coordinate system on our shape representation.
 We model uncertainty in the approach center as $\by \sim \mN(\hat{\by}, \Sigma_y)$ and uncertainty in the approach angle as $\psi \sim \mN(\hat{\psi}, \sigma_{\psi}^2)$.
 For shorthand in the remainder of this paper we will refer to the uncertain approach parameters as $\rho = \{\by, \psi \}$.
 In practice $\Sigma_{y}^2$ and $\sigma_{\psi}^2$ can be set from repeatability measurements for a robot~\cite{mooring1986determination}.
@@ -457,7 +466,7 @@ The MAB algorithm can also be terminated when the $95\%$ confidence interval aro
 \begin{figure*}%
 \label{fig:shape_examples}
     \centering
-    \includegraphics[width=16.5cm]{figures/shapes.jpg}%
+    %\includegraphics[width=16.5cm]{figures/shapes.jpg}%
   
     \caption{Three objects shown from the Brown Visual Lab Dataset with induced shape uncertainty and visualized with the GPIS-Blur method \cite{mahler2015gp}. The four methods (uniform allocation, iterative pruning, Thompson and Gittins) were all run until a stopping time of $10,000$ evaluations with a randomly selected grasp set of $|\mG|=1000$. We also show the grasp returned by the brute force approach of exhaustively sampling every grasp in the set.  The grasps and the quality each one found is shown above.  In the two out of three cases, Thompson sampling is able to find the best grasp in the set at the stopping interval of $10,000$, however at the last shape there is a difference of $2\%$ grasp quality.}%
     \label{fig:shape_samples}%

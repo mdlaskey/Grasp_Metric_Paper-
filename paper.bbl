@@ -138,6 +138,10 @@ B.~Kehoe, D.~Berenson, and K.~Goldberg, ``Estimating part tolerance bounds
   \emph{Robotics and Automation (ICRA), 2012 IEEE International Conference
   on}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2012, pp. 576--583.
 
+\bibitem{kehoe2015survey}
+B.~Kehoe, S.~Patil, P.~Abbeel, and K.~Goldberg, ``A survey of research on cloud
+  robotics and automation,'' 2015.
+
 \bibitem{kelly1981multi}
 F.~Kelly \emph{et~al.}, ``Multi-armed bandits with discount factor near one:
   The bernoulli case,'' \emph{The Annals of Statistics}, vol.~9, no.~5, pp.

@@ -16,10 +16,10 @@
 \gdef\HyperFirstAtBeginDocument#1{#1}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
-\citation{kehoe2012toward}
 \citation{brown}
 \citation{kehoe2012toward}
 \citation{brown}
+\citation{kehoe2012toward}
 \citation{li1988task}
 \citation{christopoulos2007handling}
 \citation{kim2012physically}
@@ -43,12 +43,13 @@
 \citation{dragiev2011}
 \citation{hollinger2013}
 \@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{section.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Normalized grasp quality over time of the returned grasp for 4 sample-based planning methods. Normalization divides the current quality of grasp, $P_F(\Gamma _{\mathaccentV {bar}016{k}})$ returned by the highest probability of force closure in the candidate grasp set $P_F(\Gamma ^*)$. The highest quality grasp was determined by brute force search over all candidate grasps (which required 10x more time than any of these methods \cite  {kehoe2012toward}). Data is based on 100 objects randomly selected from from the Brown Vision 2D Lab Dataset \cite  {brown} with 1000 uniformly distributed candidate grasp plans. Monte Carlo methods such as Uniform sampling and iterative pruning (eliminating candidates that perform poorly on initial samples) eventually converge to within 3$\%$ of the optimal (the dashed grey line), requiring approximately 40,000 and 20,000 iterations. Two Multi-Arm Bandit methods perform significantly better, converging after only 4000 iterations.. \relax }}{1}{figure.caption.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Iterations versus the normalized probability of force closure $P_F$ for the best estimated grasp at iteration $k$, $P_F(\Gamma _{\mathaccentV {bar}016{k}})$, out of 1000 candidate grasps using uniform allocation, iterative pruning (eliminating candidates that perform poorly on initial samples), and our proposed Multi-Armed Bandit (MAB) algorithms (Gittins indices and Thompson Sampling). The normalized $P_F$ is the ratio of the best estimated grasp at iteration $k$, $P_F(\Gamma _{\mathaccentV {bar}016{k}})$, to the highest $P_F$ in the candidate grasp set $P_F(\Gamma ^*)$ averaged over 100 independent runs on randomly selected objects from the Brown Vision 2D Dataset \cite  {brown}. The highest quality grasp was determined by brute force search over all candidate grasps\nobreakspace  {}\cite  {kehoe2012toward}. Uniform allocation and iterative pruning converge to within 3$\%$ of the optimal (the dashed grey line) in approximately 40,000 and 20,000 iterations, respectively. In comparison, the MAB methods both converge in approxmately 4,000 iterations. \relax }}{1}{figure.caption.1}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:grasp_quality}{{1}{1}{Normalized grasp quality over time of the returned grasp for 4 sample-based planning methods. Normalization divides the current quality of grasp, $P_F(\Gamma _{\bar {k}})$ returned by the highest probability of force closure in the candidate grasp set $P_F(\Gamma ^*)$. The highest quality grasp was determined by brute force search over all candidate grasps (which required 10x more time than any of these methods \cite {kehoe2012toward}). Data is based on 100 objects randomly selected from from the Brown Vision 2D Lab Dataset \cite {brown} with 1000 uniformly distributed candidate grasp plans. Monte Carlo methods such as Uniform sampling and iterative pruning (eliminating candidates that perform poorly on initial samples) eventually converge to within 3$\%$ of the optimal (the dashed grey line), requiring approximately 40,000 and 20,000 iterations. Two Multi-Arm Bandit methods perform significantly better, converging after only 4000 iterations.. \relax }{figure.caption.1}{}}
+\newlabel{fig:grasp_quality}{{1}{1}{Iterations versus the normalized probability of force closure $P_F$ for the best estimated grasp at iteration $k$, $P_F(\Gamma _{\bar {k}})$, out of 1000 candidate grasps using uniform allocation, iterative pruning (eliminating candidates that perform poorly on initial samples), and our proposed Multi-Armed Bandit (MAB) algorithms (Gittins indices and Thompson Sampling). The normalized $P_F$ is the ratio of the best estimated grasp at iteration $k$, $P_F(\Gamma _{\bar {k}})$, to the highest $P_F$ in the candidate grasp set $P_F(\Gamma ^*)$ averaged over 100 independent runs on randomly selected objects from the Brown Vision 2D Dataset \cite {brown}. The highest quality grasp was determined by brute force search over all candidate grasps~\cite {kehoe2012toward}. Uniform allocation and iterative pruning converge to within 3$\%$ of the optimal (the dashed grey line) in approximately 40,000 and 20,000 iterations, respectively. In comparison, the MAB methods both converge in approxmately 4,000 iterations. \relax }{figure.caption.1}{}}
 \citation{kehoe2012toward}
 \citation{brown}
 \citation{christopoulos2007handling}
+\citation{glazebrook2000index}
 \citation{ferrari1992}
 \citation{miller2004graspit}
 \citation{cheong2011output}
@@ -80,14 +81,13 @@
 \citation{kehoe2012estimating}
 \citation{barto1998reinforcement}
 \citation{lai1985asymptotically}
-\citation{glazebrook2000index}
 \citation{robbins1985some}
 \citation{simon1989optimal}
 \citation{rothschild1974two}
 \citation{st2012online}
+\citation{bergemann2006bandit}
 \citation{bubeck2009pure}
 \citation{robbins1985some}
-\citation{bergemann2006bandit}
 \citation{lai1985asymptotically}
 \citation{lai1985asymptotically}
 \@writefile{toc}{\contentsline {section}{\numberline {II}Related Work}{2}{section.2}}
@@ -124,20 +124,20 @@
 \citation{mooring1986determination}
 \citation{zheng2005}
 \citation{hang2013a}
-\citation{weisz2012pose}
-\citation{kim2012physically}
 \citation{kehoe2012estimating}
 \citation{kehoe2012toward}
+\citation{kim2012physically}
+\citation{weisz2012pose}
 \citation{li1988task}
 \citation{christopoulos2007handling}
 \citation{kehoe2012toward}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces llustration of our grasping model for parallel jaw grippers on a mechanical switch. Jaw placements are illustrated by a red direction arrow and line. A grasp plan consists of 2D locations for each of the parallel-jaws $\mathbf  {j}_1$ and $\mathbf  {j}_2$. When following the grasp plan, the jaws contact the object at locations $\mathbf  {c}_1$ and $\mathbf  {c}_2$, and the object has outward pointing unit surface normals $\mathbf  {n}_1$ and $\mathbf  {n}_2$ at these locations. Together with the center of mass of the object $\mathbf  {z}$, these values can be used to determine the forces and torques that a grasp can apply to an object.\relax }}{4}{figure.caption.3}}
-\newlabel{fig:grasp_model}{{2}{4}{llustration of our grasping model for parallel jaw grippers on a mechanical switch. Jaw placements are illustrated by a red direction arrow and line. A grasp plan consists of 2D locations for each of the parallel-jaws $\bj _1$ and $\bj _2$. When following the grasp plan, the jaws contact the object at locations $\bc _1$ and $\bc _2$, and the object has outward pointing unit surface normals $\bn _1$ and $\bn _2$ at these locations. Together with the center of mass of the object $\bz $, these values can be used to determine the forces and torques that a grasp can apply to an object.\relax }{figure.caption.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Illustration of our grasping model for parallel jaw grippers on a mechanical switch. Jaw placements are illustrated by a red direction arrow and line. A grasp plan centered at $\mathbf  {y}$ (plus symbol) at angle $\psi $ consists of 2D locations for each of the parallel jaws $\mathbf  {j}_1$ and $\mathbf  {j}_2$. When following the grasp plan, the jaws contact the object at locations $\mathbf  {c}_1$ and $\mathbf  {c}_2$, and the object has outward pointing unit surface normals $\mathbf  {n}_1$ and $\mathbf  {n}_2$ at these locations. Together with the center of mass of the object $\mathbf  {z}$, these values can be used to determine the forces and torques that a grasp can apply to an object.\relax }}{4}{figure.caption.3}}
+\newlabel{fig:grasp_model}{{2}{4}{Illustration of our grasping model for parallel jaw grippers on a mechanical switch. Jaw placements are illustrated by a red direction arrow and line. A grasp plan centered at $\by $ (plus symbol) at angle $\psi $ consists of 2D locations for each of the parallel jaws $\bj _1$ and $\bj _2$. When following the grasp plan, the jaws contact the object at locations $\bc _1$ and $\bc _2$, and the object has outward pointing unit surface normals $\bn _1$ and $\bn _2$ at these locations. Together with the center of mass of the object $\bz $, these values can be used to determine the forces and torques that a grasp can apply to an object.\relax }{figure.caption.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {III-A}Candidate Grasp Model}{4}{subsection.3.1}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {III-B}Sources of Uncertainty}{4}{subsection.3.2}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {III-B.1}Shape Uncertainty}{4}{subsubsection.3.2.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces A graphical model that illustrates the relationship between the different types of uncertainty in an object. As illustrated uncertainty in pose, motion and shape affect the contacts and surface normals that makes up the grasp. Friction coefficient is independent of this relationship. \relax }}{4}{figure.caption.4}}
-\newlabel{fig:graphical_model}{{3}{4}{A graphical model that illustrates the relationship between the different types of uncertainty in an object. As illustrated uncertainty in pose, motion and shape affect the contacts and surface normals that makes up the grasp. Friction coefficient is independent of this relationship. \relax }{figure.caption.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces A graphical model that illustrates the relationship between the different types of uncertainty in an object. As illustrated uncertainty in pose, approach, and shape affect the contacts and surface normals that makes up the grasp. Friction coefficient is independent of this relationship. \relax }}{4}{figure.caption.4}}
+\newlabel{fig:graphical_model}{{3}{4}{A graphical model that illustrates the relationship between the different types of uncertainty in an object. As illustrated uncertainty in pose, approach, and shape affect the contacts and surface normals that makes up the grasp. Friction coefficient is independent of this relationship. \relax }{figure.caption.4}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {III-B.2}Pose Uncertainty}{4}{subsubsection.3.2.2}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {III-B.3}Approach Uncertainty}{4}{subsubsection.3.2.3}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {III-B.4}Friction Uncertainty}{4}{subsubsection.3.2.4}}
@@ -194,13 +194,13 @@
 \bibcite{bergemann2006bandit}{5}
 \bibcite{brook2011collaborative}{6}
 \bibcite{bubeck2009pure}{7}
-\newlabel{fig:shape_examples}{{\caption@xref {fig:shape_examples}{ on input line 457}}{7}{Multi-Armed Bandit Experiments}{figure.caption.6}{}}
+\bibcite{caflisch1998monte}{8}
+\newlabel{fig:shape_examples}{{\caption@xref {fig:shape_examples}{ on input line 467}}{7}{Multi-Armed Bandit Experiments}{figure.caption.6}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Three objects shown from the Brown Visual Lab Dataset with induced shape uncertainty and visualized with the GPIS-Blur method \cite  {mahler2015gp}. The four methods (uniform allocation, iterative pruning, Thompson and Gittins) were all run until a stopping time of $10,000$ evaluations with a randomly selected grasp set of $|\mathcal  {G}|=1000$. We also show the grasp returned by the brute force approach of exhaustively sampling every grasp in the set. The grasps and the quality each one found is shown above. In the two out of three cases, Thompson sampling is able to find the best grasp in the set at the stopping interval of $10,000$, however at the last shape there is a difference of $2\%$ grasp quality.\relax }}{7}{figure.caption.6}}
 \newlabel{fig:shape_samples}{{5}{7}{Three objects shown from the Brown Visual Lab Dataset with induced shape uncertainty and visualized with the GPIS-Blur method \cite {mahler2015gp}. The four methods (uniform allocation, iterative pruning, Thompson and Gittins) were all run until a stopping time of $10,000$ evaluations with a randomly selected grasp set of $|\mG |=1000$. We also show the grasp returned by the brute force approach of exhaustively sampling every grasp in the set. The grasps and the quality each one found is shown above. In the two out of three cases, Thompson sampling is able to find the best grasp in the set at the stopping interval of $10,000$, however at the last shape there is a difference of $2\%$ grasp quality.\relax }{figure.caption.6}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces  \relax \fontsize  {8}{9pt}\selectfont  Sensitivity Analysis for convergence to within $3\%$ of estimated best grasp in the set for Thompson Sampling under rotational variance $\sigma _{\phi } = \delimiter "4266308 0.03,0.12, 0.24 \delimiter "5267309 $ radians, translation uncertainty $\sigma _{\mathbf  {t}} = \delimiter "4266308 3, 12, 24 \delimiter "5267309 $ units friction coefficient uncertainty $\sigma _{\mu } = \delimiter "4266308 0.05,0.2, 0.4 \delimiter "5267309 $ from left to right on a 40 x 40 unit workspace averaged over 100 objects from the Brown Vision Lab Data set. The sensitivity analysis shows that large variance in translational uncertainty in pose can increase the amount of iterations needed for the bandit algorithm to converge to the highest quality grasp in the set. \relax }}{7}{table.caption.8}}
 \newlabel{tab:opt-p-comparison}{{I}{7}{\footnotesize Sensitivity Analysis for convergence to within $3\%$ of estimated best grasp in the set for Thompson Sampling under rotational variance $\sigma _{\phi } = \lbrace 0.03,0.12, 0.24 \rbrace $ radians, translation uncertainty $\sigma _{\bt } = \lbrace 3, 12, 24 \rbrace $ units friction coefficient uncertainty $\sigma _{\mu } = \lbrace 0.05,0.2, 0.4 \rbrace $ from left to right on a 40 x 40 unit workspace averaged over 100 objects from the Brown Vision Lab Data set. The sensitivity analysis shows that large variance in translational uncertainty in pose can increase the amount of iterations needed for the bandit algorithm to converge to the highest quality grasp in the set. \relax }{table.caption.8}{}}
 \@writefile{toc}{\contentsline {section}{References}{7}{section*.9}}
-\bibcite{caflisch1998monte}{8}
 \bibcite{chapelle2011empirical}{9}
 \bibcite{cheong2011output}{10}
 \bibcite{christopoulos2007handling}{11}

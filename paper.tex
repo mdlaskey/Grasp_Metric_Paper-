@@ -112,7 +112,7 @@ Multi-Arm Bandit Models for 2D Sample Based Grasp Planning with Uncertainty  [v1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{abstract}
-For applications such as warehouse order fulfillment, robot grasps must be robust to uncertainty arising from sensing, shape, mechanics, and control.  One way to achieve this is to evaluate the performance of candidate grasps by sampling perturbations in shape, pose, and control, computing the probability of force closure for each candidate to identify the grasp with the highest expected quality. Prior work has turned to cloud based computing because evaluating the quality of each grasp is computationally demanding. To improve efficiency, we consider how Multi-Armed Bandit (MAB) models for optimizing decisions can be applied in this context. We formulate robust grasp planning as a MAB problem and evaluate grasp planning convergence time using 100 object shapes randomly selected from the Brown Vision 2D Lab Dataset with 1000 uniformly distributed candidate grasp angles. We consider the case where shape uncertainty is represented as a Gaussian process implicit surface (GPIS) and there is Gaussian uncertainty in pose, gripper approach angle, and coefficient of friction. 
+For applications such as warehouse order fulfillment, robot grasps must be robust to uncertainty arising from sensing, shape, mechanics, and control.  One way to achieve this is to evaluate the performance of candidate grasps by sampling perturbations in shape, pose, and control, computing the probability of force closure for each candidate to identify the grasp with the highest expected quality. Prior work has turned to cloud computing because evaluating the quality of each grasp is computationally demanding. To improve efficiency, we consider how Multi-Armed Bandit (MAB) models for optimizing decisions can be applied in this context. We formulate robust grasp planning as a MAB problem and evaluate grasp planning convergence time using 100 object shapes randomly selected from the Brown Vision 2D Lab Dataset from 1000 uniformly distributed candidate grasp angles. We consider the case where shape uncertainty is represented as a Gaussian process implicit surface (GPIS) and there is Gaussian uncertainty in pose, gripper approach angle, and coefficient of friction. 
 Uniform allocation and iterative pruning, the non-MAB methods, converge slowly.
 In contrast, Thompson Sampling and the Gittins index method, the MAB methods we consider, converged to within 3\% of the optimal grasp approximately 5x faster.
 \end{abstract}
@@ -143,7 +143,7 @@ However, a robot may not be able to measure these quantities exactly due to sens
 
 \begin{figure}%
     \centering
-     \subfloat{{\includegraphics[scale=0.25]{matlab_figures/pfc-01.jpg} }}%
+     \subfloat{{\includegraphics[scale=0.25]{matlab_figures/pfc.eps} }}%
 
     \caption{Number of samples versus the normalized probability of force closure $P_F$ for the best estimated grasp after $k$ samples, $P_F(\Gamma_{\bar{k}})$, out of 1000 candidate grasps using uniform allocation, iterative pruning (eliminating candidates that perform poorly on initial samples), and our proposed Multi-Armed Bandit (MAB) algorithms (Gittins indices and Thompson Sampling).
     %We evaluated performance on 100 objects randomly selected from from the Brown Vision 2D Lab Dataset \cite{brown} with 1000 uniformly distributed candidate grasp plans.
@@ -262,10 +262,13 @@ The indices can then be used to form a policy, where at each timestep the agent 
  
 
 \subsubsection{Thompson Sampling}
-Computation of the Gittins indices can increase exponentially in time as the discount factor approaches $1$. The problem with this is that the effective time horizon is a function of $\gamma$. Thus, if the actual horizon is longer than the effective horizon, the method can only pull the current estimate of the best arm \cite{kelly1981multi}. Thus, no longer trading off exploration and exploitation. Thompson sampling is an alternative to the Gittins Index method that isn't prone to such a problem. 
-All arms are initialized with prior Beta distributions, which is normally Beta($\alpha_{k,0}=1$,  $\beta_{k,0} =1$) $\forall 1 \leq k \leq K$ to reflect a uniform prior on the parameter of the Bernoulli distribution, $p_{k,0}$.
-Then for each arm draw $p_{k,t} \sim \mbox{Beta}(\alpha_{k,t},\beta_{k,t})$ and pull the arm with the highest $p_{k,t}$ drawn.
-A reward is then observed, $R_{k,t}$ and the corresponding Beta distribution is updated. The full algorithm is shown in Algorithm 1.  
+Computation of the Gittins indices can increase exponentially in time as the discount factor approaches $1$.
+However, in the case of finding the best arm, we want to plan for long term reward and thus want $\gamma$ as close to $1$ as possible.
+Due to computational constraints we must use a smaller $\gamma$, but this can lead to the algorithm pulling only the most promising arm for many iterations~\cite{kelly1981multi}.
+
+Thompson Sampling is an alternative to the Gittins Index method that isn't prone to such a problem. 
+In Thompson Sampling, for each arm draw $p_{k,t} \sim \mbox{Beta}(\alpha_{k,t},\beta_{k,t})$ and pull the arm with the highest $p_{k,t}$ drawn.
+A reward is then observed, $R_{k,t}$ and the corresponding Beta distribution is updated. All arms are initialized with prior Beta distributions, which is normally Beta($\alpha_{k,0}=1$,  $\beta_{k,0} =1$) $\forall 1 \leq k \leq K$ to reflect a uniform prior on the parameter of the Bernoulli distribution, $p_{k,0}$.The full algorithm is shown in Algorithm 1.
 
 The intuition for Thompson sampling is that the random samples of $p_{k,t}$ allow the method to explore. However as it receives more samples it hones in on promising arms, since the Beta distributions approach delta distributions as number of samples drawn goes towards infinity \cite{goetschalckx2011continuous}. Chapelle et al. demonstrated empirically that Thompson sampling achieved lower cumulative regret than traditional bandit algorithms like UCB for the Beta-Bernoulli case \cite{chapelle2011empirical}. Theoretically, Agrawal et al. recently proved an upper bound on the asymptotic complexity of  cumulative regret for  Thompson sampling that was sub-linear  for $k$ -arms and logarithmic in the case of $2$ arms  \cite{agrawal2011analysis}. 
 
@@ -478,7 +481,7 @@ The MAB algorithm can also be terminated when the $95\%$ confidence interval aro
 \begin{figure*}%
 \label{fig:shape_examples}
     \centering
-    \includegraphics[width=16.5cm]{figures/shapes.jpg}%
+    %\includegraphics[width=16.5cm]{figures/shapes.jpg}%
     \caption{Grasps with the highest estimated probabilty of force closure $P_F$ after 10,000 samples using uniform allocation, iterative pruning, Gittins indices, and Thompson sampling on three objects from the Brown Vision 2D Dataset. For reference, we also show the grasp with highest $P_F$ after brute force evaluation using 100,000 samples. The candidate grasp set was of size $|\mG|=1000$. We visualize the GPIS representation of the object shape uncertainty using GPIS-Blur~\cite{mahler2015gp}, which causes more uncertain areas to appear more blurry.  On objects A and B Thompson sampling finds the best grasp after 10,000 samples, but for object C the grasp selected has $2\%$ lower $P_F$.}%
     \label{fig:shape_samples}%
 \end{figure*}
@@ -507,7 +510,7 @@ As illustrated in Fig. \ref{fig:worst_case}, all the methods are affected by wor
 
 \begin{figure}[t!]
 \centering
-\includegraphics[scale=0.25]{matlab_figures/worst_case-02.jpg}
+%\includegraphics[scale=0.25]{matlab_figures/worst_case-02.jpg}
 \caption{ \footnotesize 
 	Number of samples versus the probability of force closure of the best estimated grasp after $k$ samples $P_F(\Gamma_{\bar{k}})$ using uniform allocation, iterative pruning, Gittins indices, and Thompson Sampling over 1,000 candidate grasps when samples are ordered such that many perturbations that do result in force closure are given to the algorithm initially.
 	The normalized $P_F$ is the ratio of the best estimated grasp at iteration $k$, $P_F(\Gamma_{\bar{k}})$, to the highest $P_F$ in the candidate grasp set $P_F(\Gamma^*)$ averaged over 100 independent runs on randomly selected objects from the Brown Vision 2D Dataset \cite{brown}.

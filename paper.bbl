@@ -39,10 +39,6 @@ P.~Bachman and D.~Precup, ``Greedy confidence pursuit: A pragmatic approach to
 A.~G. Barto, \emph{Reinforcement learning: An introduction}.\hskip 1em plus
   0.5em minus 0.4em\relax MIT press, 1998.
 
-\bibitem{bergemann2006bandit}
-D.~Bergemann and J.~V{\"a}lim{\"a}ki, ``Bandit problems,'' Cowles Foundation
-  for Research in Economics, Yale University, Tech. Rep., 2006.
-
 \bibitem{brook2011collaborative}
 P.~Brook, M.~Ciocarlie, and K.~Hsiao, ``Collaborative grasp planning with
   multiple object representations,'' in \emph{{Proc. {IEEE} Int. Conf. Robotics
@@ -144,7 +140,8 @@ B.~Kehoe, D.~Berenson, and K.~Goldberg, ``Estimating part tolerance bounds
 
 \bibitem{kehoe2015survey}
 B.~Kehoe, S.~Patil, P.~Abbeel, and K.~Goldberg, ``A survey of research on cloud
-  robotics and automation,'' 2015.
+  robotics and automation,'' \emph{Automation Science and Engineering, IEEE
+  Transactions on}, vol.~12, no.~2, pp. 398--409, 2015.
 
 \bibitem{kelly1981multi}
 F.~Kelly \emph{et~al.}, ``Multi-armed bandits with discount factor near one:
@@ -162,10 +159,21 @@ T.~L. Lai and H.~Robbins, ``Asymptotically efficient adaptive allocation
   rules,'' \emph{Advances in applied mathematics}, vol.~6, no.~1, pp. 4--22,
   1985.
 
+\bibitem{Mikko2015POMDP}
+M.~Lauri and R.~Ritala, ``Optimal sensing via multi-armed bandit relaxations in
+  mixed observability domains,'' in \emph{Robotics and Automation, 2015. ICRA
+  2015. Proceedings of the 2005 IEEE International Conference on}.\hskip 1em
+  plus 0.5em minus 0.4em\relax IEEE, 2015.
+
 \bibitem{li1988task}
 Z.~Li and S.~S. Sastry, ``Task-oriented optimal grasping by multifingered robot
   hands,'' \emph{Robotics and Automation, IEEE Journal of}, vol.~4, no.~1, pp.
   32--44, 1988.
+
+\bibitem{liu2004quality}
+G.~Liu, J.~Xu, X.~Wang, and Z.~Li, ``On quality functions for grasp synthesis,
+  fixture planning, and coordinated manipulation,'' \emph{Automation Science
+  and Engineering, IEEE Transactions on}, vol.~1, no.~2, pp. 146--162, 2004.
 
 \bibitem{mahler2015gp}
 J.~Mahler, S.~Patil, B.~Kehoe, J.~van~den Berg, M.~Ciocarlie, P.~Abbeel, and

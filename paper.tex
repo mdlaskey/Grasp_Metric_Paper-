@@ -121,7 +121,7 @@ perturbations in shape, pose, and gripper approach and to compute the probabilit
 identify a grasp with the highest expected quality. Since evaluating the
 quality of each grasp is computationally demanding, prior work has turned to cloud computing. To improve computational efficiency and to extend this work, we consider how
 Multi-Armed Bandit (MAB) models for optimizing decisions can be applied in this context. We formulate robust grasp
-planning as a MAB problem and evaluate convergence times towards an optimal grasp candidate using 100 objects shapes from
+planning as a MAB problem and evaluate convergence times towards an optimal grasp candidate using 100 object shapes from
 the Brown Vision 2D Lab Dataset with 1000 grasp candidates per object. We consider the case where shape uncertainty is represented as a Gaussian process implicit surface (GPIS) with Gaussian uncertainty in pose, gripper approach angle, and coefficient of friction. 
 We find that Thompson Sampling and the Gittins index MAB methods converged to within 3\% of the optimal grasp up to 10x faster than uniform allocation and 5x faster than iterative pruning. 
 \end{abstract}
@@ -154,7 +154,7 @@ a robot may not be able to measure these quantities exactly due to sensor imprec
     \centering
      \subfloat{{\includegraphics[scale=1]{matlab_figures/pfc-01.jpg} }}%
 
-    \caption{Number of samples versus the normalized probability of force closure $P_F$ for the best estimated grasp 
+     \caption{Number of samples (i.e. iterations of arm pulls) versus the normalized probability of force closure $P_F$ for the best estimated grasp 
         after $t$ samples, $P_F(\Gamma_{\bar{k}, t})$, out of 1000 candidate grasps using uniform allocation, iterative pruning (eliminating candidates that perform poorly on initial samples), and our proposed Multi-Armed Bandit (MAB) algorithms (Gittins indices and Thompson Sampling).
     %We evaluated performance on 100 objects randomly selected from from the Brown Vision 2D Lab Dataset \cite{brown} with 1000 uniformly distributed candidate grasp plans.
     The normalized $P_F$ is given by the ratio of $P_F(\Gamma_{\bar{k}, t})$ to the highest $P_F$ value in the candidate
@@ -192,8 +192,8 @@ parallel jaw gripper. We furthermore model uncertainty in friction coefficient a
 
 We compare Thompson sampling and Gittins indices, two popular algorithms for solving the MAB problem,
 against uniform allocation and an adaptive sampling method known as iterative pruning, which iteratively reduces the set
-of candidate grasps based on the sample mean~\cite{kehoe2012toward}. 
-In terms of the number of samples needed to find a grasp with highest estimated probability of force closure on objects in the Brown Vision 2D Dataset, a dataset of 2D planar objects~\cite{brown, christopoulos2007handling}. Our simulation results show that Thompson Sampling, a MAB algorithm, required $5$x fewer samples than iterative
+of candidate grasps based on the sample mean~\cite{kehoe2012toward},
+in terms of the number of samples needed to find a grasp with highest estimated probability of force closure on objects in the Brown Vision 2D Dataset, a dataset of 2D planar objects~\cite{brown, christopoulos2007handling}. Our simulation results show that Thompson Sampling, a MAB algorithm, required $5$x fewer samples than iterative
 pruning and $10$x fewer samples than uniform allocation to determine a grasp within $3\%$ of the estimated highest probability of force closure
 grasp among a set of 1000 grasp candidates per object and averaged over 100 objects.
 
@@ -266,7 +266,7 @@ Beta distributions are specified by shape parameters $\alpha$ and $\beta$, where
 
 One benefit of the Beta prior on Bernoulli reward distributions is that updates to the belief distribution after observing rewards from arm pulls can be derived in closed form.
 At timestep $t=0$, we pull arm $k$ and observe reward $R_{k,0}$, where $R_{k,0} \in \lbrace 0, 1\rbrace$.
-The posterior of the Beta after this observation is $\alpha_{k, 1} = \alpha_{k, 0} + R_{k,0}$,  $\beta_{k, 1} = \beta_{k, 0} + 1-R_{k,0}$, where $\alpha_{k,0}$ and $\beta_{k,0}$ are the prior shape parameters for arm $k$ before any samples are evaluated.
+The posterior of the Beta distribution after this observation is $\alpha_{k, 1} = \alpha_{k, 0} + R_{k,0}$,  $\beta_{k, 1} = \beta_{k, 0} + 1-R_{k,0}$, where $\alpha_{k,0}$ and $\beta_{k,0}$ are the prior shape parameters for arm $k$ before any samples are evaluated.
 
 Given the current belief $\alpha_{k, t}, \beta_{k, t}$ for an arm $k$ at time $t$, the expected Bernoulli parameter, $\bar{p}_{k,t}$, is:
 %Thus, we can write the expected probability of force closure as follows
@@ -299,8 +299,8 @@ We refer the reader to~\cite{gittins2011multi} for a more detailed analysis of t
  
 
 \subsubsection{Thompson Sampling}
-The computational cost of the Gittins index method can increase exponentially in time as the discount factor approaches $1$.
-However, in the case of finding the best arm, we want to plan for long term reward and thus want $\gamma$ as close to $1$ as possible.
+The computational cost of determining the Gittins indices can increase rapidly as the discount factor approaches $1$.
+However, in the case of finding the best arm, we want to plan for long-term reward and thus want $\gamma$ as close to $1$ as possible.
 Due to computational constraints we must use a smaller $\gamma$, but this can lead to the algorithm pulling only the most promising arm for many iterations~\cite{kelly1981multi}.
 
 \begin{algorithm}
@@ -464,10 +464,10 @@ More recent work has considered adaptive sampling to discard grasps that are not
 
 To try and reduce the number of samples needed, we instead maximize the sum of $P_F$ values for each sampled grasp  $\Gamma_{k,t}$ at time $t$ up to a given time $T_s$:
 \begin{align}
-    \underset{\Gamma_{k,} \in \mG}{\text{max }} \sum \limits_{t=1}^
+    \underset{\Gamma_{k,*} \in \mG}{\text{max }} \sum \limits_{t=1}^
     {T_s} P_F \left( \Gamma_{k,t}\right)  \label{eq:problem_def}
 \end{align}
-\noindent This attempts to perform as well as Equation~\ref{eq:old_problem_def} in as few samples as possible~\cite{srinivas2009gaussian}. We then formulate the  problem as a MAB model and compare two different Bayesian MAB algorithms, Thompson sampling and Gittins indices.
+\noindent The goal is to perform as well as Equation~\ref{eq:old_problem_def} in as few samples as possible~\cite{srinivas2009gaussian}. We then formulate the  problem as a MAB model and compare two different Bayesian MAB algorithms, Thompson sampling and Gittins indices.
 
 \section{Grasp Planning as a Multi-Armed Bandit}
 We frame the grasp selection problem of \secref{objective} as a MAB problem.

@@ -92,11 +92,13 @@ Multi-Armed Bandit Models for 2D Grasp Planning with Uncertainty}
 
 
 \author{Michael Laskey$^1$, Jeff Mahler$^1$, Zoe McCarthy$^1$,  Florian T. Pokorny$^1$, Sachin Patil$^1$,\\ Jur van den Berg$^4$,  Danica Kragic$^3$, Pieter Abbeel$^1$, Ken Goldberg$^2$% <-this % stops a space
-\thanks{$^1$Department of Electrical Engineering and Computer Sciences; {\small \{mdlaskey, jmahler,zmccarthy, sachinpatil, pabbeel\}@berkeley.edu}}%
+\thanks{$^1$Department of Electrical Engineering and Computer Sciences; {\small \{mdlaskey, jmahler, zmccarthy,
+ftpokorny, sachinpatil, pabbeel\}@berkeley.edu}}%
 \thanks{$^2$Department of Industrial Engineering and Operations Research and Department of Electrical Engineering and Computer Sciences; {\small goldberg@berkeley.edu}}%
 \thanks{$^{1-2}$ University of California, Berkeley;  Berkeley, CA 94720, USA}%
-\thanks{$^3$Computer Vision and Active Perception Lab, Centre for Autonomous Systems, School of Computer Science and Communication, KTH Royal Institute of Technology, Stockholm, Sweden {\small \{fpokorny, dani\}@kth.se}}%
-\thanks{$^4$Google; Amphitheatre Parkway, Mountain View, CA 94043, USA {\small jurvandenberg@gmail.com}}%
+\thanks{$^3$Computer Vision and Active Perception Lab, Centre for Autonomous Systems, School of Computer Science and
+Communication, KTH Royal Institute of Technology, Stockholm, Sweden; {\small dani@kth.se}}%
+\thanks{$^4$Google; Amphitheatre Parkway, Mountain View, CA 94043, USA; {\small jurvandenberg@gmail.com}}%
 } 
 
 \newtheorem{theorem}{Theorem}
@@ -191,7 +193,7 @@ parallel jaw gripper. We furthermore model uncertainty in friction coefficient a
 We compare Thompson sampling and Gittins indices, two popular algorithms for solving the MAB problem,
 against uniform allocation and an adaptive sampling method known as iterative pruning, which iteratively reduces the set
 of candidate grasps based on the sample mean~\cite{kehoe2012toward}. 
-In terms of the number of samples needed to find a grasp with highest estimated probability of force closure on objects in the Brown Vision 2D Dataset, a dataset of 2D planar objects~\cite{brown, christopoulos2007handling}.Our simulation results show that Thompson Sampling, a MAB algorithm, required $5$x fewer samples than iterative
+In terms of the number of samples needed to find a grasp with highest estimated probability of force closure on objects in the Brown Vision 2D Dataset, a dataset of 2D planar objects~\cite{brown, christopoulos2007handling}. Our simulation results show that Thompson Sampling, a MAB algorithm, required $5$x fewer samples than iterative
 pruning and $10$x fewer samples than uniform allocation to determine a grasp within $3\%$ of the estimated highest probability of force closure
 grasp among a set of 1000 grasp candidates per object and averaged over 100 objects.
 
@@ -245,11 +247,13 @@ Developing a policy that successfully trades between exploration and exploitatio
 
 At each time step, the MAB algorithm incurs \textit{regret}, the difference between the expected reward of the best arm and that of the selected arm. Bandit algorithms minimize cumulative regret, the sum of regret over the entire sequence of arm choices.
 Lai and Robbins~\cite{lai1985asymptotically} showed that the cumulative regret of the optimal solution to the bandit problem is bounded by a logarithmic function of the number of arm pulls.
-They presented an algorithm called (Upper Confidence Bound) UCB that obtains this bound asymptotically~\cite{lai1985asymptotically}.
+They presented an algorithm called Upper Confidence Bound (UCB) that obtains this bound asymptotically~\cite{lai1985asymptotically}.
 The algorithm maintains a confidence bound on the distribution of reward based on prior observations and pulls the arm with the highest upper confidence bound.
 
 
-In the robotics field, Hsu et al. applied MAB models to improve the performance and reduce computation time of the probabilistic roadmap motion planner by adaptively sampling waypoints~\cite{hsu2005hybrid}. Matikainen et al. formulated policy learning as choosing a state machine from a known libraries of state machines. They then used a MAB algorithm to improve the computational speed of finding the best state machine~\cite{matikainen2013multi}. Lauri and Ritala used MAB models to solve a relaxed mixed observable POMDP problem and achieve an efficient solution~\cite{Mikko2015POMDP}.
+In the robotics field, Hsu et al. applied MAB models to improve the performance and reduce computation time of the
+probabilistic roadmap motion planner by adaptively sampling waypoints~\cite{hsu2005hybrid}. Matikainen et al. formulated
+policy learning as choosing a state machine from a known library of state machines. They then used a MAB algorithm to improve the computational speed of finding the best state machine~\cite{matikainen2013multi}. Lauri and Ritala used MAB models to solve a relaxed mixed observable POMDP problem and achieve an efficient solution~\cite{Mikko2015POMDP}.
 %Many variants of UCB have thus been proposed~\cite{cesa2006prediction}. 
 
 
@@ -269,7 +273,8 @@ Given the current belief $\alpha_{k, t}, \beta_{k, t}$ for an arm $k$ at time $t
 
 \vspace{-2ex}
 \begin{align}\label{eq:shape_sampling}
-\bar{p}_{k,t} = \frac{\alpha_{k,t}}{\alpha_{k,t} + \beta_{k,t}} = \frac{\mbox{\#Successes} + \alpha_{k,0}}{\mbox{\#Trials}+\alpha_{k,0}+\beta_{k,0}}
+\bar{p}_{k,t} = \frac{\alpha_{k,t}}{\alpha_{k,t} + \beta_{k,t}} = \frac{\mbox{\#Successes} +
+\alpha_{k,0}}{\mbox{\#Trials}+\alpha_{k,0}+\beta_{k,0}}.
 \end{align}
 
 All arms are initialized with prior Beta distributions, which is normally Beta($\alpha_{k,0}=1$,  $\beta_{k,0} =1$) for $k\leq K$ to reflect a uniform prior on the parameter of the Bernoulli distribution, $p_{k,0}$.
@@ -279,13 +284,14 @@ All arms are initialized with prior Beta distributions, which is normally Beta($
 %In our case we only care about the regret at the time our decision of the optimal grasp needs to be made, decoupling the exploration and exploitation stages.
 
 \subsubsection{The Gittins Index Method} 
-One MAB method is to treat the problem as a Markov Decision Process (MDP) and use Markov Decision theory.
+One MAB method is to treat the problem as a Markov Decision Process (MDP) and to use Markov Decision theory.
 Formally, a MDP is defined by sets of states, actions, transition probabilities between states, a reward function, and a discount factor~\cite{barto1998reinforcement}.
 In the Beta-Bernoulli MAB case, the set of actions consists of $K$ arms and the set of states are the Beta posterior on each arm, or the values of $\alpha_{k,t}$ and $\beta_{k,t}$. 
 
-Methods such as Value Iteration can compute optimal policies for a discrete MDP with respect to the discount factor $\gamma$ ~\cite{barto1998reinforcement}.
-However, the curse of dimensionality affects performance because for $K$ arms, a finite horizon of $T$ and a Beta-Bernoulli distribution on each arm then the state space is exponential in size with respect to $K$.
-Using the fact that pulling an arm only changes the state of the arm pulled, Gittins showed that instead of solving the $K$-dimensional MDP one can instead solve $K$ 1-dimensional optimization problems: for each arm $k$ and for each state $x_{k,t} = \lbrace \alpha_{k,t}, \beta_{k,t} \rbrace$ up to a timestep $T$ ~\cite{weber1992gittins}. 
+Methods such as Value Iteration can compute optimal policies for a discrete MDP with respect to the discount factor $\gamma$ \cite{barto1998reinforcement}.
+However, the curse of dimensionality affects performance because for $K$ arms, a finite horizon of $T$, and a
+Beta-Bernoulli distribution on each arm, the state space is exponential in size with respect to $K$.
+Using the fact that pulling an arm only changes the state of the arm pulled, Gittins showed that instead of solving the $K$-dimensional MDP one can solve $K$ 1-dimensional optimization problems for each arm $k$ and for each state $x_{k,t} = \lbrace \alpha_{k,t}, \beta_{k,t} \rbrace$ up to a timestep $T$ \cite{weber1992gittins}. 
 
 The solution to the optimization problem assigns each state an index $v(x_{k,t})$, which can be thought of as the expected value for each state. 
 The indices can then be used to form a policy, where at each timestep the agent selects the arm $k_t$ where $k_t= \underset{1 \leq k \leq K}{\mbox{argmax }} v(x_{k,t})$.  The indices for the Beta-Bernoulli case are computed offline and can be found in ~\cite{gittins2011multi}.
@@ -293,7 +299,7 @@ We refer the reader to~\cite{gittins2011multi} for a more detailed analysis of t
  
 
 \subsubsection{Thompson Sampling}
-Computation of the Gittins indices can increase exponentially in time as the discount factor approaches $1$.
+The computational cost of the Gittins index method can increase exponentially in time as the discount factor approaches $1$.
 However, in the case of finding the best arm, we want to plan for long term reward and thus want $\gamma$ as close to $1$ as possible.
 Due to computational constraints we must use a smaller $\gamma$, but this can lead to the algorithm pulling only the most promising arm for many iterations~\cite{kelly1981multi}.
 
@@ -318,16 +324,20 @@ Due to computational constraints we must use a smaller $\gamma$, but this can le
 \end{algorithm}
 
 Thompson sampling is an alternative to the Gittins index method that is not prone to this problem. 
-In Thompson sampling, for each arm draw $p_{k,t} \sim \mbox{Beta}(\alpha_{k,t},\beta_{k,t})$ and pull, the arm with the highest $p_{k,t}$ drawn.
-A reward, $R_{k,t}$, is then observed and the corresponding Beta distribution is updated. Sampling from a Beta distribution is computationally inexpensive and implemented  in most science computing libraries~\cite{MATLAB:2010}. Thompson sampling does make an assumption that sampling from the Beta distribution for each arm is significantly computationally cheaper than actually pulling an arm.The full algorithm is shown in Algorithm 1.
+In Thompson sampling, for each arm draw $p_{k,t} \sim \mbox{Beta}(\alpha_{k,t},\beta_{k,t})$ and pull, the arm with the
+highest $p_{k,t}$ is drawn.
+A reward, $R_{k,t}$, is then observed and the corresponding Beta distribution is updated. Sampling from a Beta
+distribution is computationally inexpensive and implemented  in most scientific computing libraries~\cite{MATLAB:2010}. Thompson sampling does make an assumption that sampling from the Beta distribution for each arm is significantly computationally cheaper than actually pulling an arm. The full algorithm is shown in Algorithm 1.
 
-The intuition for Thompson sampling is that the random samples of $p_{k,t}$ allow the method to explore. However, as more samples are received the method focuses on promising arms, since the Beta distributions approach delta distributions as number of samples drawn goes towards infinity~\cite{agrawal2011analysis}. Chapelle et al. demonstrated empirically that Thompson sampling achieved lower cumulative regret than traditional bandit algorithms like UCB for the Beta-Bernoulli case~\cite{chapelle2011empirical}. Agrawal et al. recently proved an upper bound on the asymptotic complexity of  cumulative regret for  Thompson sampling that is sub-linear for $k$-arms and logarithmic in the case of $2$ arms ~\cite{agrawal2011analysis}. 
+The intuition for Thompson sampling is that the random samples of $p_{k,t}$ allow the method to explore. However, as
+more samples are received, the method focuses on promising arms, since the Beta distributions approach delta
+distributions as the number of samples drawn tends towards infinity~\cite{agrawal2011analysis}. Chapelle et al. demonstrated empirically that Thompson sampling achieved lower cumulative regret than traditional bandit algorithms like UCB for the Beta-Bernoulli case~\cite{chapelle2011empirical}. Agrawal et al. recently proved an upper bound on the asymptotic complexity of  cumulative regret for  Thompson sampling that is sub-linear for $k$-arms and logarithmic in the case of $2$ arms~\cite{agrawal2011analysis}. 
 
 
 
 
 \section{Grasp Planning Problem Definition}
-We consider grasping a rigid, planar object from above using parallel-jaw grippers.
+We consider grasping a rigid planar object from above using parallel-jaw grippers.
 We assume that the interaction between the gripper and object is quasi-static~\cite{kehoe2012estimating, kehoe2012toward}.
 We consider uncertainty in shape, pose, gripper approach, and friction coefficient. We assume that the distributions on these quantities are given and can be sampled from.  While we only consider grasping planar objects, our method can work on planar slices of a 3D object. 
 \begin{figure}[t!]
@@ -390,17 +400,17 @@ In practice, a robot may not be able to execute a desired grasp $\Gamma = \lbrac
 We model approach uncertainty as Gaussian uncertainty around the angle of approach and centroid of a straight line grasp $\Gamma$.
 Formally, let $\hat{\by} = \frac{1}{2} (\bj_1 + \bj_2)$ denote the center of a planned grasp axis and $\hat{\psi}$ denote the clockwise angle that the planned axis $\bj_1 - \bj_2$ makes with the y-axis of the 2D coordinate system on our shape representation.
 We model uncertainty in the approach center as $\by \sim \mN(\hat{\by}, \Sigma_y)$ and uncertainty in the approach angle as $\psi \sim \mN(\hat{\psi}, \sigma_{\psi}^2)$.
-For shorthand, the remainder of this paper we will refer to the uncertain approach parameters as $\rho = \{\by, \psi \}$.
+To shorten notation, the remainder of this paper we will refer to the uncertain approach parameters as $\rho = \{\by, \psi \}$.
 In practice $\Sigma_{y}^2$ and $\sigma_{\psi}^2$ can be set from repeatability measurements for a robot~\cite{mooring1986determination}.
 
  \subsubsection{Friction Uncertainty}
 As shown in~\cite{hang2013a,zheng2005}, uncertainty in friction coefficient can cause grasp quality to significantly vary.
-However, friction coefficients may be uncertain due to factors such as material between a gripper and an object (e.g. dust, water, moisture), variations in the gripper material due to manufacturing tolerances, or misclassification of the object surface to be grasped.
-We model uncertainty in friction coefficient as Gaussian noise, $\mu \sim \mN(\hat{\mu},\sigma_{\mu}^2)$.
+However, friction coefficients may be uncertain due to factors such as the presence of material between a gripper and an
+object (e.g. dust, water, moisture), variations in the gripper material due to manufacturing tolerances, or due to a misclassification of the object surface to be grasped. We model uncertainty in friction coefficient as Gaussian noise, $\mu \sim \mN(\hat{\mu},\sigma_{\mu}^2)$.
 
  
 \subsection{Grasp Quality}\label{sec:grasp_sample}
-We measure the quality of grasp using the probability of force closure~\cite{kehoe2012estimating, kehoe2012toward, kim2012physically,weisz2012pose} given a grasp $\Gamma$. Force closure is considered as a binary-valued quantity $F$ that is 1 if the grasp can resist wrenches in arbitrary directions and 0 otherwise.
+We measure the quality of a grasp using the notion of probability of force closure~\cite{kehoe2012estimating, kehoe2012toward, kim2012physically,weisz2012pose} given a grasp $\Gamma$. Force closure is considered as a binary-valued quantity $F$ that is 1 if the grasp can resist wrenches in arbitrary directions and 0 otherwise.
 Let $\mW \in \mathbb{R}^3$ denote the contact wrenches derived from contact locations $\bc_1,\bc_2$, normals $\bn_1,\bn_2$, friction coefficient $\mu$, and center of mass $\bz$ for a given grasp and shape.
 If the origin lies within the convex hull of $\mW$, then the grasp is in force closure~\cite{li1988task}.
 We rank grasps using the probability of force closure given uncertainty in shape, pose, robot approach, and friction coefficient~\cite{christopoulos2007handling, kehoe2012toward}:
@@ -433,7 +443,7 @@ Finally, we use these quantities to compute the forces and torques that can be a
 \subsection{Objective}
 \seclabel{objective}
 
-Given the sources of uncertainty and their relationships as described above, the grasp planning objective is to find the grasp that maximizes the probability of force closure from a set of candidate grasps $\mG = \{\Gamma_1, ..., \Gamma_K\}$:
+Given the sources of uncertainty and their relationships as described above, the grasp planning objective is to find a grasp that maximizes the probability of force closure from a set of candidate grasps $\mG = \{\Gamma_1, ..., \Gamma_K\}$:
 
 \vspace{-2ex}
 \begin{align}
@@ -467,38 +477,50 @@ In a MAB, we want to minimize cumulative regret which is an equivalent objective
 The proposed algorithm is an anytime algorithm because it can be stopped at any point during its computation to return the current estimate of the best grasp or wait until a $95\%$ confidence interval is smaller than some threshold $\epsilon$. Using the quantile function of the beta distribution, $B$, we can measure the $95\%$ confidence interval as: 
 
 \vspace{-2ex}
+{\small
 \begin{align}\label{eq:confidence}
-B(0.025,\alpha_{k,t},\beta_{k,t}) \leq P_F(\Gamma_{k,t})) \leq B(0.975,\alpha_{k,t},\beta_{k,t})
+B(0.025,\alpha_{k,t},\beta_{k,t}) \leq P_F(\Gamma_{k,t})) \leq B(0.975,\alpha_{k,t},\beta_{k,t}).
 \end{align}
-
-To summarize, the algorithm terminates and returns $\bar{k}$, or a grasp that has the highest estimated $P_F$ when the following condition is met:
-
-\vspace{-2ex}
-\begin{align}\label{eq:stopping_condition}
-\lbrace t \geq T_s \: \mbox{or} \: |B(0.025,\alpha_{\bar{k},t},\beta_{\bar{k},t}) -  B(0.975,\alpha_{\bar{k},t},\beta_{\bar{k},t})| \leq \epsilon \rbrace.
-\end{align}
+}
+To summarize, the algorithm terminates and returns $\bar{k}$, or a grasp that has the highest estimated $P_F$ when 
+$t \geq T_s $ or $|B(0.025,\alpha_{\bar{k},t},\beta_{\bar{k},t}) -
+B(0.975,\alpha_{\bar{k},t},\beta_{\bar{k},t})| \leq \epsilon$.
 
 \section{Simulation Experiments}
 We used the Brown Vision Lab 2D dataset \cite{brown}, a database of 2D planar objects, as in \cite{christopoulos2007handling}.
 GPIS models of 2 example objects are visualized using the GPIS-Blur method of~\cite{mahler2015gp} in Figure \ref{fig:shape_samples}.
-We downsampled the silhouette by a factor of 2 to create a 40 x 40 occupancy map, which holds 1 if the point cloud was observed and 0 if it was not observed, and a measurement noise map, which holds the variance 0-mean noise added to the SDF values.
+We downsampled the silhouette by a factor of 2 to create a 40 x 40 occupancy map, which holds 1 if the point cloud was
+observed and 0 if it was not observed, and a measurement noise map, which holds the variance of 0-mean noise added to the SDF values.
 The measurement noise were assigned uniformly at random to the SDF.
 We then construct a GPIS using the same method as proposed in~\cite{mahler2015gp}.
 For illustrative purposes, the noise in approach, pose, and friction coefficient were set to the following variances $\sigma_{\psi}^2 = 0.2$ rads$^2$, $\sigma_{\by}^2 = 3$ grid cells$^2$, $\sigma_{\mu}^2 = 0.4$, $\sigma_{\phi}^2 = 0.3$ rads$^2$ and $\sigma_{\bt}^2 = 3$ grid cells$^2$.
 We  performed experiments for the case of two hard contacts in 2-D.
-We drew random grasps $\Gamma$ by uniformly sampling the angle of grasp axis around a circle with radius $\sqrt{2} M$, where $M$ is the dimension of the workspace, and then sampling the circle's origin from a zero mean Gaussian with variance 10 units$^2$. All experiments were run on machine with OS X with a 2.7 GHz Intel core i7 processor and 16 GB 1600 MHz memory in Matlab 2013b.
+We drew random grasps $\Gamma$ by uniformly sampling the angle of the grasp axis around a circle with radius $\sqrt{2}
+M$, where $M$ is the dimension of the workspace, and then sampling the circle's origin from a zero mean Gaussian with
+variance 10 units$^2$. All experiments were run on a machine with OS X with a 2.7 GHz Intel core i7 processor and 16 GB 1600 MHz memory in Matlab 2013b.
 
 
 
 
 
 \subsection{Multi-Armed Bandit Experiments}
-For our experiments we look at selecting an optimal grasp among $|G| = 1000$ candidates. We draw samples from our graphical model using the technique described in Sec.  \ref{sec:grasp_sample}. We calculated the expected performance over 100 randomly selected shapes in the Brown Vision Lab 2D dataset and for the grasps planned by Thompson sampling, Gittins indices, iterative pruning~\cite{kehoe2012toward} and uniform allocation). Uniform allocation selects a grasp at random from the set to sample next, thus does not use any prior information. Iterative pruning prunes grasps every 1000 iterations based on lowest sample mean and removes 10$\%$ of the current grasp set.  We set the discount factor $\gamma =0.98$ for Gittins, which was the highest we could compute due to the exponential growth in computation time with respect to $\gamma$~\cite{gittins2011multi}. 
+For our experiments we look at selecting an optimal grasp among $|G| = 1000$ candidates. We draw samples from our
+graphical model using the technique described in Sec.  \ref{sec:grasp_sample}. We calculated the expected performance
+over 100 randomly selected shapes in the Brown Vision Lab 2D dataset and for the grasps planned by Thompson sampling,
+Gittins indices, iterative pruning~\cite{kehoe2012toward} and uniform allocation. Uniform allocation selects a grasp at
+random from the set to sample the next candidate and thus does not use any prior information. Iterative pruning prunes
+grasps every 1000 iterations based on lowest sample mean and removes 10$\%$ of the current grasp set.  We set the
+discount factor $\gamma =0.98$ for the Gittins method, which was the highest we could compute in a reasonable amount of
+time due to the exponential growth in computation time with respect to $\gamma$~\cite{gittins2011multi}. 
 
-In Fig. \ref{fig:grasp_quality}, we plot time $t$ vs. $P(\Gamma_{\bar{k},t})$/$P(\Gamma^*)$, the normalized probability of force closure for the grasp returned by the algorithm $\Gamma_{\bar{k},t}$.  Non-MAB methods such as uniform sampling and iterative pruning (eliminating candidates grasp based on sample mean) eventually converge to within 3$\%$ of the optimal, requiring approximately 40,000 and 20,000 iterations.  Gittins indices and Thompson sampling  perform significantly better, converging after only 4000 iterations. In Fig. \ref{fig:shape_samples}, we select a stopping time $T_s=10,000$, which is 10 samples per grasp on average, and for each method visualize the grasp  returned, $\Gamma_{\bar{k},10,000}$, on two real world objects, a coaxial cable splitter and a mechanical switch. 
+In Fig. \ref{fig:grasp_quality}, we plot time $t$ vs. $P(\Gamma_{\bar{k},t})$/$P(\Gamma^*)$, the normalized probability
+of force closure for the grasp returned by the algorithm.  Non-MAB methods such as uniform sampling and iterative
+pruning (eliminating candidates grasp based on sample mean) eventually converge to within 3$\%$ of the optimal grasp,
+requiring approximately 40,000 and 20,000 iterations.  Gittins indices and Thompson sampling  perform significantly
+better, converging after only 4000 iterations. In Fig. \ref{fig:shape_samples}, we select a stopping time $T_s=10,000$,
+which corresponds to 10 samples per grasp on average, and for each method visualize the grasp  returned, $\Gamma_{\bar{k},10,000}$, on two real world objects, a coaxial cable splitter and a mechanical switch. 
 
 The time per iteration is $t_{i} = t_{a}+t_{p}$, where $t_{a}$ is the time to decide which arm to pull next and $t_{p}$ is the time taken to draw a sample from the graphical model in Fig. \ref{fig:graphical_model}. The time per iteration for Thompson sampling, Gittins indices, iterative pruning and uniform allocation is $31.6$, $31.2$, $30.4$ and $30.2$ ms. Most of $t_{i}$ is dominated by sampling time, since $t_{p} \approx 30$ms. Sampling from our graphical model in Fig. \ref{fig:graphical_model} involves drawing samples form a GPIS, a high dimensional Gaussian, and evaluating the probability of force closure metric. 
-
 The MAB algorithm can also be terminated when the $95\%$ confidence interval around the returned grasp (see Equation \ref{eq:confidence}) is below a set threshold $\epsilon$. We plot the algorithm's confidence intervals around the returned grasp $P_F(\Gamma_{\bar{k}})$ vs. the number of samples drawn in Fig. \ref{fig:confidence} for the Gittins indices, Thompson sampling, iterative pruning~\cite{kehoe2012toward} and uniform allocation.  As illustrated, the confidence interval for Thompson sampling and Gittins indices converges at a faster rate than the other two methods. 
 
 
@@ -507,7 +529,7 @@ The MAB algorithm can also be terminated when the $95\%$ confidence interval aro
 \includegraphics[scale=1]{matlab_figures/confidence_bounds.jpg}
 \caption{ Number of samples versus the algorithm's $95\%$ confidence intervals from Eq. \ref{eq:confidence} on the probability of force closure of the best estimated grasp after $t$ samples using uniform allocation, iterative pruning, Gittins indices, and Thompson Sampling. The values are averaged over 100 independent runs on randomly selected objects from the Brown Vision 2D Dataset~\cite{brown} with 1,000 candidate grasps for each object. An increasingly narrow confidence interval indicates that the algorithm allocated an increasing number of samples to its estimate of the best grasp. }
 
-\vspace*{-10pt}
+\vspace*{-15pt}
 \label{fig:confidence}
 \end{figure}
 
@@ -536,17 +558,17 @@ We also analyze the performance of Thompson sampling under variations in noise f
 We increase the variance parameters across a set range for each parameter to simulate low, medium and high levels of noise.
 All experiments were averaged across 100 objects randomly selected  from the Brown dataset with $|\mG| = 1000$.
 
-For friction coefficient we varied $\sigma^2_{\mu}$ across the following values $\sigma^2_{\mu} = \lbrace 0.05, 0.2, 0.4 \rbrace$.
+For the friction coefficient, we varied $\sigma^2_{\mu}$ across the values $\lbrace 0.05, 0.2, 0.4 \rbrace$.
 As illustrated in Table 1, the performance of the bandit algorithm remains largely unchanged, with typical convergence to zero in simple regret less than 5000 evaluations.
 
 For rotational uncertainty in pose, we varied $\sigma^2_{\phi}$ across the set $\lbrace 0.03, 0.12,0.24\rbrace$ radians$^2$. As illustrated in Table 1, the performance of the bandit algorithms is affected by the change in rotation. Increase in variance to $0.24$ radians$^2$  causes the  simple regret to not converge until around 6432 samples or an average of 6.4 samples per grasp. 
 
-For translational uncertainty in pose, we varied $\sigma^2_{\bt}$ in the range of $\lbrace 3,12, 24 \rbrace$ units$^2$ (on a 40 x 40 unit workspace). Our results indicate that the performance of the bandit algorithms is affected by the change in rotation and an increased noise of $\sigma^2_{\bt} = 24$ causes the algorithm to not converged until 8763 evaluations for Thompson sampling. 
+For translational uncertainty in pose, we varied $\sigma^2_{\bt}$ in the range of $\lbrace 3,12, 24 \rbrace$ units$^2$ (on a 40 x 40 unit workspace). Our results indicate that the performance of the bandit algorithms is affected by the change in rotation and an increased noise of $\sigma^2_{\bt} = 24$ causes the algorithm to not converge until 8763 evaluations for Thompson sampling. 
 
 
 
 \subsection{Worst Case}
-The MAB algorithms use the observations of samples drawn to decide which grasp to sample next from. To show worst case performance under such a model, we sorted the quality of all 1000 grasps offline and arranged the order of samples, so that the top 500 grasps have samples drawn in the order of worst to best and the bottom 500 grasps have samples drawn in order of best to worst. This provides misleading observations to the bandit algorithms. We demonstrate in Fig. \ref{fig:worst_case} a case where the observations are misleading. As illustrated in Fig. \ref{fig:worst_case}, all the methods are affected by worst case performance. The results suggest that, when the observations are misleading, the preferred policy is uniform allocation of grasp samples.
+The MAB algorithms use the observations of samples drawn to decide which grasp to sample next from. To show worst case performance under such a model, we sorted the quality of all 1000 grasps offline and arranged the order of samples, so that the top 500 grasps have samples drawn in the order of worst to best and the bottom 500 grasps have samples drawn in order of best to worst. This provides misleading observations to the bandit algorithms. We demonstrate in Fig. \ref{fig:worst_case} a case where the observations are misleading. As illustrated in Fig. \ref{fig:worst_case}, all methods are affected by worst case performance. The results suggest that, when the observations are misleading, the preferred policy is uniform allocation of grasp samples.
 
 
 
@@ -580,13 +602,13 @@ Friction $\sigma_{\mu}$ &  4985  & 4456   & 4876\\
 In this work, we proposed a multi-armed bandit approach to efficiently identify high-quality grasps under uncertainty in shape, pose, friction coefficient and approach. 
 A key insight from our work is that exhaustively sampling each grasp is inefficient, and we found that a MAB approach gives priority to promising grasps and can reduce computational time. Initial results have shown MAB algorithms to outperform the methods of prior work, uniform allocation and iterative pruning  ~\cite{kehoe2012estimating,kehoe2012toward} in terms of finding a higher quality grasp faster.
 However, as shown in Fig. \ref{fig:worst_case} there are some pathological cases that can mislead bandit algorithms to focus samples on the wrong grasps.
-Fortunately, the probability of many successive samples being misleading approaches rapidly zero as the time horizon is increased.
+Fortunately, the probability of many successive samples being misleading rapidly approaches zero as the time horizon is increased.
 
 In future work, we plan to scale our method to 3D objects. This could substantially increase the number of candidate grasps, further motivating the use of cloud computing. Glazebrook and Wilkinson showed that the Gittins index method could be parallelized by simply dividing the arms into $M$ subsets, where $M$ is the number of cores, and solving each MAB separately. \cite{glazebrook2000index}. A similar method could also be done for Thompson sampling. Another promising scheme for parrallelizing the MAB, is to have the algorithm not sample one arm at each iteration but $M$. We will explore both of these approaches in future work.
 
 \section{Acknowledgments} 
 This work is supported in part by the U.S. National Science Foundation under Award IIS-1227536, NSF-Graduate Research Fellowship, and by grants from Google. 
-We thank our colleagues who gave feedback and suggestions in particular Sanjay Krishnan, Peter Bartlett, Steve McKinley and Dylan Hadfield-Menell.
+We thank the AMPLab, UCBerkeley and our colleagues who gave feedback and suggestions, in particular Sanjay Krishnan, Peter Bartlett, Steve McKinley and Dylan Hadfield-Menell.
 
 \bibliographystyle{IEEEtranS}
 \bibliography{references}

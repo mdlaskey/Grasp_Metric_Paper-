@@ -299,7 +299,7 @@ We refer the reader to~\cite{gittins2011multi} for a more detailed analysis of t
  
 
 \subsubsection{Thompson Sampling}
-The computational cost of determining the Gittins indices can increase rapidly as the discount factor approaches $1$.
+The computational cost of determining the Gittins indices can increase exponentially as the discount factor approaches $1$.
 However, in the case of finding the best arm, we want to plan for long-term reward and thus want $\gamma$ as close to $1$ as possible.
 Due to computational constraints we must use a smaller $\gamma$, but this can lead to the algorithm pulling only the most promising arm for many iterations~\cite{kelly1981multi}.
 
@@ -343,7 +343,8 @@ We consider uncertainty in shape, pose, gripper approach, and friction coefficie
 \begin{figure}[t!]
 \centering
 \includegraphics[width = 8.5cm, height = 5.25cm]{figures/bandit_grasp_model.jpg}
-\caption{Illustration of our grasping model for parallel jaw grippers on a mechanical switch. Jaw placements are illustrated by a red direction arrow and line. A grasp plan centered at $\by$ (plus symbol) at angle $\psi$ consists of 2D locations for each of the parallel jaws $\bj_1$ and $\bj_2$. When following the grasp plan, the jaws contact the object at locations $\bc_1$ and $\bc_2$, and the object has outward pointing unit surface normals $\bn_1$ and $\bn_2$ at these locations. Together with the center of mass of the object $\bz$, these values can be used to determine the forces and torques that a grasp can apply to an object.}
+\caption{Illustration of our grasping model for parallel jaw grippers on a mechanical switch. Jaw placements are
+illustrated by rectangles closing along the dashed line. A grasp plan centered at $\by$ (plus symbol) at angle $\psi$ consists of 2D locations for each of the parallel jaws $\bj_1$ and $\bj_2$. When following the grasp plan, the jaws contact the object at locations $\bc_1$ and $\bc_2$, and the object has outward pointing unit surface normals $\bn_1$ and $\bn_2$ at these locations. Together with the center of mass of the object $\bz$, these values can be used to determine the forces and torques that a grasp can apply to an object.}
 \vspace*{-2ex}
 \label{fig:grasp_model}
 \end{figure}
@@ -487,21 +488,22 @@ $t \geq T_s $ or $|B(0.025,\alpha_{\bar{k},t},\beta_{\bar{k},t}) -
 B(0.975,\alpha_{\bar{k},t},\beta_{\bar{k},t})| \leq \epsilon$.
 
 \section{Simulation Experiments}
-We used the Brown Vision Lab 2D dataset \cite{brown}, a database of 2D planar objects, as in \cite{christopoulos2007handling}.
+We used the Brown Vision Lab 2D dataset \cite{brown} of 2D objects as in \cite{christopoulos2007handling}.
 We downsampled the silhouette by a factor of 2 to create a 40 x 40 occupancy map, which holds 1 if the point cloud was
 observed and 0 if it was not observed, and a measurement noise map, which holds the variance of 0-mean noise added to the SDF values.
-The measurement noise were assigned uniformly at random to the SDF.
+The measurement noise was assigned uniformly at random to the SDF.
 We then construct a GPIS using the same method as proposed in~\cite{mahler2015gp}.
-For illustrative purposes, the noise in approach, pose, and friction coefficient were set to the following variances $\sigma_{\psi}^2 = 0.2$ rads$^2$, $\sigma_{\by}^2 = 3$ grid cells$^2$, $\sigma_{\mu}^2 = 0.4$, $\sigma_{\phi}^2 = 0.3$ rads$^2$ and $\sigma_{\bt}^2 = 3$ grid cells$^2$.
+The noise in approach, pose, and friction coefficient were set to the following variances $\sigma_{\psi}^2 = 0.2$ rads$^2$, $\sigma_{\by}^2 = 3$ grid cells$^2$, $\sigma_{\mu}^2 = 0.4$, $\sigma_{\phi}^2 = 0.3$ rads$^2$ and $\sigma_{\bt}^2 = 3$ grid cells$^2$.
 We  performed experiments for the case of two hard contacts in 2-D.
 We drew random grasps $\Gamma$ by uniformly sampling the angle of the grasp axis around a circle with radius $\sqrt{2}
 M$, where $M$ is the dimension of the workspace, and then sampling the circle's origin from a zero mean Gaussian with
 variance 10 units$^2$. All experiments were run on a machine with OS X with a 2.7 GHz Intel core i7 processor and 16 GB
-1600 MHz memory in Matlab 2013b. For illustration purposes, Figure \ref{fig:shape_samples} also displays
-GPIS models of 2 real-world objects are visualized using the GPIS-Blur method~\cite{mahler2015gp}.
+1600 MHz memory in Matlab 2013b. 
+Figure \ref{fig:shape_samples} displays examples of GPIS models using the GPIS-Blur method~\cite{mahler2015gp}
+as well as resulting grasp samples.
 
 \subsection{Multi-Armed Bandit Experiments}
-For our experiments we look at selecting an optimal grasp among $|G| = 1000$ candidates. We draw samples from our
+For our experiments we consider selecting an optimal grasp among $|G| = 1000$ candidates per object. We draw samples from our
 graphical model using the technique described in Sec.  \ref{sec:grasp_sample}. We calculated the expected performance
 over 100 randomly selected shapes in the Brown Vision Lab 2D dataset and for the grasps planned by Thompson sampling,
 Gittins indices, iterative pruning~\cite{kehoe2012toward} and uniform allocation. Uniform allocation selects a grasp at
@@ -605,7 +607,7 @@ In future work, we plan to scale our method to 3D objects. This could substantia
 
 \section{Acknowledgments} 
 This work is supported in part by the U.S. National Science Foundation under Award IIS-1227536, NSF-Graduate Research Fellowship, and by grants from Google. 
-We thank the AMPLab, UCBerkeley and our colleagues who gave feedback and suggestions, in particular Sanjay Krishnan, Peter Bartlett, Steve McKinley and Dylan Hadfield-Menell.
+We thank the AMPLab, UC Berkeley and our colleagues who gave feedback and suggestions, in particular Sanjay Krishnan, Peter Bartlett, Steve McKinley and Dylan Hadfield-Menell.
 
 \bibliographystyle{IEEEtranS}
 \bibliography{references}

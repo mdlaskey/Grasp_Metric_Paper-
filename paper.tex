@@ -489,11 +489,11 @@ B(0.975,\alpha_{\bar{k},t},\beta_{\bar{k},t})| \leq \epsilon$.
 
 \section{Simulation Experiments}
 We used the Brown Vision Lab 2D dataset \cite{brown} of 2D objects as in \cite{christopoulos2007handling}.
-We downsampled the silhouette by a factor of 2 to create a 40 x 40 occupancy map, which holds 1 if the point cloud was
-observed and 0 if it was not observed, and a measurement noise map, which holds the variance of 0-mean noise added to the SDF values.
-The measurement noise was assigned uniformly at random to the SDF.
+We downsampled the silhouette by a factor of 2 to create a 40 x 40 occupancy map, which contained 1 if the object was
+observed and 0 if it was not observed. We computed a quadtree representation of the SDF and removed information about
+the SDF on grid cells corresponding to uniformly chosen quadtree cells to simulate localized uncertainty in shape perception.
 We then construct a GPIS using the same method as proposed in~\cite{mahler2015gp}.
-The noise in approach, pose, and friction coefficient were set to the following variances $\sigma_{\psi}^2 = 0.2$ rads$^2$, $\sigma_{\by}^2 = 3$ grid cells$^2$, $\sigma_{\mu}^2 = 0.4$, $\sigma_{\phi}^2 = 0.3$ rads$^2$ and $\sigma_{\bt}^2 = 3$ grid cells$^2$.
+The noise parameters in approach, pose, and friction coefficient were set to the following variances: $\sigma_{\psi}^2 = 0.2$ rads$^2$, $\sigma_{\by}^2 = 3$ grid cells$^2$, $\sigma_{\mu}^2 = 0.4$, $\sigma_{\phi}^2 = 0.3$ rads$^2$ and $\sigma_{\bt}^2 = 3$ grid cells$^2$.
 We  performed experiments for the case of two hard contacts in 2-D.
 We drew random grasps $\Gamma$ by uniformly sampling the angle of the grasp axis around a circle with radius $\sqrt{2}
 M$, where $M$ is the dimension of the workspace, and then sampling the circle's origin from a zero mean Gaussian with
@@ -503,7 +503,7 @@ Figure \ref{fig:shape_samples} displays examples of GPIS models using the GPIS-B
 as well as resulting grasp samples.
 
 \subsection{Multi-Armed Bandit Experiments}
-For our experiments we consider selecting an optimal grasp among $|G| = 1000$ candidates per object. We draw samples from our
+For our experiments, we consider selecting an optimal grasp among $|G| = 1000$ candidates per object. We draw samples from our
 graphical model using the technique described in Sec.  \ref{sec:grasp_sample}. We calculated the expected performance
 over 100 randomly selected shapes in the Brown Vision Lab 2D dataset and for the grasps planned by Thompson sampling,
 Gittins indices, iterative pruning~\cite{kehoe2012toward} and uniform allocation. Uniform allocation selects a grasp at
@@ -517,10 +517,12 @@ of force closure for the grasp returned by the algorithm.  Non-MAB methods such 
 pruning (eliminating candidates grasp based on sample mean) eventually converge to within 3$\%$ of the optimal grasp,
 requiring approximately 40,000 and 20,000 iterations.  Gittins indices and Thompson sampling  perform significantly
 better, converging after only 4000 iterations. In Fig. \ref{fig:shape_samples}, we select a stopping time $T_s=10,000$,
-which corresponds to 10 samples per grasp on average, and for each method visualize the grasp  returned, $\Gamma_{\bar{k},10,000}$, on two real world objects, a coaxial cable splitter and a mechanical switch. 
+which corresponds to 10 samples per grasp on average, and for each method visualize the grasp returned,
+$\Gamma_{\bar{k},10,000}$.
 
-The time per iteration is $t_{i} = t_{a}+t_{p}$, where $t_{a}$ is the time to decide which arm to pull next and $t_{p}$ is the time taken to draw a sample from the graphical model in Fig. \ref{fig:graphical_model}. The time per iteration for Thompson sampling, Gittins indices, iterative pruning and uniform allocation is $31.6$, $31.2$, $30.4$ and $30.2$ ms. Most of $t_{i}$ is dominated by sampling time, since $t_{p} \approx 30$ms. Sampling from our graphical model in Fig. \ref{fig:graphical_model} involves drawing samples form a GPIS, a high dimensional Gaussian, and evaluating the probability of force closure metric. 
-The MAB algorithm can also be terminated when the $95\%$ confidence interval around the returned grasp (see Equation \ref{eq:confidence}) is below a set threshold $\epsilon$. We plot the algorithm's confidence intervals around the returned grasp $P_F(\Gamma_{\bar{k}})$ vs. the number of samples drawn in Fig. \ref{fig:confidence} for the Gittins indices, Thompson sampling, iterative pruning~\cite{kehoe2012toward} and uniform allocation.  As illustrated, the confidence interval for Thompson sampling and Gittins indices converges at a faster rate than the other two methods. 
+The time per iteration is $t_{i} = t_{a}+t_{p}$, where $t_{a}$ is the time to decide which arm to pull next and $t_{p}$ is the time taken to draw a sample from the graphical model in Fig. \ref{fig:graphical_model}. The time per iteration for Thompson sampling, Gittins indices, iterative pruning and uniform allocation is $31.6$, $31.2$, $30.4$ and $30.2$ ms. Most of $t_{i}$ is dominated by sampling time, since $t_{p} \approx 30$ ms. Sampling from our graphical model in Fig. \ref{fig:graphical_model} involves drawing samples form a GPIS, a high dimensional Gaussian, and evaluating the probability of force closure metric. 
+The MAB algorithm can also be terminated when the $95\%$ confidence interval around the returned grasp (see Equation
+\ref{eq:confidence}) is below a set threshold $\epsilon$ in size. We plot the algorithm's confidence intervals around the returned grasp $P_F(\Gamma_{\bar{k}})$ vs. the number of samples drawn in Fig. \ref{fig:confidence} for the Gittins indices, Thompson sampling, iterative pruning~\cite{kehoe2012toward} and uniform allocation.  As illustrated, the confidence interval for Thompson sampling and Gittins indices converges at a faster rate than the other two methods. 
 
 
 \begin{figure}[t!]
@@ -537,7 +539,11 @@ The MAB algorithm can also be terminated when the $95\%$ confidence interval aro
 \label{fig:shape_examples}
     \centering
     \includegraphics[width=16.5cm]{figures/shapes.jpg}%
-    \caption{Grasps with the highest estimated probabilty of force closure $P_F$ after 10,000 samples using uniform allocation, iterative pruning, Gittins indices, and Thompson sampling on two objects, a coaxial cable splitter and a mechanical switch. For reference, we also show the grasp with highest $P_F$ after brute force evaluation using 100,000 samples and the nominal shape. The candidate grasp set was of size $|\mG|=1000$. We visualize the GPIS representation of the object shape uncertainty using GPIS-Blur~\cite{mahler2015gp}, which causes more uncertain areas to appear more blurry.}%
+    \caption{Grasps with the highest estimated probabilty of force closure $P_F$ after 10,000 samples using uniform
+    allocation, iterative pruning, Gittins indices, and Thompson sampling on two objects from the Brown 2D dataset
+\cite{brown}. For reference, we also show the grasp with highest $P_F$ after brute force evaluation using 100,000
+samples and the nominal shape. The candidate grasp set was of size $|\mG|=1000$ for each object. We visualize the GPIS
+representation of the imposed object shape uncertainty using GPIS-Blur~\cite{mahler2015gp}, which causes more uncertain areas to appear more blurry.}%
     \label{fig:shape_samples}%
 \end{figure*}
 
@@ -558,7 +564,8 @@ We increase the variance parameters across a set range for each parameter to sim
 All experiments were averaged across 100 objects randomly selected  from the Brown dataset with $|\mG| = 1000$.
 
 For the friction coefficient, we varied $\sigma^2_{\mu}$ across the values $\lbrace 0.05, 0.2, 0.4 \rbrace$.
-As illustrated in Table 1, the performance of the bandit algorithm remains largely unchanged, with typical convergence to zero in simple regret less than 5000 evaluations.
+As illustrated in Table 1, the performance of the bandit algorithm remains largely unchanged, with typical convergence
+to zero in simple regret in less than 5000 iterations.
 
 For rotational uncertainty in pose, we varied $\sigma^2_{\phi}$ across the set $\lbrace 0.03, 0.12,0.24\rbrace$ radians$^2$. As illustrated in Table 1, the performance of the bandit algorithms is affected by the change in rotation. Increase in variance to $0.24$ radians$^2$  causes the  simple regret to not converge until around 6432 samples or an average of 6.4 samples per grasp. 
 

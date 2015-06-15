@@ -21,10 +21,6 @@
 \providecommand{\BIBdecl}{\relax}
 \BIBdecl
 
-\bibitem{brown}
-``2d planar database,''
-  \url{https://vision.lems.brown.edu/content/available-software-and-databases}.
-
 \bibitem{agrawal2011analysis}
 S.~Agrawal and N.~Goyal, ``Analysis of thompson sampling for the multi-armed
   bandit problem,'' \emph{arXiv preprint arXiv:1111.1797}, 2011.
@@ -44,6 +40,10 @@ P.~Brook, M.~Ciocarlie, and K.~Hsiao, ``Collaborative grasp planning with
   multiple object representations,'' in \emph{{Proc. {IEEE} Int. Conf. Robotics
   and Automation (ICRA)}}.\hskip 1em plus 0.5em minus 0.4em\relax IEEE, 2011,
   pp. 2851--2858.
+
+\bibitem{brown}
+{Brown University Vision Lab}, ``2d planar database,''
+  \url{https://vision.lems.brown.edu/content/available-software-and-databases}.
 
 \bibitem{caflisch1998monte}
 R.~E. Caflisch, ``Monte carlo and quasi-monte carlo methods,'' \emph{Acta

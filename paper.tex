@@ -539,11 +539,14 @@ The MAB algorithm can also be terminated when the $95\%$ confidence interval aro
 \label{fig:shape_examples}
     \centering
     \includegraphics[width=16.5cm]{figures/shapes.jpg}%
-    \caption{Grasps with the highest estimated probabilty of force closure $P_F$ after 10,000 samples using uniform
-    allocation, iterative pruning, Gittins indices, and Thompson sampling on two objects from the Brown 2D dataset
-\cite{brown}. For reference, we also show the grasp with highest $P_F$ after brute force evaluation using 100,000
-samples and the nominal shape. The candidate grasp set was of size $|\mG|=1000$ for each object. We visualize the GPIS
-representation of the imposed object shape uncertainty using GPIS-Blur~\cite{mahler2015gp}, which causes more uncertain areas to appear more blurry.}%
+    \caption{
+We show two objects from the Brown 2D dataset \cite{brown} where data is omitted at randomly chosen rectangular
+nodes of a quadtree representation. The resulting GPIS models are
+visualized using GPIS-Blur~\cite{mahler2015gp}, where uncertain areas appear more blurry.
+Grasps with the highest estimated normalized probabilty of force closure $P_F$ after 10,000 samples using uniform
+allocation, iterative pruning, Gittins indices, and Thompson sampling are displayed.
+For reference, we also show the grasp with highest $P_F$ after brute force evaluation using 100,000
+samples and the nominal shape. The candidate grasp set was of size $|\mG|=1000$ for each object. }
     \label{fig:shape_samples}%
 \end{figure*}
 
@@ -610,7 +613,11 @@ A key insight from our work is that exhaustively sampling each grasp is ineffici
 However, as shown in Fig. \ref{fig:worst_case} there are some pathological cases that can mislead bandit algorithms to focus samples on the wrong grasps.
 Fortunately, the probability of many successive samples being misleading rapidly approaches zero as the time horizon is increased.
 
-In future work, we plan to scale our method to 3D objects. This could substantially increase the number of candidate grasps, further motivating the use of cloud computing. Glazebrook and Wilkinson showed that the Gittins index method could be parallelized by simply dividing the arms into $M$ subsets, where $M$ is the number of cores, and solving each MAB separately. \cite{glazebrook2000index}. A similar method could also be done for Thompson sampling. Another promising scheme for parrallelizing the MAB, is to have the algorithm not sample one arm at each iteration but $M$. We will explore both of these approaches in future work.
+In future work, we plan to scale our method to 3D objects. This could substantially increase the number of candidate
+grasps, further motivating the use of cloud computing. Glazebrook and Wilkinson showed that the Gittins index method
+could be parallelized by simply dividing the arms into $M$ subsets, where $M$ is the number of cores, and solving each
+MAB separately. \cite{glazebrook2000index}. A similar method could also be done for Thompson sampling. Another promising
+scheme for parallelizing the MAB is to sample $M$ arms at each iteration. We will explore both of these approaches in future work.
 
 \section{Acknowledgments} 
 This work is supported in part by the U.S. National Science Foundation under Award IIS-1227536, NSF-Graduate Research Fellowship, and by grants from Google. 

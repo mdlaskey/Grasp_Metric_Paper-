@@ -306,7 +306,7 @@ Due to computational constraints we must use a smaller $\gamma$, but this can le
 \begin{algorithm}
  \KwResult{Current Best Arm, $\Gamma^*$ }
  Initialize Beta($\alpha_{k,0}=1$,$\beta_{k,0}=1$) $\forall k \in K$ \\
-\For{ t=1,2,...,N }{ 
+\For{ t=1,2,...,T }{ 
  Draw $p_{k,t} \sim$ Beta($\alpha_{k,t}$,$\beta_{k,t}$) for $k = 1,...,K$\\
  Pull arm $k_t  = \underset{k\in K}{\mbox{argmax}} \: p_{k,t}$\\
  Observe reward $R_{k,t} \in \lbrace 0,1 \rbrace$\\
@@ -514,7 +514,7 @@ time due to the exponential growth in computation time with respect to $\gamma$~
 
 In Fig. \ref{fig:grasp_quality}, we plot time $t$ vs. $P(\Gamma_{\bar{k},t})$/$P(\Gamma^*)$, the normalized probability
 of force closure for the grasp returned by the algorithm.  Non-MAB methods such as uniform sampling and iterative
-pruning (eliminating candidates grasp based on sample mean) eventually converge to within 3$\%$ of the optimal grasp,
+pruning (eliminating candidate grasps based on sample mean) eventually converge to within 3$\%$ of the optimal grasp,
 requiring approximately 40,000 and 20,000 iterations.  Gittins indices and Thompson sampling  perform significantly
 better, converging after only 4000 iterations. In Fig. \ref{fig:shape_samples}, we select a stopping time $T_s=10,000$,
 which corresponds to 10 samples per grasp on average, and for each method visualize the grasp returned,
@@ -522,7 +522,9 @@ $\Gamma_{\bar{k},10,000}$.
 
 The time per iteration is $t_{i} = t_{a}+t_{p}$, where $t_{a}$ is the time to decide which arm to pull next and $t_{p}$ is the time taken to draw a sample from the graphical model in Fig. \ref{fig:graphical_model}. The time per iteration for Thompson sampling, Gittins indices, iterative pruning and uniform allocation is $31.6$, $31.2$, $30.4$ and $30.2$ ms. Most of $t_{i}$ is dominated by sampling time, since $t_{p} \approx 30$ ms. Sampling from our graphical model in Fig. \ref{fig:graphical_model} involves drawing samples form a GPIS, a high dimensional Gaussian, and evaluating the probability of force closure metric. 
 The MAB algorithm can also be terminated when the $95\%$ confidence interval around the returned grasp (see Equation
-\ref{eq:confidence}) is below a set threshold $\epsilon$ in size. We plot the algorithm's confidence intervals around the returned grasp $P_F(\Gamma_{\bar{k}})$ vs. the number of samples drawn in Fig. \ref{fig:confidence} for the Gittins indices, Thompson sampling, iterative pruning~\cite{kehoe2012toward} and uniform allocation.  As illustrated, the confidence interval for Thompson sampling and Gittins indices converges at a faster rate than the other two methods. 
+\ref{eq:confidence}) is below a set threshold $\epsilon$ in size. We plot the algorithm's confidence intervals around
+the returned grasp $P_F(\Gamma_{\bar{k}})$ vs. the number of samples drawn in Fig. \ref{fig:confidence} for the Gittins
+index method, Thompson sampling, iterative pruning~\cite{kehoe2012toward} and uniform allocation.  As illustrated, the confidence interval for Thompson sampling and Gittins indices converges at a faster rate than the other two methods. 
 
 
 \begin{figure}[t!]
@@ -548,17 +550,24 @@ allocation, iterative pruning, Gittins indices, and Thompson sampling are displa
 For reference, we also show the grasp with highest $P_F$ after brute force evaluation using 100,000
 samples and the nominal shape. The candidate grasp set was of size $|\mG|=1000$ for each object. }
     \label{fig:shape_samples}%
+    \vspace{-12pt}
 \end{figure*}
 
 \begin{figure}[ht!]
 \centering
 \includegraphics[scale=1]{matlab_figures/worst_case-02.jpg}
 \caption{ \footnotesize 
-	Number of samples versus the probability of force closure of the best estimated grasp after $t$ samples $P_F(\Gamma_{\bar{k}, t})$ using uniform allocation, iterative pruning, Gittins indices, and Thompson sampling over 1,000 candidate grasps when samples are ordered such that many perturbations that do result in force closure are given to the algorithm initially for grasps of low quality.
+	Number of samples versus the probability of force closure of the best estimated grasp after $t$ samples
+	$P_F(\Gamma_{\bar{k}, t})$ using uniform allocation, iterative pruning, Gittins indices, and Thompson sampling over
+	1,000 candidate grasps. We generated 1,000 samples for each grasp hypothesis from the graphical model. For the top
+500 grasp hypotheses, we sorted samples such that unstable samples preceeded force closed samples and,
+for the bottom 500 grasp hypotheses, we sorted samples such that stable grasps preceeded unstable grasps.
+This provides misleading observations to the bandit algorithms.
 	The normalized $P_F$ is the ratio of the best estimated grasp at iteration $t$, $P_F(\Gamma_{\bar{k}, t})$, to the highest $P_F$ in the candidate grasp set $P_F(\Gamma^*)$ averaged over 100 independent runs on randomly selected objects from the Brown Vision 2D Dataset~\cite{brown}.
- 	The highest quality grasp was determined by brute force search over all candidate grasps (which required 10x  more time than any of these methods~\cite{kehoe2012toward}).
+ 	The highest quality grasp was determined by brute force search over all candidate grasps (which required 10x more
+ 	iterations than any of these methods~\cite{kehoe2012toward}).
  	The results suggest that when samples are misleadingly ordered, the best policy is uniform allocation.}
-\vspace*{-10pt}
+\vspace*{-20pt}
 \label{fig:worst_case}
 \end{figure}
 \subsection{Sensitivity Analysis }\label{sec:sensitivity}
@@ -569,15 +578,25 @@ All experiments were averaged across 100 objects randomly selected  from the Bro
 For the friction coefficient, we varied $\sigma^2_{\mu}$ across the values $\lbrace 0.05, 0.2, 0.4 \rbrace$.
 As illustrated in Table 1, the performance of the bandit algorithm remains largely unchanged, with typical convergence
 to zero in simple regret in less than 5000 iterations.
+For rotational uncertainty in pose, we varied $\sigma^2_{\phi}$ across the set $\lbrace 0.03, 0.12,0.24\rbrace$
+radians$^2$. As illustrated in Table 1, the performance of the bandit algorithms is affected by the change in rotation.
+An increase in variance to $0.24$ radians$^2$  causes the  simple regret to not converge until around 6432 samples or an average of 6.4 samples per grasp. 
 
-For rotational uncertainty in pose, we varied $\sigma^2_{\phi}$ across the set $\lbrace 0.03, 0.12,0.24\rbrace$ radians$^2$. As illustrated in Table 1, the performance of the bandit algorithms is affected by the change in rotation. Increase in variance to $0.24$ radians$^2$  causes the  simple regret to not converge until around 6432 samples or an average of 6.4 samples per grasp. 
-
-For translational uncertainty in pose, we varied $\sigma^2_{\bt}$ in the range of $\lbrace 3,12, 24 \rbrace$ units$^2$ (on a 40 x 40 unit workspace). Our results indicate that the performance of the bandit algorithms is affected by the change in rotation and an increased noise of $\sigma^2_{\bt} = 24$ causes the algorithm to not converge until 8763 evaluations for Thompson sampling. 
+For translational uncertainty in pose, we varied $\sigma^2_{\bt}$ in the range of $\lbrace 3,12, 24 \rbrace$ units$^2$
+(on a 40 x 40 unit workspace). Our results indicate that the performance of the bandit algorithms is affected by a 
+change in translation and an increased noise of $\sigma^2_{\bt} = 24$ causes the algorithm to not converge until 8763 evaluations for Thompson sampling. 
 
 
 
 \subsection{Worst Case}
-The MAB algorithms use the observations of samples drawn to decide which grasp to sample next from. To show worst case performance under such a model, we sorted the quality of all 1000 grasps offline and arranged the order of samples, so that the top 500 grasps have samples drawn in the order of worst to best and the bottom 500 grasps have samples drawn in order of best to worst. This provides misleading observations to the bandit algorithms. We demonstrate in Fig. \ref{fig:worst_case} a case where the observations are misleading. As illustrated in Fig. \ref{fig:worst_case}, all methods are affected by worst case performance. The results suggest that, when the observations are misleading, the preferred policy is uniform allocation of grasp samples.
+The MAB algorithms use the observations of samples drawn to decide which grasp to sample next from. To show worst case
+performance under such a model, we generated 1000 samples for each grasp hypothesis from the graphical model. For the top
+500 grasp hypotheses, we sorted samples such that unstable samples ($F=0)$ preceeded force closed ($F=1)$ samples and,
+for the bottom 500 grasp hypotheses, we sorted samples such that stable grasps preceeded unstable grasps.
+This provides misleading observations to the bandit algorithms. We demonstrate in Fig. \ref{fig:worst_case} a case where the
+observations are misleading. As illustrated in Fig. \ref{fig:worst_case}, all methods are affected by worst case
+performance. The results suggest that, when the observations are misleading, the preferred policy is uniform allocation
+of grasp samples.
 
 
 
@@ -599,7 +618,7 @@ Position $\sigma_{\bt}$ & 4210    & 5207 &  8763\\
 Friction $\sigma_{\mu}$ &  4985  & 4456   & 4876\\
  %\hline
 \end{tabular}
-   \caption { \footnotesize  Number of iterations until convergence to within $3\%$ of grasp with the highest estimated probability of force closure $P_F$ for Thompson sampling under uncertainty in the object orientation $\sigma_{\phi}^2 = \lbrace 0.03,0.12, 0.24 \rbrace$ radians$^2$,  uncertainty in the object position $\sigma_{\bt}^2 = \lbrace 3, 12, 24 \rbrace$ units$^2$, and uncertainty in friction coefficient $\sigma_{\mu}^2 = \lbrace 0.05,0.2, 0.4 \rbrace$ on a 40$\times$40 grid averaged over 100 independent runs on random objects from the Brown Vision 2D Dataset. High variances in position and orientation uncertainty increases the amount of iterations needed for the bandit algorithm to converge.
+   \caption { \footnotesize  Number of iterations until convergence to within $3\%$ of grasp with the highest estimated probability of force closure $P_F$ for Thompson sampling under uncertainty in the object orientation $\sigma_{\phi}^2 = \lbrace 0.03,0.12, 0.24 \rbrace$ radians$^2$,  uncertainty in the object position $\sigma_{\bt}^2 = \lbrace 3, 12, 24 \rbrace$ units$^2$, and uncertainty in friction coefficient $\sigma_{\mu}^2 = \lbrace 0.05,0.2, 0.4 \rbrace$ on a 40$\times$40 grid averaged over 100 independent runs on random objects from the Brown Vision 2D Dataset. High variance in position and orientation uncertainty increases the amount of iterations needed for the bandit algorithm to converge.
    }
 		\tablabel{opt-p-comparison}
 \vspace*{-20pt}
@@ -610,13 +629,13 @@ Friction $\sigma_{\mu}$ &  4985  & 4456   & 4876\\
 
 In this work, we proposed a multi-armed bandit approach to efficiently identify high-quality grasps under uncertainty in shape, pose, friction coefficient and approach. 
 A key insight from our work is that exhaustively sampling each grasp is inefficient, and we found that a MAB approach gives priority to promising grasps and can reduce computational time. Initial results have shown MAB algorithms to outperform the methods of prior work, uniform allocation and iterative pruning  ~\cite{kehoe2012estimating,kehoe2012toward} in terms of finding a higher quality grasp faster.
-However, as shown in Fig. \ref{fig:worst_case} there are some pathological cases that can mislead bandit algorithms to focus samples on the wrong grasps.
+However, as shown in Fig. \ref{fig:worst_case}, there are some pathological cases that can mislead bandit algorithms to focus samples on the wrong grasps.
 Fortunately, the probability of many successive samples being misleading rapidly approaches zero as the time horizon is increased.
 
 In future work, we plan to scale our method to 3D objects. This could substantially increase the number of candidate
 grasps, further motivating the use of cloud computing. Glazebrook and Wilkinson showed that the Gittins index method
 could be parallelized by simply dividing the arms into $M$ subsets, where $M$ is the number of cores, and solving each
-MAB separately. \cite{glazebrook2000index}. A similar method could also be done for Thompson sampling. Another promising
+MAB separately. \cite{glazebrook2000index}. A similar method could also be applied for Thompson sampling. Another promising
 scheme for parallelizing the MAB is to sample $M$ arms at each iteration. We will explore both of these approaches in future work.
 
 \section{Acknowledgments} 

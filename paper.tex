@@ -532,7 +532,7 @@ index method, Thompson sampling, iterative pruning~\cite{kehoe2012toward} and un
 \includegraphics[scale=1]{matlab_figures/confidence_bounds.jpg}
 \caption{ Number of samples versus the algorithm's $95\%$ confidence intervals from Eq. \ref{eq:confidence} on the probability of force closure of the best estimated grasp after $t$ samples using uniform allocation, iterative pruning, Gittins indices, and Thompson Sampling. The values are averaged over 100 independent runs on randomly selected objects from the Brown Vision 2D Dataset~\cite{brown} with 1,000 candidate grasps for each object. An increasingly narrow confidence interval indicates that the algorithm allocated an increasing number of samples to its estimate of the best grasp. }
 
-\vspace*{-15pt}
+\vspace*{-10pt}
 \label{fig:confidence}
 \end{figure}
 
@@ -550,7 +550,7 @@ allocation, iterative pruning, Gittins indices, and Thompson sampling are displa
 For reference, we also show the grasp with highest $P_F$ after brute force evaluation using 100,000
 samples and the nominal shape. The candidate grasp set was of size $|\mG|=1000$ for each object. }
     \label{fig:shape_samples}%
-    \vspace{-12pt}
+    \vspace{-14pt}
 \end{figure*}
 
 \begin{figure}[ht!]
@@ -567,7 +567,7 @@ This provides misleading observations to the bandit algorithms.
  	The highest quality grasp was determined by brute force search over all candidate grasps (which required 10x more
  	iterations than any of these methods~\cite{kehoe2012toward}).
  	The results suggest that when samples are misleadingly ordered, the best policy is uniform allocation.}
-\vspace*{-20pt}
+\vspace*{-24pt}
 \label{fig:worst_case}
 \end{figure}
 \subsection{Sensitivity Analysis }\label{sec:sensitivity}

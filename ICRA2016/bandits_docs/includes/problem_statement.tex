@@ -1,0 +1,19 @@
+\section{Definitions and Problem Statement}
+\seclabel{problem}
+
+Let $g \in \mathfrak{se}(3)$ denote an attempted pose of the robot end-effector in 3D space, and $\Gamma = \{ g_1, ..., g_N\}$ denote a set of candidate grasps.
+Let $\upsilon$ denote uncertainty in object shape represented by a Gaussian Process implicit surface~\cite{} distribution over signed distance fields $f$ with mean $\mu_f \in \mathbb{R}^{M \times M}$ and covariance $\Sigma_f$.
+Let $\xi$ denote Gaussian uncertainty in object pose with mean $\mu_{\xi} \in \mathfrak{se}(3)$ and covariance $\Sigma_{\xi}$.
+Let $\rho$ denote Gaussian uncertainty in gripper pose with mean $\mu_{\rho} \in \mathfrak{se}(3)$ and covariance $\Sigma_{\rho}$.
+Let $\zeta$ denote Gaussian uncertiainty in friction coefficient mean $\mu_{\zeta} \in \mathbb{R}$ and covariance $\Sigma_{\zeta}$.
+
+We are interested in finding the candidate grasp that maximizes the probability of force closure $P_F(g) = \mathbb{P} \left( F = 1 \big| g, \upsilon, \xi, \rho, \zeta\right)$~\cite{} subject to these sources of uncertainty over a budgeted maximum number of samples $T$.
+To perform this as q	uickly as possible we formulate this as a maximization over the sum of $P_F$ for the grasps sampled at iteration $t$.
+
+\vspace{-2ex}
+\begin{align*}
+	\maximum{g_1, ..., g_T \in \Gamma} \sum \limits_{t=1}^T P_F(g_{t})
+\end{align*}
+
+\noindent Laskey et al.~\cite{} proposed to solve this objective using algorithms for Multi-Armed Bandits.
+In this work, we propose to use Multi-Armed Bandits with correlations between arms to further accelerate convergence.

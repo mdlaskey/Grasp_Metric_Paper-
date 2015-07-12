@@ -1,0 +1,59 @@
+\section{Continuous Correlated Beta Processes}
+\seclabel{background}
+
+We use Continuous Correlated Beta Processes (CCBPs) to model correlations in the probability of force closure between two grasps.
+For example, two grasps that contact the shape in similar locations may have similar probabilities of force closure.
+We refer the reader to Goetschalckx et al.~\cite{} for a detaled description of CCBPs.
+
+\subsection{Beta-Bernoulli Processes}
+
+Consider a set of $K$ grasps $\Gamma = \{g_k\}_{k=1}^K$.
+Then force closure for each grasp $F(g_k) \in \{0, 1\}$ is a Bernoulli random variable with probability of success $\theta_k = P_F(g_k)$.
+Since we do not know the value of $\theta_k$ for each grasp, we can specify a distribution of $\theta_k$ based on our prior belief about the likelihood of force closure.
+A common choice for a prior on the Bernoulli parameter $\theta_k$ is the Beta distribution, which is specified by shape parameters $\alpha > 0$ and $\beta > 0$:
+
+\vspace{-2ex}
+\begin{align*}
+	\betadist(\alpha, \beta) = \frac{1}{B(\alpha, \beta)} \theta_k^{\alpha-1} (1 - \theta_k)^{\beta-1}
+\end{align*}
+
+\noindent This combination of indepdent Bernoulli random variables with Beta priors is known as a {\it Beta-Bernoulli process}.
+
+Let our prior distribution on $\theta_k$ be a beta distribution with parameters $\alpha_{k,0}$, $\beta_{k,0}$.
+Then after observing force closure for $t$ samples $F_{1}(g_k), ..., F_{t}(g_k)$ from our uncertainty model, our posterior distribution on the Bernoulli success probability $\theta_k$ is obtained using Bayes rule.
+This yields~\cite{laskey2015bandits}
+
+\vspace{-2ex}
+\begin{align*}
+	p \left(\theta_k | F_{1}(g_k), ..., F_{t}(g_k) \right) &= \betadist\left( \alpha_{k,t}, \beta_{k,t} \right) \\
+	\alpha_{k,t} &= \alpha_{k,0} + \sum \limits_{i=1}^t F_{i}(g_k) \\
+	\beta_{k,t} &= \beta_{k,0} + \sum \limits_{i=1}^t (1 - F_{i}(g_k))
+\end{align*}
+
+\noindent Therefore the belief distribution on the probability of force closure $\theta_k$ can be updated by incrementing the value of $\alpha$ and $\beta$ for each force closure observed.
+The expected value of $\theta_k$ after the observations is
+
+\begin{align*}
+	\mathbb{E} \left[ \theta_k | F_{1}(g_k), ..., F_{t}(g_k) \right] = \frac{\alpha_{k,t}}{\alpha_{k,t} + \beta_{k,t}} = \frac{\mbox{\#Successes} +	
+	\alpha_{k,0}}{\mbox{\#Trials}+\alpha_{k,0}+\beta_{k,0}}.
+\end{align*}
+
+\subsection{Continuous Correlated Beta Processes}
+
+Continuous Correlated Beta Processes(CCBPs) were introduced by Goetschalckx et al.~\cite{} to model correlations between the Bernoulli random variables in a Beta-Bernoulli process, which may lead to faster convergence in Multi-Armed Bandit problems~\cite{}.
+Such correlations may exist when the Bernoulli random variables depend on common latent factors.
+For example, two probability of force closure variables $\theta_k$ may be correlated when two grasps have similar poses or when the surface geometry near the points at which they contact an object are similar.
+
+A CCBP is a Beta-Bernoulli process with an additional parameter $k(g_i, g_j) : \mathcal{G} \times \mathcal{G} \rightarrow [0,1]$, called the kernel, that measures similarity between two grasps.
+The kernel should approach 1 as the arguments become increasingly similar and approach 0 as the arguments become dissimilar.
+Let $F_{1}(g_{I(1)}), ..., F_{t}(g_{I(t)})$ be $t$ observations of force closure from samples of our uncertainty models for grasps $g_{I(1)}, ..., g_{I(t)}$, where $I(j)$ is the index of the grasp sampled at time $j$.
+Then the CCBP posterior update for $\theta_k$ is~\cite{}:
+
+\vspace{-2ex}
+\begin{align*}
+	p \left(\theta_k | F_{1}(g_{I(1)}), ..., F_{t}(g_{I(t)}) \right) &= \betadist\left( \alpha_{k,t}, \beta_{k,t} \right) \\
+	\alpha_{k,t} &= \alpha_{k,0} + \sum \limits_{j=1}^t k(g_k, g_{I(j)}) F_{i}(g_{I(j)}) \\
+	\beta_{k,t} &= \beta_{k,0} + \sum \limits_{=1}^t k(g_k, g_{I(j)}) (1 - F_{i}(g_{I(j)}))
+\end{align*}
+
+\noindent Therefore grasps can constitute "effective" observations of other grasps if the two grasps are similar according to the kernel function.

@@ -1,0 +1,39 @@
+\section{Introduction}
+Robots in warehousing and small- to medium-scale manufacturing must be able to efficiently handle to new products and parts.
+For example, a robot processing orders in a distribution warehouse must be able to quickly adapt to new consumer products to place them in shipping containers.
+Analytic methods for grasp planning requires precise knowledge of contact locations and surface normals,
+but a robot in the field may not measure these quantities exactly due to sensor imprecision and missing data resulting from occlusions or highly reflective surfaces.
+This motivates a fast and adaptive approach to grasp planning that is robust to uncertainty about the state of the robot and environment.
+
+\TODO{I think the parts about force closure should be greatly compressed here}
+Force closure, the ability to resist external forces and torques in arbitrary directions~\cite{li1988task}, is a commonly-used binary metric of grasp quality.
+Past work has measured the probability of force closure given uncertainty in robot state~\cite{brook2011collaborative, hsiao2011bayesian}, object pose~\cite{christopoulos2007handling, kim2012physically, weisz2012pose}, and object shape~\cite{brook2011collaborative, hsiao2011bayesian, kehoe2012estimating, mahler2015gp}.
+Computing the probability of force closure requires integrating over the uncertain quantities, which many works have computed using computationally expensive Monte-Carlo integration over sampled perturbations~\cite{christopoulos2007handling, hsiao2011bayesian, kehoe2012toward, kim2012physically, weisz2012pose} parallelized in the cloud~\cite{kehoe2012toward} or using iterative pruning of grasps with low quality~\cite{kehoe2012estimating, kehoe2015survey}.
+
+Recently, Laskey et al.~\cite{laskey2015bandits} showed that it was possible to jointly compute the integral and identify the best grasp using Multi-Armed Bandit (MAB) algorithms such as Thompson Sampling, leading to $5-10\times$ speedups over previous work on a set of parallel-jaw grasps on 2D objects.
+However, the MAB algorithms still needed roughly 5,000 samples to identify the best grasp from a pool of 1,000 candidates for each object, which could be time-consuming for 3D objects.
+Also, the number of samples is prohibitively high to use the algorithms based on physical success from robot trials instead of in simulation.
+One possible reason for the magnitude of samples is that this work treated each grasp and object independently, when in reality grasps and objects with similar features, such as those illustrated in\figref{teaser}, should convey information about the probability of success of one another.
+
+\TODO{Need to get correct terminology. Technically not contextual or combinatorial. Ask Kevin.}
+Correlated Multi-Armed Bandits (CMABs) are an extension of standard MABs in which options have correlated rewards.
+On each observation, standard MAB algorithms update only the predictive model for the option chosen, while CMAB algorithms typically update a global predictive model of the reward for each option.
+This can lead to faster convergence if the algorithm has some knowledge of the correlation structure between options.~\cite{}.
+A primary challenge is thus estimating a model of the global correlation structure of the arms, which may require a large amount of data.
+
+In this work, we leverage CMABs to accelerate identification of robust grasps using a correlation structure learned from large amounts of data.
+We model the probability of force closure for grasps on 3D shapes as a Correlated Continuous Beta Processes (CCBPs)~\cite{}, a model of 0-1 correlated options with computationally inexpensive posterior updates compared to alternative models such as Gaussian Processes~\cite{}.
+Each option corresponds to a single grasp center and axis.
+Evaluating an option corresponds to sampling from Gaussian uncertainty in object pose, gripper pose, and contact friction, and measuring force closure for the grasp on the sampled state.
+We learn the correlation structure between grasps \TODO{Write up}
+
+Our primary contribution is \TODO{Write up}.
+Our experiments show that \TODO{Write up}.
+
+
+ 
+
+
+
+
+

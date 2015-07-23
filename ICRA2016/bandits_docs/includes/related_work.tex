@@ -1,0 +1,57 @@
+\section{Related Work}
+
+Many works on grasp planning focus on finding grasps by maximizing a grasp quality metric, such as the ability to resist external perturbations to the object in wrench space~\cite{ferrari1992, miller2004graspit}.
+These metrics have been used to synthesize grasps for known objects using sampling-based optimization in software tools such as GraspIt!~\cite{miller2004graspit} or OpenGRASP~\cite{}.
+However, analytic grasp quality metrics have been criticized for relying on perfect knowledge of object shape, pose, material properties, and locations of contact~\cite{cheong2011output} and the abliity of a gripper to actuate any contact force in the friction cone, which is not true of many real-world grippers~\cite{}.
+Recent work has also suggested that grasp closure metrics may fail to accurately predict of grasp success on a physical robot~\cite{balasubmaranian, weisz}.
+This has motivated work on transferring known grasps from a database to new objects, evaluating robust versions of analytic quality metrics with respect to uncertainty in the state of the robot and environment, and work on data-driven grasp synthesis~\cite{}.
+
+Many works have approached grasp synthesis for unknown or familiar objects by transferring grasps from a benchmark set of exemplar objects in a large database.
+%Ciocarlie et al.~\cite{ciocarlie2009} found that human hand postures lie on a low-dimensional subspace, called eigen-grasps, and exploited this structure to speed up grasp optimization to synthesize grasps at a large scale in GraspIt!.
+Li and Pollard~\cite{} generated grasps by matching object shapes to human hand postured in a database.
+Hillebrand and Roa~\cite{} transfer grasps from objects of the same category using pose alignment and geometric warping betwen corresponding points on a shape surface.
+Goldfelder et al.~\cite{} developed the Columbia grasp database, a database of 1,814 distinct models and over 200,000 form closure grasps generated using the Eigengrasp planner in GraspIt!~\cite{ciocarlie2009}.
+The authors later used synthetic partial depth maps of objects in the database to match robot sensor data to precomputed grasps, using the Iterated Closest Point (ICP) algorithm to align the coordinate frames of the depth maps~\cite{partial}.
+Detry et al.~\cite{91inbohg} create a low-dimensional representation of object parts and cluster object parts that are grasped similarly to form a shape library of prototypical grasp parts, and show that this representation can be transferred to real sensor data~\cite{}.
+
+Work on evaluating grasp quality metrics under uncertainty, such as the probability of force closure, has considered uncertainty in the state of a robotic gripper~\cite{goldberg1990bayesian, stulp2011learning} and uncertainty in contact locations with an object~\cite{zheng2005}.
+Recent work has also studied the effects of uncertainty in object pose and gripper positioning~\cite{brook2011collaborative, hsiao2011bayesian}.
+Brook, Ciocarlie, and Hsiao~\cite{brook2011collaborative, hsiao2011bayesian} studied a Bayesian framework to evaluate the probability of grasp success given uncertainty in object identity, gripper positioning, and pose by simulating grasps on deterministic mesh and point cloud models.
+Weisz et al.~\cite{weisz2012pose} and Kim et al.~\cite{kim2012physically} independently found that grasps ranked by probability of force closure subject to perturbations of object pose in simulation were empirically more successful on a physical robot than grasps planned using deterministic wrench space metrics. 
+Many works have also studied grasping under object shape uncertainty resulting from imprecision of object segmentations in images~\cite{chris}, part tolerancing in manufacturing~\cite{kehoe}, or missing and noisy data from depth sensors such as the Kinect~\cite{mahler, laskey}.
+Many have also studied caging gripper configurations, which may be a waypoint to form closure grasps and are robust to perturbations in object pose and shape~\cite{}.
+
+Another approach for synthesizing grasps on objects is to sample grasps and rank them according to metrics derived from human labels or physical execution~\cite{bohg}.
+Saxena et al.~\cite{bothsaxenaworks} used a logistic regression classified to predict grasp afordances in images from human annotated training data.
+Several other works have examined predicting grasp points using depth gradient features~\cite{rao}, global shape context descriptors~\cite{}, and 3D edges~\cite{}. 
+Lenz et al~\cite{lenz} used deep learning to detect grasp bounding boxes in color and depth images.
+Herzog et al.~\cite{} extract "heightmaps" of local object curvature from human demonstrated grasps, construct a library of heightmap templates, and match new sensor data to templates to select grasps similar to the demonstrations.
+Kappler et al.~\cite{} trained a deep neural network to predict human labelled grasps for a Barett hand on a database of synthetic objects.
+Recently, several works have studied forming a database of grasps on synthetic objects from simulation outcomes~\cite{detry} or physical execution~\cite{tellex}.
+In comparison, our work uses data-driven correlations between grasps based on local and global features of an object surface to quickly and adaptively acquire samples for evaluating and ranking grasps by their likelihood of success.
+
+Active learning for grasp planning is an active area of research.
+Several works have studied active search for successful grasps by minimzing uncertainty about the state of the envirnoment~\cite{kahn, vincsze}, but without use of an explicit grasp quality metric to guide the search.
+Recently, Laskey et al.~\cite{} showed that MAB algorithms can be used to accelerate the identification of a grasp with high probability of force closure under uncertainty in shape, pose, and friction in 2D.
+Tellex et al.~\cite{} proposed an initiative to adaptively collect a dataset of grasps and point clouds for one million objects using MAB and reinforcemen learning.
+MAB algorithms select the next grasp to sample by trading off gaining information about grasps with few samples and exploiting the success of grasps known to work well.
+In robotics, MAB algorithms have also been for speeding up probabilistic roadmap motion planning by adaptively sampling waypoints~\cite{hsu2005hybrid}, searching for the best state machine for a particular task~\cite{matikainen2013multi}, solving mixed observable POMDPs~\cite{Mikko2015POMDP}, and multi-agent navigation~\cite{guy}.
+
+One shortcoming of the MAB model used by Laskey et al. is that it did not take into account correlations between grasps~\cite{}.
+In reality, grasp correlations may occure from grasps with similar poses~\cite{}, objects with similar global structure~\cite{}, or on surfaces with similar local geometry~\cite{}.
+Correlated Multi-Armed Bandit (CMAB) models, also referred to as Bayesian Optimization models~\cite{}, have been used to trading off infromation gathering and exploitation in applicatoins such as ad-serving~\cite{}, next-best view prediction in object modeling~\cite{}, envrionmental monitoring in robotics~\cite{}.
+Perhaps the most common model of correlations in a CMAB is a linear model~\cite{}, however this depends on the selection of features are linearly related to a success criteria.
+Another common model of correlations is a Gaussian Process (GP)~\cite{}, which can model nonlinear relationships between options and rewards but are expensive to update with new observations ($O(n^2)$ where $n$ is the number of observations so far).
+As a result, several fast approximate version of GP bandit algorithms exist, such as local GPs~\cite{} and hierarchical GPs~\cite{}.
+Recently, Goetschalckx et al.~\cite{} developed the Continuous Correlated Beta Process (CCBP), a nonlinear model of 0-1 reward probabilities.
+CCBPs are inexpensive to update compared to GPs, requiring $O(n)$ time in the worst case and a much smaller factor when efficient nearest neighbor queries can be performed~\cite{}.
+In this work we utilize CCBPs to model correaltions between grasps because of their ability to scale to thousands of grasp observations with reasonable runtime.
+
+
+
+
+
+
+
+
+

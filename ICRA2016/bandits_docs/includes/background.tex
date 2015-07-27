@@ -1,14 +1,18 @@
 \section{Continuous Correlated Beta Processes}
 \seclabel{background}
 
-We use Continuous Correlated Beta Processes (CCBPs) to model correlations in the probability of force closure between two grasps.
-For example, two grasps that contact the shape in similar locations may have similar probabilities of force closure.
+Finding an approximate solution of Equation~\ref{eq:objective} using Multi-Armed Bandits requires a model of the reward distribution of each arm.
+We use Continuous Correlated Beta Processes (CCBPs) to model the probability of force closure of grasps as a Bernoulli random variable with correlations between grasps.
 We refer the reader to Goetschalckx et al.~\cite{} for a detaled description of CCBPs.
+In practice, correlations may occur between grasps that contact the shape in similar locations may have similar probabilities of force closure.
+Correlations may also occur between grasps on different shapes, such as grasping the handle of a mug and the handle of a teapot.
 
 \subsection{Beta-Bernoulli Processes}
 
-Consider a set of $K$ grasps $\Gamma = \{g_k\}_{k=1}^K$.
-Then force closure for each grasp $F(g_k) \in \{0, 1\}$ is a Bernoulli random variable with probability of success $\theta_k = P_F(g_k)$.
+For clarity we first review Beta-Bernoulli Processes, the uncorrelated version of CCBPs. 
+Let $\Gamma = \{g_k\}_{k=1}^K$ denote our discrete set of $K$ candidate grasps.
+Let $F(\bg_k) \in \{0, 1\}$ denote the occurence of force closure for a grasp $\bg_k$.
+We model $F(\bg_k)$ as a Bernoulli random variable with probability of success $\theta_k = P_F(\bg_k)$.
 Since we do not know the value of $\theta_k$ for each grasp, we can specify a distribution of $\theta_k$ based on our prior belief about the likelihood of force closure.
 A common choice for a prior on the Bernoulli parameter $\theta_k$ is the Beta distribution, which is specified by shape parameters $\alpha > 0$ and $\beta > 0$:
 
@@ -34,26 +38,40 @@ This yields~\cite{laskey2015bandits}
 The expected value of $\theta_k$ after the observations is
 
 \begin{align*}
-	\mathbb{E} \left[ \theta_k | F_{1}(g_k), ..., F_{t}(g_k) \right] = \frac{\alpha_{k,t}}{\alpha_{k,t} + \beta_{k,t}} = \frac{\mbox{\#Successes} +	
+	\mathbb{E} \left[ \theta_k | F_{1}(g_k), ..., F_{t}(g_k) \right] &= \frac{\alpha_{k,t}}{\alpha_{k,t} + \beta_{k,t}} \\
+	&= \frac{\mbox{\#Successes} +	
 	\alpha_{k,0}}{\mbox{\#Trials}+\alpha_{k,0}+\beta_{k,0}}.
 \end{align*}
 
 \subsection{Continuous Correlated Beta Processes}
 
-Continuous Correlated Beta Processes(CCBPs) were introduced by Goetschalckx et al.~\cite{} to model correlations between the Bernoulli random variables in a Beta-Bernoulli process, which may lead to faster convergence in Multi-Armed Bandit problems~\cite{}.
+Continuous Correlated Beta Processes(CCBPs) were independently developed by Goetschalckx et al.~\cite{goetschalckx2011continuous} and Montesano and Lopes~\cite{montesano2012active} to model correlations between the Bernoulli random variables in a Beta-Bernoulli process, which may lead to faster convergence in Multi-Armed Bandit problems~\cite{chu2011contextual}.
 Such correlations may exist when the Bernoulli random variables depend on common latent factors.
 For example, two probability of force closure variables $\theta_k$ may be correlated when two grasps have similar poses or when the surface geometry near the points at which they contact an object are similar.
 
-A CCBP is a Beta-Bernoulli process with an additional parameter $k(g_i, g_j) : \mathcal{G} \times \mathcal{G} \rightarrow [0,1]$, called the kernel, that measures similarity between two grasps.
-The kernel should approach 1 as the arguments become increasingly similar and approach 0 as the arguments become dissimilar.
-Let $F_{1}(g_{I(1)}), ..., F_{t}(g_{I(t)})$ be $t$ observations of force closure from samples of our uncertainty models for grasps $g_{I(1)}, ..., g_{I(t)}$, where $I(j)$ is the index of the grasp sampled at time $j$.
+A CCBP is a Beta-Bernoulli process with an additional parameter $k(\bg_i, \bg_j) : \mathcal{G} \times \mathcal{G} \rightarrow [0,1]$, called the kernel, that measures similarity between two grasps.
+The kernel approaches 1 as the arguments become increasingly similar and approaches 0 as the arguments become dissimilar.
+One common choice of kernel is the squared exponential kernel 
+\begin{align*}
+	k(\bg_i, \bg_j) &= \exp\left( -d(\bg_i, \bg_j)^2 \right)
+\end{align*}
+\noindent where $d(\cdot): \mathcal{G} \times \mathcal{G} \rightarrow \mathbb{R}_{+}$ is a distance metric between grasps.
+A common choice of distance metric is
+\begin{align*}
+	d(\bg_i, \bg_j) &= \left( \phi(\bg_i) - \phi(\bg_j) \right)^T C^{-1} \left( \phi(\bg_i) - \phi(\bg_j)\right)
+\end{align*}
+\noindent where $\phi(\cdot) : \mG \rightarrow \mathbb{R}^m$ is an $m$-dimensional feature representation of grasps and $C \in \mathbb{R}^{m \times m}$ is the {\it kernel bandwidth}.
+The bandwidth $C$ scales dimensions of the feature space to mark some dimensions as being more or less relevant for measuring similarity between grasps.
+
+Given a kernel, on each observation we update the belief of each grasp proportional to how similar it is to the observed grasp as measured by the kernel. 
+Let $F_{1}(\bg_{I(1)}), ..., F_{t}(\bg_{I(t)})$ be $t$ observations of force closure from samples of our uncertainty models for grasps $g_{I(1)}, ..., g_{I(t)}$, where $I(j)$ is the index of the grasp sampled at time $j$.
 Then the CCBP posterior update for $\theta_k$ is~\cite{}:
 
 \vspace{-2ex}
 \begin{align*}
 	p \left(\theta_k | F_{1}(g_{I(1)}), ..., F_{t}(g_{I(t)}) \right) &= \betadist\left( \alpha_{k,t}, \beta_{k,t} \right) \\
-	\alpha_{k,t} &= \alpha_{k,0} + \sum \limits_{j=1}^t k(g_k, g_{I(j)}) F_{i}(g_{I(j)}) \\
-	\beta_{k,t} &= \beta_{k,0} + \sum \limits_{=1}^t k(g_k, g_{I(j)}) (1 - F_{i}(g_{I(j)}))
+	\alpha_{k,t} = \alpha_{k,0} + \sum \limits_{j=1}^t k(g_k, g_{I(j)}) F_{i}(g_{I(j)}) \\
+	\beta_{k,t} = \beta_{k,0} + \sum \limits_{=1}^t k(g_k, g_{I(j)}) (1 - F_{i}(g_{I(j)}))
 \end{align*}
 
-\noindent Therefore grasps can constitute "effective" observations of other grasps if the two grasps are similar according to the kernel function.
+\noindent Intuitively, this allows observations of a grasp to constitute "effective" observations of other grasps.

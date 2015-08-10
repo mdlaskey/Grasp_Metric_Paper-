@@ -1,0 +1,85 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2345678901234567890123456789012345678901234567890123456789012345678901234567890
+%        1         2         3         4         5         6         7         8
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out if you need a4paper
+% fix acrobat png issue bug
+\pdfminorversion=4
+%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
+
+\IEEEoverridecommandlockouts                              % This command is only needed if 
+                                                          % you want to use the \thanks command
+
+\overrideIEEEmargins                                      % Needed to meet printer requirements.
+
+% See the \addtolength command later in the file to balance the column lengths
+% on the last page of the document
+
+% The following packages can be found on http:\\www.ctan.org
+%\usepackage{graphics} % for pdf, bitmapped graphics files
+%\usepackage{epsfig} % for postscript graphics files
+%\usepackage{mathptmx} % assumes new font selection scheme installed
+%\usepackage{times} % assumes new font selection scheme installed
+%\usepackage{amsmath} % assumes amsmath package installed
+%\usepackage{amssymb}  % assumes amsmath package installed
+
+\usepackage{balance}
+%\usepackage{subfigure}
+%\usepackage[subfigure]{tocloft} 
+
+
+%\usepackage[colorlinks]{hyperref}
+%\usepackage[caption=false]{subfig}
+
+
+\usepackage{caption}
+%\usepackage{subcaption}
+\captionsetup{compatibility=false}
+\captionsetup{font={footnotesize}}
+
+
+\usepackage{subcaption}
+\usepackage{benktools}
+\usepackage{tikz}
+\usetikzlibrary{external}
+\usetikzlibrary{positioning,shapes,shadows,arrows, calc, fit, backgrounds, arrows, positioning}
+\tikzexternalize[prefix=tikz/]
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\input{includes/preamble.tex}
+
+\begin{document}
+\title{\LARGE \bf DexNet 1.0: Correlated Multi-Armed Bandit Models for Large Scale 3D Grasp Planning Under Uncertainty}
+\author{Jeffrey Mahler, Brian Hou, Mel Roderick, Michael Laskey, Florian Pokorny, Ken Goldberg}
+%\institute{Deptartment of Electrial Engineering and Computer Sciences, University of California, Berkeley, USA
+%\{jmahler, zmccarthy, sachinpatil, pabbeel, goldberg\}@berkeley.edu} 
+\maketitle
+
+%\input{includes/abstract}
+%
+\input{includes/extended_abstract}
+%%\input{includes/introduction}
+%\input{includes/related_work}
+%
+%\input{includes/problem_statement}
+%\input{includes/background}
+%\input{includes/methodology}
+%\input{includes/analysis}
+%\input{includes/experiments}
+%\input{includes/conclusion}
+
+%%\appendix
+%\include{includes/proofs}
+
+\addtolength{\textheight}{-9.0cm}
+
+%\balance
+\bibliographystyle{IEEEtranS}
+\bibliography{bibliography}
+
+
+
+\end{document}
+
+
+

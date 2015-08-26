@@ -69,16 +69,17 @@ Iniitial reuslts suggest that performance on the flower pot is poorer because it
 \vspace*{-15pt}
 \end{figure}
 
-To examine the effects of orders of magnitude of prior data in the MAB algorithms, we first examined the effect of using prior data on smaller local datasets of 27 objects.
-\figref{global-mab} shows the normalized probability of force closure $P_F$ versus iteration when planning grasps for the () using prior grasp data from the five nearest neighbor objects in DexNet out of 27 total objects averaged over 50 trials.
+To examine the effects of orders of magnitude of prior data in the MAB algorithms, we ran the algorithms with priors computed from increasingly larger subsets of prior data from DexNet: 0, 15, 150, and 1500 objects. 
+\figref{global-mab} shows the normalized probability of force closure $P_F$ versus iteration when planning grasps for a bottle using prior grasp data from the five nearest neighbor objects in DexNet averaged over 50 trials.
 Each other object was labelled with 250 grasps and $P_F$ evaluated using brute force Monte-Carlo integration.
-We see that running correlated MAB algorithms with even a small dataset of prior data (blue line) can significantly accelerate the convergence of MAB algorithms to a grasp with high $P_F$, even on an object for which correlated Thompson sampling without priors does not outperform uncorrelated Thompson sampling.
+We see that the convergence of the correlated MAB algorithms to a grasp with high $P_F$ accelerates with increasingly largers subsets of prior data used.
 This suggests that adding more prior data may further accelerate convergence, because it is increasingly likely that a similar object and grasp exists in the dataset as the size increases.
+Future work will examine these effects on a larger subset of objects and will use more than five nearest neighbors from DexNet to compute priors, which may lead to even larger gains for larger subsets of prior data.
 
 \begin{figure}[t!]
 \centering
-\includegraphics[scale=0.09]{figures/bottle_avg_reward_w_model.jpg}
-\caption{Comparison of the normalized $P_F$ of the sampled grasp (y-axis) versus iteration of the MAB algorithm (x-axis) for correlated Thompson sampling with and without the use of prior grasps from five nearest neighbors from DexNet, uncorrelated Thompson sampling, and Uniform Allocation averaged over 20 trials on the bottle object. We see that convergence to within 90\% of the optimal grasp is accelerated by approximately 20$\times$, even with a small database of only 27 prior objects. }
+\includegraphics[scale=0.09]{figures/bottle_avg_reward_w_model2.jpg}
+\caption{Comparison of the normalized $P_F$ of the sampled grasp (y-axis) versus iteration of the MAB algorithm (x-axis) for correlated Thompson sampling with and without the use of prior grasps from five nearest neighbors from DexNet, uncorrelated Thompson sampling, and Uniform Allocation averaged over 20 trials on the bottle object. Prior grasps were taken from increasingly larger subsets of DexNet: 15, 150, and 1500 objects. We see that convergence to within 90\% of the optimal grasp is accelerated by approximately 10$\times$ over uncorrelated Thompson sampling, and performance appears to improve with increasing sizes of the prior dataset used. }
 \figlabel{global-mab}
 \vspace*{-15pt}
 \end{figure}

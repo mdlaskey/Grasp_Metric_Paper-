@@ -50,7 +50,7 @@ Boularias et al.~\cite{boularias2014efficient} used a Gaussian process Bayesian 
 However, GP models are expensive to update with new observations ($O(n^2)$ where $n$ is the number of observations so far)~\cite{rasmussen2006}, which limited the scale of experiments in both simulation and the physical world that the authors could perform.
 To make the model more tractable, Boularias et al. later extended their work to use an heuristic upper confidence bound-based reinforcement learning~\cite{boularias2015learning}.
 Recently, Goetschalckx et al.~\cite{goetschalckx2011continuous} developed the Continuous Correlated Beta Process (CCBP), a nonlinear model of 0-1 reward probabilities.
-CCBPs are inexpensive to update compared to GPs, requiring $O(n)$ time in the worst case and a much smaller factor when efficient nearest neighbor queries can be performed~\cite{goetschalckx2011continuous}.
+CCBPs are inexpensive to update compared to GPs, requiring $O(n)$ time in the worst case and a much smaller factor when approximate kernels are computed using efficient nearest neighbor queries~\cite{goetschalckx2011continuous}.
 Montesano and Lopes~\cite{montesano2012active} used CCBPs (although the authors did not refer to them as CCBPs) to actively acquire grasp executions, measuring correlations from the responses to a bank of 151 image filters.
 In this work we also utilize CCBPs to model correaltions between grasps, and study their performance on grasping simulations over thousands of objects.
 

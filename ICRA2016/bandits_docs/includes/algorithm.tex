@@ -1,3 +1,67 @@
-\section{Algorithm}
+\section{Grasp Selection Algorithm}
+\seclabel{algo}
 
-\TODO{Brief section on the high-level algorithm using the model: grasp sampling, evaluation of grasps, thompson sampling}
+Our full algorithm for grasp selection using Multi-Armed Bandits (MABs) with prior grasp and object data from Dex-Net is detailed in Algorithm~\ref{alg:full}.
+We first generate a set of candidate grasps $\mG$ for object $\mO$ and predict a prior distribution for each grasp using the Dex-Net database $\mD$.
+Next, we run MAB by selecting the next grasp using Thompson sampling, evaluating each grasp using force closure as described in \secref{quality}, and updating the Beta belief parameters for each grasp.
+Finally, we return the grasp that has the highest mean prediction.
+
+\begin{algorithm}
+{\small
+    \SetAlgoLined
+    {\bf Input:} Object $\mO$, Number of Candidate Grasps $K$, Database of Prior Knowledge $\mD$, Maximum Iterations $T$, \\ Prior beta shape $\alpha_0$, $\beta_0$, Random Variables $\nu$, $\xi$, and $\gamma$ \\
+    \KwResult{Estimate of the grasp with highest $P_F$, $\hat{\bg}^*$}
+    
+    \tcp{Generate candidate grasps and priors}
+	$\mG$ = AntipodalGraspSample($\mO, K$) \;
+	$\mA_0 = \varnothing, \mB_0 = \varnothing$\;
+	\For{$\bg_k \in \mG$}{
+		\tcp{Equations~\ref{eq:alpha-prior} and ~\ref{eq:beta-prior}}
+		$\alpha_{k,0}, \beta_{k,0} =$ ComputePriors($\mO, \bg_k, \mD$)\; 
+		$\mA_0 = \mA_0 \cup \{\alpha_{k,0}\}, \mB_0 = \mB_0 \cup \{\beta_{k,0}\}$\;
+	}
+	
+	\tcp{Run MAB with Thompson Sampling}
+	\For{$t = 1, .., T$}{
+		$j = $ SelectNextIndex($\mA_{t-1}, \mB_{t-1}$)\;
+		$\hat{\nu}, \hat{\xi}, \hat{\gamma} =$ SampleRandomVariables($\nu, \xi, \gamma)$\;
+		$F_{j} = $ EvaluateForceClosure($\bg_j, \hat{\nu}, \hat{\xi}, \hat{\gamma}$)\;
+		\tcp{Equations~\ref{eq:alpha} and ~\ref{eq:beta}}
+		$\mA_{t}, \mB_{t} = $ UpdateBeta($j, F_j, \mG$)\; 
+	}
+	
+	\tcp{Find grasp with max estimated quality}
+	$\mU = \left\{ \mu_j = \frac{\alpha_{j,T}}{\alpha_{j,T} + \beta_{j,T}} \big| j = 1, ..., K \right\}$\;
+	$j^*$ = $\myargmax{j = 1, ..., T} \mu_j$\;
+	return $\bg_j$\;
+    \caption{Grasp Selection With Multi-Armed Bandits Using a Database of Prior Knowledge}
+    \label{alg:full}
+}
+\end{algorithm}
+
+\subsection{Grasp Candidate Generation}
+\seclabel{candidates}
+In past work, Laskey et al.~\cite{laskey2015bandits} sampled candidate grasps in 2D by sampling a grasp center from an isotropic Gaussian ceneterd at the object center of mass and sampling a grasp angle uniformly at random.
+However, this method is problematic in 3D because many of the samples may be oriented away from the object and the grasps may not adequately cover the entire surface of the object.
+
+In this work, we use a modified version of the 2D algorithm presented in Smith et al.~\cite{smith1999computing} to concentrate samples on grasps that are antipodal~\cite{mahler2015gp}.
+Let $K$ be the number of grasps to sample, $w$ be the maximal opening of the gripper, $\gamma$ be an estimate of the friction coefficient, and $\mC = \{ \by \in \bR^3 \big| | f(\by) | < \epsilon$ be the set of points on the object surface for threshold $\epsilon$ and object SDF $f$.
+To sample a single grasp, we first generate a contact point $\bc_1$ by sampling uniformly at random from $\mC$, which can be done using rejection sampling.
+Next we form the friction cone $\mF_1$ at $\bc_1$ as described in \secref{contact} and sample a direction $\bv$ uniformly at random from the cone.
+We then compute
+\vspace{-2ex}
+\begin{align*}
+	\bc_2 &= \minimum{t \geq 0} t \text{ such that } | f\left(\bc_1 + (w / 2 - t) \bv \right) | < \epsilon \\
+	\bx &= 0.5 (\bc_1 + \bc_2)
+\end{align*}
+\noindent similar to the contact computation of \secref{contact} and form the friction cone $\mF_2$ at contact $\bc_2$.
+This yields a grasp $\bg = [\bx, \bv]^T$.
+We add $\bg$ to our candidate set if $-\bv \in C\mF_1)$ and $\bv \in C(\mF_2)$, where $C(\mF) = \{ \by = t \bbf \big| t \in [0, \infty], \bbf \in Conv(\mF)\}$ is the convex cone for friction cone $\mF$.
+
+\subsection{Thompson Sampling}
+\seclabel{thompson}
+
+Following Laskey et al.~\cite{laskey2015bandits}, we use Thompson sampling to select the next grasp to evaluate given belief distributions on the probability of force closure for each arm specified by estimates $\mA_t = \{\alpha_{1,t}, ..., \alpha_{K,t}\}$ and $\mB_t = \{\beta_{1,t}, ..., \beta_{K,t}\}$ at iteration $t$.
+Thompson sampling samples a probability of force closure $\hat{\theta}_{j,t} \sim B(\alpha_{j,t}, \beta_{j,t})$ for all grasps $j = 1, ..., K$, then selects the grasp $j_t^* = \myargmax{j} \hat{\theta}_{j,t}$ to evaluate next.
+Several other criteria exist for selecting the next evaluation in MAB, such as Gittins indices~\cite{laskey2015bandits}, Upper Confidence Bounds~\cite{boularias2015learning}, and Expected Improvement~\cite{montesano2012active}.
+ 

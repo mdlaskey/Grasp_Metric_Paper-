@@ -46,14 +46,19 @@
 \input{includes/preamble.tex}
 
 \begin{document}
-\title{\LARGE \bf DexNet 1.0: Correlated Multi-Armed Bandit Models for Large Scale 3D Grasp Planning Under Uncertainty
-		\versionline{2}}
-\author{Jeffrey Mahler, Brian Hou, Mel Roderick, Michael Laskey, Kai Kohlhoff, \\ Torsten Kroeger, Florian Pokorny, James Kuffner, Ken Goldberg}
-%\institute{Deptartment of Electrial Engineering and Computer Sciences, University of California, Berkeley, USA
-%\{jmahler, zmccarthy, sachinpatil, pabbeel, goldberg\}@berkeley.edu} 
+\title{\LARGE \bf Dex-Net 1.0: A Cloud-Based Network of 3D Object Models Based on Deep Learning for Object Similarity and Multi-Armed Bandits for Robust Grasp Planning
+%Correlated Multi-Armed Bandit Models for Large Scale 3D Grasp Planning Under Uncertainty
+		\versionline{4}}
+\author{Jeffrey Mahler$^1$, Florian Pokorny$^1$, Brian Hou$^1$, Mel Roderick$^1$, Michael Laskey$^1$, Kai Kohlhoff$^3$, \\ Torsten Kroeger$^3$, James Kuffner$^3$, Ken Goldberg$^2$
+\thanks{$^1$Department of Electrical Engineering and Computer Sciences; {\tt\small \{jmahler, ftpokorny, brian.hou\}@berkeley.edu, melrose\_roderick@brown.edu}}%
+\thanks{$^2$Department of Industrial Engineering and Operations Research; {\tt\small goldberg@berkeley.edu}}%
+\thanks{$^{1-2}$ University of California, Berkeley, USA}%
+\thanks{$^3$ Google Inc., Mountain View, USA; {\tt\small \{kohlhoff, tkr, kuffner\}@google.com}}
+}
 \maketitle
 
-\TODO{Possibly will include Matthieu Aubry and Pieter Abbeel as coauthors as well}
+\TODO{Possibly will include Matthieu Aubry, Alyosha Efros, and Pieter Abbeel as coauthors} \\
+\TODO{Update number of models in title: I want it to reflect exactly how many we use in experiments}
 
 \input{includes/abstract}
 %
@@ -63,9 +68,9 @@
 \input{includes/problem_statement}
 \input{includes/background}
 \input{includes/algorithm}
-%\input{includes/analysis}
+\input{includes/dataset}
 \input{includes/experiments}
-%\input{includes/conclusion}
+\input{includes/conclusion}
 
 %%\appendix
 %\include{includes/proofs}

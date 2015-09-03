@@ -1,49 +1,35 @@
 \section{Introduction}
 \seclabel{introduction}
 
-Robots in warehouse order fullfillment and small- to medium-scale manufacturing must be able to efficiently grasp and manipulate new products and parts.
-For example, a robot processing orders in a distribution warehouse must quickly plan graps for new consumer products to place them in shipping containers. 
-% Above motivates speed and adaptivity
-% Statement motivating robustness to uncertainty
-Furthermore, a robot may not fully observe the state of the workspace, such as the pose or frictional properties of consumer products, due to sensor imprecision and missing data resulting from occlusions.
-This poses a challenge for grasp planning with either analytic methods~\cite{ferrari1992, ciocarlie2009} that require precise knowledge of contact locations and surface normals or data-driven approaches~\cite{bohg2014data} that attempt to build a statistical model of grasp success over the massive number of configurations of the environment.
-%This motivates an approach to grasp planning that is fast, robust to uncertainty about the state of the robot and environment, and can adapt to new objects and perturbations in the envrionment.
+Consider a robot fulfilling orders in a warehouse.
+The robot must quickly plan grasps for consumer products to fullfill orders.
+Furthermore, the robot may not precisely know the state of the environment, such as the pose or frictional properties of object, due to sensor imprecision and missing data (e.g. occlusions in point clouds).
+This poses a challenge for many existing grasp planning methods that are based on precise knowledge of contact locations and surface normals~\cite{ciocarlie2009, ferrari1992} due to the distribution on possible environment configurations.
 
-Past work has attempted to overcome this by planning grasps analytically with high probability of force closure~\cite{kehoe2012toward, kim2012physically, laskey2015bandits, mahler2015gp, weisz2012pose}, or using data-driven methods to predict grasp success from human labels~\cite{balasubramanian2012physical, detry2013learning,  herzog2014learning, kappler2015leveraging, lenz2015deep, saxena2008robotic} or empirical successes on a physical robot~\cite{boularias2014efficient, brook2011collaborative, detry2011learning, kroemer2010combining, montesano2012active}.
-Many works on grasp selection with probablity of force closure evaluate a set of candidate grasps using sampling and select the highest quality grasp either using brute force sampling~\cite{kehoe2012toward, kim2012physically, weisz2012pose}, iterative pruning~\cite{kehoe2012estimating}, or Multi-Armed Bandit (MAB) algorithms to adaptively sample more promising grasps~\cite{barto1998reinforcement,
-lai1985asymptotically, laskey2015bandits, robbins1985some}.
-However, MAB algorithms, the current fastest sampling method, still required approximately 10 samples per grasp to converge to a solution and needed to be re-run for every new object.
-
-On the other hand, data-driven approaches have shown promise over analytic methods on physical robot trials~\cite{balasubramanian2012physical, herzog2014learning} possibly due to a reduction in modelling error.
-The number of objects and grasps tested is typically on the order of tens to hundreds for physical robot trials and at most a few thousand objects and hundreds of thousands of grasps when using simulation or human labels~\cite{goldfeder2009columbia, lenz2015deep, kappler2015leveraging}.
-In comparison, state-of-the-art learning results in image classification~\cite{deng2009imagenet, krizhevsky2012imagenet} and speech recognition~\cite{cieri2004fisher, hannun2014deepspeech} relied on datasets containing tens of millions of examples.
-This raises the question: will maching learning for grasp planning under vast numbers of possible object poses, object shapes, environment configurations, etc., exhibit scaling effects similar to those observed in computer vision and speech recognition?
-%may require orders of magnitude more data than in use currently.
-
-%This motivated gradient-based methods based on approximations to the probabliity of force closure~\cite{mahler2015gp} and using Multi-Armed Bandit algorithms to adaptively sample more promising grasps~\cite{laskey2015bandits}, which reduced the number of samples until convregence by 10$\times$.
-%However, the number of iterations was still prohibitively high for real-time execution and prior knowledge could not be utilized for new objects.
-
-To make progress toward answering this question, we introduce the Dexterity Network (DexNet) 1.0, a dataset of tens of thousands of 3D mesh models and a system for building statistical models that predict grasp quality across the dataset.
-DexNet is composed of laser-scanned 3D mesh models from the KIT object database~\cite{kasper2012kit}, the Amazon Picking Challenge objects, BigBIRD~\cite{singh2014bigbird}, and YCB ~\cite{calli2015benchmarking}, and synthetic 3D mesh models from 3DNet~\cite{wohlkinger20123dnet} and the SHREC 2014 large scale object retrieval challenge~\cite{li2015comparison}.
-~\figref{dexnet-teaser} shows a subset of the objects in the dataset.
-To measure similarity between objects, we form an object network based on Deep Convolutional Neural Networks (CNNs) trained to predict object categories from synthetic rendered images of each object~\cite{aubry2015understanding, li2015comparison}.
-The DexNet system uses Google Compute Engine to launch up to 600 instances at a time to samples and evaluate grasps on subsets of objects and to learn predictive models of grasp quality.
+In vision and speech, advances in Big Data and distributed computing, combined with datasets of milliions of examples such as ImageNet~\cite{deng2009imagenet} and the Fisher corpus~\cite{cieri2004fisher}, have produced impressive results~\cite{hannun2014deepspeech, hays2008im2gps, krizhevsky2012imagenet} that surpass those obtained from decades of research on analytic methods.
+This raises the question: will machine learning of grasps for vast numbers of possible object poses, object shapes, environment configurations, etc., exhibit scaling effects similar to those observed in computer vision and speech recognition?
 
 \begin{figure}[t!]
 \centering
 \includegraphics[scale=0.085]{figures/dexnet_collage.jpg}
-\caption{Sample of 3D mesh models from the DexNet dataset. The dataset consists of over 30,000 models from laser-scanned datsets such as the KIT object database~\cite{kasper2012kit} and the Yale-CMU-Berkeley object set~\cite{calli2015benchmarking}, and synthetic datasets such as 3DNet\cite{wohlkinger20123dnet} and the SHREC 2014 object retrieval challenge dataset~\cite{li2015comparison} }
+\caption{Sample of 3D mesh models from the Dex-Net dataset. The dataset currently includes over 10,000 models from laser-scanned datsets such as the KIT object database~\cite{kasper2012kit} and the Yale-CMU-Berkeley object set~\cite{calli2015benchmarking}, and synthetic datasets such as 3DNet\cite{wohlkinger20123dnet}, ModelNet~\cite{wu20143d}, and the SHREC 2014 object retrieval challenge dataset~\cite{li2015comparison}. }
 \figlabel{dexnet-teaser}
 \vspace*{-15pt}
 \end{figure}
 
-In this work, we use DexNet to study the number of samples that MAB algorithms take to converge to a grasp with high probability of force closure across orders of magnitude of prior data of grasps with known quality.
-To do so, we extend the MAB framework of Laskey et al.~\cite{laskey2015bandits} to model correlations between the probability of force closure for grasps on similar objects using Continuous Correlated Beta Processes (CCBPs)~\cite{goetschalckx2011continuous, montesano2012active}.
-CCBPs allow us to form a prior belief on the quality of candidate grasps for a new object based on data in DexNet and to efficiently update a global belief on the quality of all candidate grasps on an object after observing the outcome of a single sampled grasp.
-We measure local similarities between grasps on the same object by a distance between the gripper poses and the similarity between local surface patches near the mean location of contact on the object~\cite{herzog2014learning, kappler2015leveraging}.
-We measure global similarity in shape based on the distance between the objects in DexNet.
-Our results suggest \TODO{Fill in with new results}.
-%While we acknowledge probability of force closure has shortcomings~\cite{balasubramanian2012physical}, we use it in this work because it is relatively inexpensive to evaluate computationally, allowing us to better examine the effects of scale.
+We introduce Dex-Net 1.0, a dataset of 3D models and grasps with similarity metrics, and a system for actively acquiring statistical models of grasp quality across the network.
+The Dex-Net dataset contains representative 3D models of objects that could be encountered in warehousing or the home.
+Dex-Net contains laser-scanned 3D mesh models from the KIT object database~\cite{kasper2012kit}, the Amazon Picking Challenge objects, BigBIRD~\cite{singh2014bigbird}, and YCB ~\cite{calli2015benchmarking} to reflect physical objects commonly used for benchmarking in grasping research.
+The dataset also includes synthetic 3D mesh models from shape classification datasets such as 3DNet~\cite{wohlkinger20123dnet}, ModelNet~\cite{wu20143d}, and the SHREC 2014 large scale object retrieval challenge~\cite{li2015comparison} to scale the number of models.
+~\figref{dexnet-teaser} shows a sample of the objects in the dataset.
+We measure object similarity based the distance between feature vectors generated from multi-view Convolutional Neural Networks (CNNs)~\cite{su2015multi}, a state-of-the are method in shape retrieval
+We measure similarity between grasps by the pose of the gripper and local surface ``heightmaps" extracted at location of contact with an object~\cite{herzog2012template, kappler2015leveraging}.
+Our system uses Google Cloud Platform to distribute grasp quality evaluations across hundreds of virtual machines and to store millions of grasps across the objects in Dex-Net.
+
+In this work, we use Dex-Net to study the convergence rate of Multi-Armed Bandit (MAB) algorithms for finding a grasp with high probability of force closure under object pose, gripper pose, and friction coefficient uncertainty from a set of 250 candidate grasps on objects from Dex-Net.
+To do so, we extend the MAB framework of Laskey et al.~\cite{laskey2015bandits} to model correlations between the probability of force closure for similar grasps on similar 3D objects using Continuous Correlated Beta Processes (CCBPs)~\cite{goetschalckx2011continuous, montesano2012active}.
+CCBPs predict a belief distribution for the quality of each grasp based similarity to data in Dex-Net that can be efficiently updated after observing the quality of a grasp for a sampled object pose, gripper pose, and friction coefficient.
+Our results suggest that CCBPs bootstrapped with data from Dex-Net can accelerate grasp planning by up to $10\times$.
 
 
  

@@ -1,8 +1,8 @@
 \section{Definitions and Problem Statement}
 \seclabel{problem}
 
-Given a previously unknown object, we consider the problem of finding a of parallel-jaw grasps with maximum probability force closure, $P_F$, under uncertainty in object pose, gripper pose, and friction coefficient using a database of 3D object models annotated with grasps and the $P_F$ of each.
-We assume the object shape is exactly known and provided as a signed distance function (SDF) $f: \mathbb{R}^3 \rightarrow \mathbb{R}$~\cite{mahler2015gp, newcombe2011kinectfusion}, which is zero on the object surface, positive outside the object, and zero inside the object. 
+We consider the problem of finding a of parallel-jaw grasps with maximum probability force closure, $P_F$, on a 3D object model under uncertainty in object pose, gripper pose, and friction coefficient using a database of 3D object models annotated with grasps and the $P_F$ of each.
+We assume the object shape is exactly known and provided as a signed distance function (SDF) $f: \mathbb{R}^3 \rightarrow \mathbb{R}$~\cite{mahler2015gp, newcombe2011kinectfusion}, which is zero on the object surface, positive outside the object, and negative inside the object (when the object is watertight). 
 We also assume that the object is specified in units of meters and the object center of mass $\bz \in \mathbb{R}^3$ is known.
 Furthermore, we assume soft-finger contacts between the gripper and object~\cite{zheng2005} and that the gripper jaws are opened to their maximal width $w \in\bR$ before closing on the object.
 %and known uncertainty in object pose, gripper pose relative to the object, and friction coefficient, described in detail in \seclabel{uncertainty} below. 
@@ -13,7 +13,7 @@ Our grasping parameterization is illustrated in~\figref{grasp-model}.
 Let $\bg = (\bx, \bv)^T$ be a parallel-jaw grasp parameterized by the centroid of the jaws in 3D space $\bx \in \mathbb{R}^3$ and an approach direction, or axis, $\bv \in \bS^2$.
 Let $f: \mathbb{R}^3 \rightarrow \mathbb{R}$ be a signed distance function (SDF) representing an object's geometry~\cite{mahler2015gp, newcombe2011kinectfusion}.
 We denote by $\mS = \{\by \in \bR^3 \big| f(\by) = 0\}$ the surface of an object, and assume that all points are specified with respect to a reference frame centered at the object center of mass $\bz$ and oriented along the principal axes of $\mS$.
-Let $\mG = \{ [(\bx, \bw) \big| \bx \in \mathbb{R}^3, \bv \in \bS^2\}$ denote the space of all grasps and $\mH = \{ \mO = \{\bz, f(\cdot)\} \big|  \bz \in \mathbb{R}^3, f \in \mF\}$ denote the space of all objects, where the $\mF$ is the space of all SDFs.
+Let $\mG = \{ [(\bx, \bw) \big| \bx \in \mathbb{R}^3, \bv \in \bS^2\}$ denote the space of all grasps and $\mH = \{ \mO = \{\bz, f(\cdot)\} \big|  \bz \in \mathbb{R}^3, f \in \mF\}$ denote the space of all objects, where the $\mF$ is the space of all SDFs for closed and compact surfaces.
 We denote by $\mM = \mG \times \mH$ the joint space of all parallel-jaw grasps and objects, also known as a Grasp Moduli Space~\cite{pokorny2013grasp}.
 
 \begin{figure}[t!]
@@ -24,18 +24,13 @@ We denote by $\mM = \mG \times \mH$ the joint space of all parallel-jaw grasps a
 \vspace*{-15pt}
 \end{figure}
 
-
-%Let $\mM = \left\{\mV, \mT \right\}$ be a triangular mesh representing an object's geometry, where $\mV = \{\bw_i \in \mathbb{R}^3 \}_{i=1}^{N_v}$ is a set of $N_v$ vertices and $\mT = \{ \bt_i \in \mathbb{Z}_{+}^3 \}_{i=1}^{N_t}$ is a set of $N_t$ triangles formed by triplets of integer indices of vertices.
-%We will assume a fixed set of candidate grasps $\Gamma = \{ g_1, ..., g_N\}$.
-%Ideally the candidate set would form a cover of the which may be generated via Gaussian pose sampling~\cite{} or heur.
-
 \subsection{Sources of Uncertainty}
 \seclabel{uncertainty}
-We assume Gaussian uncertainty in 3D object pose, gripper pose, and friction coefficient resulting from sensing uncertainties and missing data extended from the 2D model of Laskey et al.~\cite{laskey2015bandits}.
-Let $\upsilon \sim \mN\left(\mathbf{0}, \Sigma_{\upsilon}\right)$ be a zero-mean Gaussian on $\bR^6$ and $\mu_{\xi} \in SE(3)$ be a mean object pose.
+We assume Gaussian distribuions on 3D object pose, gripper pose, and friction coefficient resulting from sensing uncertainties and missing data extended from the 2D model of Laskey et al.~\cite{laskey2015bandits}.
+Let $\upsilon \sim \mN\left(\mathbf{0}, \Sigma_{\upsilon}\right)$ denote a zero-mean Gaussian on $\bR^6$ and $\mu_{\xi} \in SE(3)$ be a mean object pose.
 Following the model of Barfoot and Furgale~\cite{barfoot2014associating}, we define the object pose random variable $\xi = \exp\left( \upsilon^{\wedge} \right) \mu_{\xi}$, where the $\wedge$ operator maps from $\bR^6$ to the Lie algebra $\mathfrak{se}(3)$.
-Let $\nu \sim \mN\left(\mu_{\nu}, \Sigma_{\nu}\right)$ denote Gaussian uncertainty in gripper pose with mean $\mu_{\nu} \in \mG$.
-Let $\gamma \sim \mN\left(\mu_{\gamma}, \Sigma_{\gamma} \right)$ denote Gaussian uncertainty in friction coefficient distributed as a Gaussian with mean $\mu_{\gamma} \in \mathbb{R}$.
+Let $\nu \sim \mN\left(\mu_{\nu}, \Sigma_{\nu}\right)$ denote a Gaussian distribution on gripper pose with mean $\mu_{\nu} \in \mG$.
+Let $\gamma \sim \mN\left(\mu_{\gamma}, \Sigma_{\gamma} \right)$ denote a Gaussian distribution on friction coefficient with mean $\mu_{\gamma} \in \mathbb{R}$.
 We denote by $\hat{\xi}, \hat{\nu},$ and $\hat{gamma}$ samples of object pose, gripper pose, and friction, respectively. 
 %Theses sources of uncertainty might be estimated based on prior models of repeatability in gripper actuation or from the posterior variance in object pose or friction coefficient in estimates based on sensor data.
 
@@ -57,21 +52,12 @@ Thus the set of all wrenches that can be applied by a grasp $\bg$ under our mode
 
 \subsection{Quality Metric}
 \seclabel{quality}
-In this work we use force closure, or the ability to resist external force and torques in arbitrary directions~\cite{ferrari1992}, as our grasp success metric.
-While we acknowledge that some evidence suggests that deterministic force closure is not always a strong predictor of physical grasp success~\cite{balasubramanian2012physical, diankov2010automated}, we use the probability of force closure because of it has shown promise in physical experiments~\cite{kim2012physically, weisz2012pose}, and it is relatively inexpensive to evaluate when compared to human labels or physical executions, allowing us to better study the effects of large amounts of data.
+In this work we use the probability of force closure, or the ability to resist external force and torques in arbitrary directions~\cite{ferrari1992}, as our grasp success metric.
+While we acknowledge that deterministic force closure has not always been reported as a predictor of physical grasp success~\cite{balasubramanian2012physical, diankov2010automated}, we use the probability of force closure because of it has shown promise in physical experiments~\cite{kim2012physically, weisz2012pose} and is relatively inexpensive to evaluate, allowing us to better study the effects of large amounts of data.
 
 Let $F \in \{0, 1\}$ denote the occurence of force closure.
-To compute force closure for a grasp $\bg \in \mG$ on object $\mO \in \mH$ given samples of object pose $\xi$, gripper pose $\nu$, and friction coefficient $\gamma$, we first compute the set of possible contact wrenches $\mW$.
+To compute force closure for a grasp $\bg \in \mG$ on object $\mO \in \mH$ given samples of object pose $\hat{\xi}$, gripper pose $\hat{\nu}$, and friction coefficient $\hat{\gamma}$, we first compute the set of possible contact wrenches $\mW$.
 Then $F = 1$ if the origin lies within the convex hull of the contact wrench set, $\mathbf{0} \in Conv(\mW)$~\cite{weisz2012pose}.
-%A graphical model describing the relationship between these quantities is given in~\figref{graphical-model}.
-%
-%\begin{figure}[t!]
-%\centering
-%\includegraphics[scale=0.5]{figures/illustrations/dexnet_graphical_model_simple.png}
-%\caption{A graphical model describing the relationships between known uncertain parameters (shaded gray) such as object pose and the force closure random variable $F$.}
-%\figlabel{graphical-model}
-%\vspace*{-15pt}
-%\end{figure}
 
 \subsection{Objective}
 The probability of force closure for a grasp $\bg$ on object $\mO$ is $P_F(\bg, \mO) = \mathbb{P}\left(F = 1 \mid \bg, \mO, \xi, \nu, \gamma \right)$.
@@ -85,4 +71,4 @@ To perform this as quickly as possible we maximize over the sum of the $P_F$ for
 \noindent where $I(i)$ denotes the grasp selected at time $t$.
 
 As the maximization over the continuous space $\mG$ is computationally expensive, past work has solved this objective by evaluating a discrete set of $K$ candidate grasps $\Gamma = \left\{ \bg_1, ..., \bg_K \right\}$ with Monte-Carlo integration~\cite{kehoe2012toward, weisz2012pose} or Multi-Armed Bandits(MAB) ~\cite{laskey2015bandits}.
-In this work, we extend the MAB model of~\cite{laskey2015bandits} to 3D and to leverage similarities between grasps and prior objects in Dex-Net for accelerated convergence to $\bg^*$.
+In this work, we extend the MAB model of~\cite{laskey2015bandits} to 3D and to leverage similarities between grasps and prior objects in Dex-Net to reduce the samples needed to converge to $\bg^*$.

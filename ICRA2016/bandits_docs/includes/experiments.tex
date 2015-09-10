@@ -1,85 +1,93 @@
 \section{Experiments}
 \seclabel{experiments}
+\TODO{Add average convergence experiment with test set}
+\TODO{Add sensitivity to uncertainty}
 
-\TODO{All experiments here are preliminary. Add new results from more objects, especially non-symmetric ones.} \\
-\TODO{Include experiments on sensitivity to uncertainty.} \\
-\TODO{Images of selected grasps.} \\
-
-We evaluated the convergence rate of Algorithm~\ref{alg:full} for varying sizes of prior data used from Dex-Net and examined the sensitivity of the convergence rate to the kernel bandwidths, number of nearest neighbors, and uncertainty.
+We evaluated the convergence rate of Algorithm~\ref{alg:full} for varying sizes of prior data used from Dex-Net and examined the sensitivity of the convergence rate to object shape, the similarity kernel bandwidths, and uncertainty.
 We created three nested training sets of 100, 1000, and 10000 objects by uniformly sampling objects from Dex-Net.
 From the remaining objects we created a set of 20 validation objects for selecting algorithm hyperparameters and a set of 30 objects for test data.
-We used isotropic covariance with object and gripper translation variance $\sigma_{t} = 0.005$, object and gripper rotation variance $\sigma_{r} = 0.1$, and friction variance $\sigma_{\gamma} = 0.1$.
-The bandwidths of our similarity kernel were set to scaling transformations $C = \sigma I$ where $\sigma \in \bR$ for the grasp parameter and global object feature maps, and a gaussian mask $C_d$ centered on the gradient heightmaps with height $w_d \in \bR$ and variance $\sigma_d \in \bR$.
-The bandwidths were selected by maximizing convergence rate on the validation set using a grid search over hyperparameters.
+We ran our algorithm with $N_n = 10$ nearest neighbors.
+We also used isotropic covariance with object and gripper translation variance $\sigma_{t} = 0.005$, object and gripper rotation variance $\sigma_{r} = 0.1$, and friction variance $\sigma_{\gamma} = 0.1$.
+
+The bandwidths of our similarity kernel were constrained to be disgonal for the grasp parameters features $C_g = \Lambda$, isotropic for the global shape features $C_s = \sigma I$ for $\sigma \in \bR$, and a gaussian mask $C_d$ centered on the gradient heightmaps with height $w_d \in \bR$ and variance $\sigma_d \in \bR$.
+The bandwidths were selected by maximizing average convergence rate on the validation set using a grid search over hyperparameters.
 
 To handle the scale of the experiments, we developed a Cloud-based software library on top of Google Cloud Platform.
 We used Google Compute Engine to distribute trials of MAB algorithms across objects and Google Cloud Storage (GCS) to store Dex-Net.
-Our experimental scripts launched up to 1500 GCE single core instances at one time for hyperparameter tuning and convergence analysis, reducing the runtime of our experiments by a factor of nearly $1500\times$.
+Our experimental scripts launched up to 1500 GCE single core instances at one time for hyperparameter tuning and convergence analysis, reducing the runtime of our experiments by over $1000\times$.
 
-\subsection{Rate of Convergence}
-\TODO{Replace with final versions. The current results are preliminary}
+\subsection{Scaling of Average Convergence Rate}
+\TODO{Replace with test results. Current are on validation set due to time constraints}
+\TODO{Add 100 model results}
 
-~\figref{local-mab} shows the normalized $P_F$ (the ratio of the $P_F$ for the sampled grasp to the highest $P_F$ in the candidate grasp set) versus iteration averaged over 20 trials for a cereal box and flower pot.
-The plot compares Algorithm~\ref{alg:full} with no prior data to uncorrelated Thompson sampling and uniform allocation, two methods used by Laskey et al.~\cite{laskey2015bandits}.
-We see that the CCBP model outperforms the uncorrelated model by approximately 10$\times$ for the cereal box but has comparable performance to Thompson sampling on the flower pot.
-Iniitial reuslts suggest that performance on the flower pot is poorer because few grasps are similar according to our feature representation.
-
-%Preliminary experiments suggest that using CCBPs with prior data from DexNet reduces the number of samples for MAB algorithms to converge to a grasp with high probablity of force closure $P_F$ under uncertainty in object pose, gripper pose, and friction coefficient.
+To examine the effects of orders of magnitude of prior data on convergence to a grasp with high $P_F$, we ran Algorithm~\ref{alg:full} on the 20 validation objects with priors computed from 1,000 and 10,000 objects from Dex-Net. 
+~\figref{avg-reward} shows the normalized $P_F$ (the ratio of the $P_F$ for the sampled grasp to the highest $P_F$ of the 250 candidate grasps) versus iteration averaged over 25 trials for each of the 20 validation objects for 4,000 iterations.
+The plot also compares Algorithm~\ref{alg:full} to uncorrelated Thompson sampling and uniform allocation~\cite{laskey2015bandits}.
+Our algorithm with 10,000 objects takes approximately $3.5\times$ fewer iterations to reach the maximum normalized $P_F$ value reached by Thompson sampling over all iterations.
+Furthermore, the 10,000 object curve does not reach below 90\% of the best grasp in the set across all iterations, suggesting that a grasp with high $P_F$ is found using prior data alone.
+However, we see that on average our algorithm makes progress more slowly than Thompson sampling.
 
 \begin{figure}[t!]
 \centering
-	\begin{subfigure}[b]{0.5\textwidth}
-        \centering
-        \includegraphics[scale=0.08]{figures/box_avg_reward_w_model.jpg}
-        \caption{Normalized $P_F$ on a cereal box with 250 candidate parallel-jaw grasps.}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.5\textwidth}
-        \centering
-        \includegraphics[scale=0.08]{figures/flowerpot_avg_reward_w_model.jpg}
-        \caption{Normalized $P_F$ on a flower pot with 250 candidate parallel-jaw  grasps.}
-    \end{subfigure}
-\caption{Comparison of the normalized $P_F$ of the sampled parallel-jaw grasp versus iteration of the MAB algorithm for correlated Thompson sampling, uncorrelated Thompson sampling, and Uniform Allocation averaged over 20 trials. (a) On the cereal box, correlated Thompson sampling converges to within 90\% of the highest quality grasp approximately 4$\times$ faster than uncorrelated. (b) However, correlated and uncorrelated Thompson sampling perform comparably on the flower pot because there are few grasp similarities in the candidate set. }
-\figlabel{local-mab}
+\includegraphics[scale=0.45]{figures/illustrations/avg_reward.eps}
+\caption{Average normalized grasp quality versus iteration over 20 validation objects and 25 trials per object for our algorithm with 1,000 and 10,000 prior 3D objects from Dex-Net. We measure quality by the $P_F$ for the best grasp predicted by the algorithm on each iteration and compare with uncorrelated Thompson sampling and uniform allocation. We see that our algorithm converges faster with 10,000 models, never dropping below approximately 90\% of the grasp with highest $P_F$ from the 250 candidate set.}
+\figlabel{avg-reward}
 \vspace*{-15pt}
 \end{figure}
 
-To examine the effects of orders of magnitude of prior data in the MAB algorithms, we ran the algorithms with priors computed from increasingly larger subsets of prior data from Dex-Net: 0, 15, 150, and 1500 objects. 
-\figref{global-mab} shows the normalized probability of force closure $P_F$ versus iteration when planning grasps for a bottle and detergent averaged over 50 trials.
-For each run of our algorithm, we used prior grasp from the five closest objects in Dex-Net in the multi-view CNN-based shape similiarity vector space.
-The objects from Dex-Net were labelled with 250 grasps and $P_F$ evaluated using brute force Monte-Carlo integration.
-For the bottle, we see that the convergence of the correlated MAB algorithms to a grasp with high $P_F$ accelerates with increasingly larger subsets of prior data used, and is approximately $10 \times$ faster when using 1500 prior objects.
-For the detergent the gains are more modest, with the largest dataset accelerating convergence to within 90\% of the optimal grasp in the set by approximately $1.5 \times$.
-As illustrated in \figref{bottle-nn}, the nearest neighbor objects become increasingly similar to the object to label with increasing sizes of datasets from Dex-Net.
-This suggests that more prior data may also lead to more similar objects to rarer categories such as the detergent bottle, which may accelerate convergence 
-\TODO{Remove}
-Future work will examine these effects on a larger subset of objects and will use assitional nearest neighbors from Dex-Net to compute priors.
+\subsection{Sensitivity to Object Shape}
+\seclabel{shape-sens}
+To understand the behavior of Algorithm~\ref{alg:full} on individual 3D objects, we examined the convergnce rate with a 3D model of the only drill in Dex-Net and a spray bottle, which is an uncommon object category but has a few examples in Dex-Net.
+~\figref{avg-reward-obj} shows the normalized $P_F$ (the ratio of the $P_F$ for the sampled grasp to the highest $P_F$ of the 250 candidate grasps) versus iteration averaged over 25 trials for 4,000 iterations on these two objects.
+We see that the spray bottle converges very quickly when using a prior dataset of 10,000 objects, finding the optimal grasp in the set in about 1,500 iterations.
+\figref{spray-grasps} illustrates the grasps predicted to have the highest $P_F$ on the spray bottle by the algorithms about 100 iterations.
+However, performance on the drill does not increase using either 1,000 or 10,000 objects.
+
+This behavior may be explained by the similarity of the closest nearest neighbors in Dex-Net found by our shape similiarty MV-CNN, displayed in \figref{query}.
+We see that the spray bottle has no nearest neighbors that are very close in shape in the 1,000 object dataset, but in the 10,000 object dataset two nearly identical spray bottles are retrieved.
+On the other hand, the drill has no similar neighbors in either dataset, and the closest model in all of Dex-Net according to our similarity metric is a phone.
 
 \begin{figure}[t!]
 \centering
-\begin{subfigure}[b]{0.5\textwidth}
-        \centering
-        \includegraphics[scale=0.08]{figures/bottle_avg_reward_w_model2.jpg}
-        \caption{Normalized $P_F$ on a bottle with 250 candidate parallel-jaw grasps.}
-    \end{subfigure}
-    \begin{subfigure}[b]{0.5\textwidth}
-        \centering
-        \includegraphics[scale=0.08]{figures/detergent_avg_reward_w_model.jpg}
-        \caption{Normalized $P_F$ on a detergent bottle with 250 candidate parallel-jaw grasps.}
-    \end{subfigure}
-%\includegraphics[scale=0.09]{figures/bottle_avg_reward_w_model2.jpg}
-\caption{Comparison of the normalized $P_F$ of the sampled parallel-jaw grasp (y-axis) versus iteration of the MAB algorithm (x-axis) for correlated Thompson sampling with and without the use of prior grasps from five nearest neighbors from Dex-Net, uncorrelated Thompson sampling, and Uniform Allocation averaged over 20. Prior grasps were taken from increasingly larger subsets of Dex-Net: 15, 150, and 1500 objects. For the bottle, convergence to within 90\% of the optimal grasp is accelerated by approximately 10$\times$ over uncorrelated Thompson sampling, and performance appears to improve with increasing sizes of the prior dataset used. The detergent converges slightly faster with more prior data, however the speedup is approximately $1.5\times$ and does not appear to improve with additional data from Dex-Net.}
-\figlabel{global-mab}
+\includegraphics[scale=0.31]{figures/illustrations/avg_reward_drill.eps}
+\caption{Average normalized grasp quality versus iteration over 25 trials per object for our algorithm with 1,000 and 10,000 prior 3D objects from Dex-Net on a spray bottle (top) and drill (bottom). We measure quality by the $P_F$ for the best grasp predicted by the algorithm on each iteration and compare with uncorrelated Thompson sampling and uniform allocation. (Top) For the spray bottle, Algorithm~\ref{alg:full} does not outperform Thompson sampling for 1,000 objects, but quickly converges to the optimizal grasp once 10,000 objects are used. (Bottom) The drill, which is relatively rare in the dataset, has no noticeable performance increase over Thompson sampling, even with 10,000 objects.}
+\figlabel{avg-reward-obj}
 \vspace*{-15pt}
 \end{figure}
 
 \begin{figure}[t!]
 \centering
-\includegraphics[scale=0.075]{figures/bottle_nearest_neighbors.jpg}
-\caption{Illustration of the five nearest neighbor objects from Dex-Net using the multi-view CNN-based shape embedding and Euclidean distance for increasing sizes of randomly selected subsets of data from Dex-Net. We see that while the neighbors for a small dataset are not relevant, the neighbors become increasingly similar to the query bottle as more data is used.}
-\figlabel{bottle-nn}
+\includegraphics[scale=0.28]{figures/illustrations/spray_grasps.eps}
+\caption{Illustation of the grasps predicted to have the highest $P_F$ after only 100 iterations by Thompson sampling, Algorithm~\ref{alg:full} with 1,000 prior objects from Dex-Net, and Algorithm~\ref{alg:full} with 10,000 prior objects from Dex-Net. Thompson sampling chooses a grasp near the edge of the object, while our algorithm selects grasps closer to the center-of-mass of the object.}
+\figlabel{spray-grasps}
+\vspace*{-5pt}
+\end{figure}
+
+\begin{figure}[t!]
+\centering
+\includegraphics[scale=0.38]{figures/illustrations/nearest_neighbors.eps}
+\caption{Illustration of the five nearest neighbor objects from Dex-Net to the spray bottle and drill using the multi-view CNN-based shape embedding and Euclidean distance for size 1,000 and 10,000 datasets from Dex-Net. We see that for the 1,000 object dataset neither model has relevant neighbors, while for the 10,000 object dataset two other spray bottles are returned. However, even with 10,000 objects no object geometrically similar to the drill is found. }
+\figlabel{query}
+\vspace*{-5pt}
+\end{figure}
+
+\section{Sensitivity to Similarity Kernel Bandwidth}
+\seclabel{band-sens}
+We also studied the sensitivity of our algorithm to the kernel bandwidth hyperparameters described in \secref{features}.
+We varied the bandwidth of the kernel for the heightmap gradients to the higher value $1 / 350$ and the lower value $1 / 450$ , as this was the most discriminative feature maps found by our hyperparameter tuning.
+\figref{bandwidth-sens} shows the normalized $P_F$ versus iteration averaged over 25 trials for 4,000 iterations on the 20 validation objects.
+We see that increasing the bandwidth of the kernel can drastically affect the performance of the algorithm, causing the performance to be no better than uniform allocation.
+This may be because overestimating similarities can lead to a grasp with high $P_F$ being predicted too low, or vice versa.
+One the other hand, decreasing the bandwidth also decreases the convergence rate but Algorithm~\ref{alg:full} with 10,000 prior objects still outperforms Thompson sampling.
+This suggests that a conservative setting of similiarity kernel bandwidth may be preferable for Algorithm~\ref{alg:full}.
+
+\begin{figure}[t!]
+\centering
+\includegraphics[scale=0.23]{figures/illustrations/weight_sensitivity.eps}
+\caption{Average normalized grasp quality versus iteration over 25 trials per object for our algorithm with 1,000 and 10,000 prior 3D objects from Dex-Net with a higher heightmap gradient kernel bandwidth of $1 / 350$ (left) and a lower kernel bandwidth of $1 / 450$ (right). We measure quality by the $P_F$ for the best grasp predicted by the algorithm on each iteration and compare with uncorrelated Thompson sampling and uniform allocation. (Left) Using a higher kernel bandwidth causes the algorithm to measure false similarities between grasps, leading to performance on par with uniform allocatoin. (Bottom) A lower kernel bandwith decreases the convergence rate, but Algorithm~\ref{alg:full} still selects a grasp within 85\% of the grasp with highest $P_F$ for all iterations, on average.}
+\figlabel{bandwidth-sens}
 \vspace*{-15pt}
 \end{figure}
 
 \section{Sensitivity to Uncertainty}
-
 \TODO{Write section}

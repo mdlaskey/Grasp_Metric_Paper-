@@ -1,17 +1,11 @@
 \begin{abstract}
-%\TODO{Adapted from flyer, probably needs to be toned down}
 Recent advances in distributed computing and machine learning combined with very large datasets of images and human speech have produced a series of results that surpass decades of research in analytic methods and, in some cases, human ability.
-%For example, deep neural networks can now learn to play video games, recognize faces, and translate between languages.
 This raises the question: can Big Data and Cloud computation produce analogous advances in robot grasping and manipulation?
-%We show that using using a large dataset of 3D models can speed up significantly the computation of valid grasps. 
-%We develop a Multi-Armed Bandit model with correlated rewards to accelerate robust grasp planning by learning from a large dataset of prior grasps and 3D object models, and implement our algorithm on Google Compute Engine.
-We show that learning from a large dataset of prior grasps and 3D object models can reduce the number of samples needed for robust grasp planning using our novel Multi-Armed Bandit algorithm with correlated rewards.
-To study scaling effects, we introduce the Dexterity Network (Dex-Net) 1.0, a dataset of approximately 10,000 unique 3D object models selected to reflect objects encountered in warehousing and the home such as tools, tableware, and toys.
-Each object is labelled with up to 250 parallel-jaw grasps and the probability of force closure of each under uncertainty in object pose, gripper pose, and friction coefficient.
+We develop a Multi-Armed Bandit algorithm with correlated rewards and show that learning from a large dataset of prior grasps and 3D object models can reduce the number of samples needed for robust grasp planning using our algorithm.
+To study scaling effects, we introduce the Dexterity Network (Dex-Net) 1.0, a dataset of approximately 10,000 unique 3D object models. Each object is labelled with up to 250 parallel-jaw grasps and the probability of force closure of each under uncertainty in object pose, gripper pose, and friction coefficient.
 We use multi-view Convolutional Neural Networks (MV-CNNs), a new deep learning method for 3D object classification, to learn a similarity metric between 3D objects and we apply it to indexing similar objects for grasp planning at scale.
-%To the best of our knowledge, this dataset is the largest to-date used for grasping research.
-We implement our algorithm and store our database using the Google Cloud Platform.
-Experiments on a set of N test objects suggest that the time taken to plan a robust grasp is approximately $2\times$ faster on average and up to $10\times$ faster on select objects when using Dex-Net as a prior... \TODO{Update numbers}
-Experiments on sensitivity indicate that....\TODO{Results of this}
+We implement our algorithm and database using the Google Cloud Platform.
+Experiments on a set of 20 test objects suggest that the time taken to plan a robust grasp is approximately $3.5\times$ faster than Thompson sampling without prior data on average
+Experiments on sensitivity suggest that convergence rate is fastest for objects for which the MV-CNN returns geometrically similar neighbors from Dex-Net.%, and that the convergence rate can descrease if the similarity metric measures false correlations between grasps.
 Code, data, and additional information can be found at: \TODO{Url}
 \end{abstract}

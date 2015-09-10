@@ -1,7 +1,7 @@
 \section{Dexterity Network}
 \seclabel{dexnet}
 
-\TODO{Make this flow with above paragraph!}
+\TODO{Perhaps a cleaner transition here}
 The Dexterity Network (Dex-Net) 1.0, is a dataset of prior 3D object models annotated with parallel-jaw grasps and a similarity metric to efficiently index objects.
 Dex-Net consists of over 10,000 3D mesh models, selected to represent objects that might be encountered in warehousing or the home such as tableware, tools, and toys.
 %Laser-scanned models from the KIT object database~\cite{kasper2012kit}, the Amazon Picking Challenge objects, BigBIRD~\cite{singh2014bigbird}, and YCB ~\cite{calli2015benchmarking} constitute 355 of the total models.
@@ -11,7 +11,7 @@ Dex-Net consists of over 10,000 3D mesh models, selected to represent objects th
 \begin{figure}[t!]
 \centering
 \includegraphics[scale=0.1]{figures/dataset_table.jpg}
-\caption{The seven datasets used in Dex-Net 1.0 with information on whether or not the models were laser-scanned, the number of models in the dataset, and the number of labelled categories (if category labels are present).}
+\caption{The seven datasets used in Dex-Net 1.0 with information on whether or not the models were laser-scanned, the number of models in the dataset, and the number of labelled categories (if category labels are present). \TODO{Remove columns}}
 \figlabel{datasets}
 \vspace*{-15pt}
 \end{figure}
@@ -50,7 +50,7 @@ Formally, our full dataset of $N_o$ 3D objects and $N_g$ grasps per object is $\
 \subsection{Object Similarity Embedding}
 \seclabel{object-similarity}
 In order to efficiently index prior 3D object and grasp data from Dex-Net, we embed each object in a Euclidean feature space in which similar objects are close together.
-Our similarity embedding is based on multi-view Convolutional Neural Networks (MV-CNNs)~\cite{su2015multi}, a state-of-the-art method for 3D shape retrieval that uses the powerful features leared by CNNs on millions of images~\cite{krizhevsky2012imagenet}.
+Our similarity embedding is based on multi-view Convolutional Neural Networks (MV-CNNs)~\cite{su2015multi}, a new method for 3D shape classifciation that outperforms previous methods and uses the powerful features leared by CNNs on millions of images~\cite{krizhevsky2012imagenet}.
  
 \figref{global-feature-model} illustrates our method.
 Let $R$ be the maximum dimension of the object bounding box.
@@ -65,8 +65,9 @@ Our method differs from the MV-CNN of Su et al.~\cite{su2015multi} because we us
 Given the MV-CNN object representation, we measure the dissimilarity between two objects $\mO_i$ and $\mO_j$ by the Euclidean distance $\| \psi(\mO_i) - \psi(\mO_j) \|_2$.
 For efficient lookups of similar objects, Dex-Net contains a KD-Tree nearest neighbor query structure with the feature vectors of all prior objects.
 
-%In our implementation, we trained our MV-CNN using the Caffe library~\cite{jia2014caffe} on rendered images from a training set of approximately $6,000$ 3D models from the SHREC 2014 dataset ~\cite{li2015comparison} for 500,000 iterations of SGD, and the final PCA step captured approximately 85\% of the variance of the vectors.
-%The image classification training step had a test accuracy of 76\%.
+In our implementation, we trained our MV-CNN using the Caffe library~\cite{jia2014caffe} on rendered images from a training set of approximately $6,000$ 3D models from the SHREC 2014 dataset ~\cite{li2015comparison} for 500,000 iterations of SGD, and the final PCA step captured approximately 85\% of the variance of the vectors.
+The image classification training step had a test accuracy of 76\%.
+To validate that our implementation was working, we tested our method on the SHREC 2014 challenge dataset and achieved a 1-NN accuracy of 86.7\%, compared to 86.8\% for the winner of the challenge~\cite{li2015comparison}.
 
 \begin{figure}[t!]
 \centering

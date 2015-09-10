@@ -8,11 +8,11 @@ Our experiments suggest that increasing the amount of prior knowledge of objects
 One current shortcoming of our method is that it relies on a set of features manually designed to predict grasp quality for a grasp and object, such as heightmaps and CNNs that predict object category.
 Future work will leverage recent developments in feature learning with Deep Neural Networks~\cite{krizhevsky2012imagenet} to optimize grasp and object representations directly based on the outcome of grasp evaluations from bandit algorithms.
 We are also interested in a future pipelined approach that integrates research on deep learning to predict object identity and pose directly from depth images as input to Dex-Net~\cite{guptaCVPR15a} and deep learning for control policies to map planned grasps on objects to motor torques~\cite{levine2015end}. 
-We will use supervision from the data in Dex-Net to study extensions of our MV-CNNs to predict 3D object model and pose from simulated depth images of objects on a planar work surface to research deep learning approaches that map from 3D objects directly to grasp or manipulation policies using supervision, with the goal of a future system that maps directly from images to motor torques.
+We will use supervision from the data in Dex-Net to study extensions of our MV-CNNs to predict 3D object model and pose from simulated depth images of objects on a planar work surface to research deep learning approaches that map from 3D objects directly to grasp or manipulation policies, with the goal of a future system that maps directly from images to motor torques.
 
 Future work will also add additional grasp and object data to Dex-Net, such as task constraints, the outcomes of physical trials, or human annotations.
-This presents a challenge because the number of labels per object and grasp may be smaller thatnwith probability of force closure due to the time cost involved.
-Thus we will study using functional map networks to establish consistent maps between objects to share sparse labels throughout Dex-Net~\cite{huang2013fine}.
-We will also add additional analytic grasp metrics to Dex-Net, such as cages~\cite{diankov2010automated} or the expected Ferrari-Canny quality~\cite{kim2012physically}.
-To achieve this we will work toward releasing Dex-Net as an open-access project with an open-source API for labelling objects in the Cloud with analytic quality metrics or simulation outcomes and integrating Dex-Net with physical robots.
+%This presents a challenge because the number of labels per object and grasp may be smaller that with probability of force closure due to the time cost involved.
+%Thus we will study using functional map networks to establish consistent maps between objects to share sparse labels throughout Dex-Net~\cite{huang2013fine}.
+We plan to add additional analytic grasp metrics to Dex-Net, such as cages~\cite{diankov2010automated} or the expected Ferrari-Canny quality~\cite{kim2012physically}, and study the selection of a set of grasps that ``cover" an object surface to increase the chances that a grasp is reachable in cluttered environments.
+We plan to release Dex-Net in the future as an open-access project with an open-source API for labelling objects in the Cloud with analytic quality metrics or simulation outcomes and integrating Dex-Net with physical robots.
 

@@ -3,7 +3,7 @@
 Our algorithm, detailed in Algorithm~\ref{alg:full}, plans a sequence of grasps with high $P_F$ for a new object $\mO$ using Multi-Armed Bandits (MABs) with correlated rewards and priors from the grasp and 3D object data in Dex-Net.
 We first generate a set of candidate grasps $\Gamma$ for object $\mO$ using the antipodal grasp sampling described in \secref{grasp-sampling} and predict a prior distribution for each grasp using the Dex-Net database $\mD$.
 Next, we run MAB by selecting the next grasp to sample using Thompson sampling~\cite{laskey2015bandits}, sampling from our uncertainty random variables, determining force closure for the grasp on the sampled variables as described in \secref{quality}, and updating a belief distribution on the probability of force closure for each grasp.
-Finally, we return the grasp for which the belief distribution has the maximum lower confidence bound, a conservative estimated of the grasp with the heighest estimated $P_F$.
+Finally, we return the grasp for which the belief distribution has the maximum lower confidence bound, a conservative estimate of the grasp with the highest estimated $P_F$.
 
 \begin{algorithm}
 {\small
@@ -40,13 +40,13 @@ Finally, we return the grasp for which the belief distribution has the maximum l
 We use Continuous Correlated Beta Processes (CCBPs) to model correlations between the $P_F$ between grasps on different objects to utilize prior grasp and object data from Dex-Net 1.0.
 CCBPS were independently proposed by Goetschalckx et al.~\cite{goetschalckx2011continuous} and Montesano and Lopes~\cite{montesano2012active} to model correlations between the Bernoulli random variables in a Beta-Bernoulli process.
 Such correlations may exist when the Bernoulli random variables depend on common latent factors.
-For example, two grasps may have similar $P_F$ when they contact the same shape in similar locations or the surface geometry at the contact points is similar.
+For example, two grasps may have similar $P_F$ when they contact the same shape in similar locations or the surface geometry at the contact points is similar, as evidenced by Lipschitz bounds on grasp WS metrics~\cite{pokorny2013c}.
 
 Let $\mO$ denote the input object to Algorithm~\ref{alg:full}, and let $\Gamma$ be the set of $N_g$ candidate grasps generated for $\mO$.
-We define $F_{j} = F(\bg_{j}) \in \{0, 1\}$ as an occurence of force closure on an evaluation of any grasp $\bg_{j} \in \Gamma$ on object $\mO$ from samples of object pose, gripper pose, and friction, as described in \secref{quality}.
+We define $F_{j} = F(\bg_{j}) \in \{0, 1\}$ as force closure on an evaluation of any grasp $\bg_{j} \in \Gamma$ from samples of object pose, gripper pose, and friction as described in \secref{quality}.
 Under our model, $F_j$ is a Bernoulli random variable with probability of success $\theta_{j}= P_F(\bg_{j})$.
 Since $\theta_j$ is unknown, our algorithm maintains a posterior belief distribution for each $\theta_j$ based on the outcome of past force closure evaluations.
-In CCBPs, the belief distribution on the Bernoulli parameter $\theta_{i,k}$ is the Beta distribution, which is specified by shape parameters $\alpha > 0$ and $\beta > 0$:
+In CCBPs, the belief distribution on the Bernoulli parameter $\theta_{i,k}$ is a Beta distribution, which is specified by shape parameters $\alpha > 0$ and $\beta > 0$:
 
 \vspace{-2ex}
 \begin{align*}
@@ -62,6 +62,7 @@ Given the feature maps, we use the squared exponential kernel
 	k(\mY_p, \mY_q) &= \exp\left( - \frac{1}{2} \sum \limits_{m=1}^{N_f} \|\phi_m(\mY_p) - \phi_m(\mY_q)\|_{C_m}^2 \right).
 \end{align*}
 \noindent where $C_m \in \bR^{d_m \times d_m}$ is the bandwidth for $\phi_m$ and $\| \by \|_{C_m} = \by^T (C_m^T C_m)^{-1} \by$.
+The bandwidths are hyperparameters of the algorithm that might be set by cross-validation on a set of training data~\cite{rasmussen2006}.
 
 We form a belief distribution for each candidate grasp in $\Gamma$ based on its its similarity to all grasps and objects from the Dex-Net 1.0 database $\mD$ as measured by the kernel~\cite{goetschalckx2011continuous}:
 %\vspace{-2ex}
@@ -80,16 +81,16 @@ Upon observing $F_{\ell}$ for grasp $\bg_{\ell}$ on iteration $t$, we update our
 	\beta_{j,t} &= \beta_{j,t-1} + k(\mY_{j}, \mY_{\ell}) (1 - F_{\ell})\label{eq:beta}
 \end{align}
 
-\noindent Intuitively, this allows observations of one grasp to constitute fractional observations of similar grasps.
+\noindent Intuitively, this allows evaluations of a grasp on an object to constitute fractional evaluations of similar grasps on similar objects.
 
 \subsection{Feature Representation}
 \seclabel{features}
-\TODO{Move elsewhere / condense? Its a lot of information coming out of nowhere}
+\TODO{Condense section / possibly move earlier.}
 We feature maps based on the grasp parameters $\phi_g$, the object local surface geometry $\phi_h$, and the global object shape $\phi_s$ to capture correlations between the $P_F$ of grasps.
 
 \subsubsection{Grasp Parameters}
 \seclabel{param-features}
-Our first feature map is $\phi_{g}(\mY) = (\bx, \bv, \| \rho_1 \|_2, \| \rho_2 \|_2)$ where $\bx$ is the grasp center, $\bv$ is the grasp approach, and $\rho_i$ is the $i$-th moment arms.
+Our first feature map is $\phi_{g}(\mY) = (\bx, \bv, \| \rho_1 \|_2, \| \rho_2 \|_2)$ where $\bx \in bR^3$ is the grasp center, $\bv \in \bS^2$ is the grasp approach, and $\rho_i \in \bR^3$ is the $i$-th moment arm.
 The moment arms are included because points on the object surface with larger moment arms will move greater distances under object orientation uncertainty.
 However, similarity $\phi_g$ may not indicate similar $P_F$ if the surfaces near the contact locations are dissimilar (consider two grasps that contact a box near the corner).
 
@@ -118,9 +119,9 @@ Our full feature vector for the heightmaps is $\phi_{h}(\bg_i, \mO_i) = (\bd_{1,
 \vspace*{-15pt}
 \end{figure}
 
-\subsubsection{Global Object Similarity}
+\subsubsection{Shape Features}
 \seclabel{global-sim}
-While force closure is based on local surface properties of an object around contact points, measuring global similarity may be similarity may be useful because the heightmaps may not capture all possible contact points for a grasp under perturbations in object and gripper pose.
+While force closure is based on local surface properties of an object around contact points, measuring global similarity may be useful because the heightmap gradients may not capture all possible contact locations for a grasp under perturbations in object and gripper pose.
 Thus we also use the feature map $\phi_{s}(\mY) = \psi(\mO)$, where $\psi$ is the similarity embedding based on MV-CNNs described in \secref{object-similarity}.
 
 %\subsection{Thompson Sampling}

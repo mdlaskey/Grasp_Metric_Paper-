@@ -1,47 +1,50 @@
 \section{Related Work}
 \seclabel{related}
 
-For a survey of the substantial literature on grasping, see Prattichizzo and Trinkle~\cite{prattichizzo2008grasping}.
-Research on grasp planning has focused on finding grasps by maximizing an analytic grasp quality metric based on wrench space (WS), such as the ability to resist external perturbations to the object based on the grasp WS~\cite{ferrari1992, miller2004graspit}, object WS~\cite{liu2015fast, pollard1994parallel}, or task WS~\cite{kruger2011partial, li1988task}.
-WS metrics have been used to synthesize grasps for known objects using sampling-based optimization in software tools such as GraspIt!~\cite{miller2004graspit} or OpenGRASP~\cite{leon2010opengrasp}.
-However, analytic WS metrics have been criticized~\cite{balasubramanian2012physical, weisz2012pose} for not being robust to variations in grasp acquistion, such as object shape, pose, material properties, and locations of contact~\cite{cheong2011output, diankov2010automated, weisz2012pose, zheng2005} and for not taking into account the dynamics of the the grasp~\cite{prattichizzo2008grasping}.
-%This has motivated work on grasp transfer from a knowledge database to new objects, robust versions of analytic quality metrics with respect to uncertainty in the state of the robot and environment, and synthesis from statistical models of grasping learned from physical data or human labels.
+%For a survey of the substantial literature on grasping, see Prattichizzo and Trinkle~\cite{prattichizzo2008grasping}.
+Past research on grasp planning has focused on finding grasps by maximizing an analytic grasp quality metric based on a wrench space (WS), such as the ability to resist external perturbations to the object based on the grasp WS~\cite{ferrari1992, ciocarlie2009}, object WS~\cite{liu2015fast}, or task WS~\cite{kruger2011partial}.
+%However, analytic WS metrics have been criticized~\cite{balasubramanian2012physical, weisz2012pose} for not being robust to variations in grasp acquistion, such as object shape, pose, material properties, and locations of contact~\cite{cheong2011output, diankov2010automated, weisz2012pose, zheng2005}.
+However, the need to recompute WS metrics for every new object and grasp motivated research on grasp planning by transferring grasps from similar objects in a database of prior knowledge~\cite{li2005shape}.
+%Li and Pollard~\cite{li2005shape} generated grasps for a human hand by matching object shapes to hand postures in a database.
+Goldfeder et al.~\cite{goldfeder2009columbia} developed the Columbia grasp database, a dataset of 1,814 distinct models and over 200,000 force closure grasps generated using the Eigengrasp planner in GraspIt!~\cite{ciocarlie2009}.
+The authors later used synthetic partial depth maps of objects in the database to match robot sensor data to precomputed grasps using the Iterated Closest Point algorithm~\cite{goldfeder2011data}.
+Research has also studied transferring grasps from objects of the same category by warping contacts betwen corresponding points on a shape surface and using local alignment and contact interpolation~\cite{stouraitis2015functional} or by interpolating grasps and shapes over a vector space representation called a Grasp Moduli Space~\cite{pokorny2013grasp}.
 
-The need to recompute WS metrics to select grasps for every new object motivated research on grasp synthesis by transferring grasps from a database of exemplar objects.
-Li and Pollard~\cite{li2005shape} generated grasps by matching object shapes to human hand postured in a database.
-Goldfelder et al.~\cite{goldfeder2009columbia} developed the Columbia grasp database, a database of 1,814 distinct models and over 200,000 force closure grasps generated using the Eigengrasp planner in GraspIt!~\cite{ciocarlie2009}.
-The authors later used synthetic partial depth maps of objects in the database to match robot sensor data to precomputed grasps, using the Iterated Closest Point (ICP) algorithm to align the coordinate frames of the depth maps~\cite{goldfeder2009data, goldfeder2011data}.
-Kehoe et al.~\cite{kehoe2013cloud} created a Cloud-based system to transfer grasps evaluated by probability of force closure on objects in a database to a physical robot by indexing the objects with the Google Goggles object recognition engine.
-Recent research has also studied grasp transfer from objects of the same category by warping contacts betwen corresponding points on a shape surface and using local rigid alignment and contact interpolation~\cite{hillenbrand2012transferring, stouraitis2015functional} or by interpolating grasps and shapes over a vector space representation called a Grasp Moduli Space~\cite{pokorny2014grasp, pokorny2013grasp}.
-
-Another line of research focused on making analytic grasp metrics robust to imprecision in perception and control~\cite{goldberg1990bayesian, stulp2011learning, zheng2005}.
-Brook, Ciocarlie, and Hsiao~\cite{brook2011collaborative, hsiao2011bayesian} developed a Bayesian framework to evaluate both the expected epsilon quality and the probability of physical success on a PR2 given uncertainty in object identity, object pose, and gripper positioning on deterministic mesh and point cloud models. 
+Recent research has also studied labelling grasps in a database with metrics that are robust to imprecision in perception and control~\cite{brook2011collaborative, mahler2015gp, zheng2005}.
+%, due to the fragility of analytic WS grasp metrics~\cite{balasubramanian2012physical, diankov2010automated, weisz2012pose}.
 Weisz et al.~\cite{weisz2012pose} found that grasps ranked by probability of force closure subject to perturbations of object pose in simulation were empirically more successful on a physical robot than grasps planned using deterministic WS metrics. 
-Kim et al.~\cite{kim2012physically} planned grasps using the expected epsilon quality metric~\cite{ferrari1992} under dynamics and uncertainty in pose, and found that the robust metric has a higher correlation with physical grasp success.
-Recent research has also studied grasping under object shape uncertainty resulting from imprecision of object segmentations in images~\cite{christopoulos2007handling}, part tolerancing in manufacturing~\cite{kehoe2012estimating, kehoe2012toward, panahi2015orienting}, or missing and noisy data from depth sensors such as the Kinect modeled with Gaussian process implicit surfaces~\cite{dragiev2013uncertainty, mahler2015gp, laskey2015bandits}.
-%Many have also studied caging gripper configurations~\cite{rimon1996caging}, which are a waypoint to form closure grasps for two fingers~\cite{vahedi2008caging, rodriguez2012caging} and may be robust to perturbations in object pose and shape~\cite{diankov2008manipulation, Wan2012_ICRA}.
+Similarly, Kim et al.~\cite{kim2012physically} planned grasps using the expected Ferrari-Canny quality~\cite{ferrari1992} under uncertainty in object pose using dynamic simulation to determine contacts, and found that the robust metric was more highly correlated with physical grasp success.
+Kehoe et al.~\cite{kehoe2013cloud} created a Cloud-based system to transfer grasps evaluated by probability of force closure on objects in a database to a physical robot by indexing the objects with the Google Goggles object recognition engine.
+The authors found that the full system of object recognition, pose estimation, and grasp execution successfully grasped objects on a table in 80\% of trials.
 
-Recent research has also studied synthesizing grasps by ranking grasps according statistical models learned from human annotations or physical execution~\cite{bohg2014data}.
+Another line of research has focused on synthesizing grasps using statistical models learned from a database of objects annotated with grasps decided by humans or physical execution~\cite{bohg2014data}.
 Saxena et al.~\cite{jiang2011efficient, saxena2008robotic} used a logistic regression classified to predict grasp affordances in images from human annotated training data.
-Lenz et al~\cite{lenz2015deep} used deep learning to detect bounding boxes for parallel-jaw grasps in color and depth images, which was extended to real time by Redmon and Angelova~\cite{redmon2014real}.
-Herzog et al.~\cite{herzog2012template, herzog2014learning} extracted "heightmaps" of local object curvature from human demonstrated grasps, construct a library of heightmap templates, and match new sensor data to templates to select grasps similar to the demonstrations.
-Detry et al.~\cite{detry2012generalizing} created a low-dimensional representation of object parts and cluster object parts that are grasped similarly to form a shape library of prototypical grasp parts, and show that this representation can be transferred to real sensor data~\cite{detry2013learning}.
-Kappler et al.~\cite{kappler2015leveraging} trained a deep neural network to predict grasp success for a Barett hand measured by human annotations and the results of simulations on a database of synthetic pointclouds of objects.
-Deep learning~\cite{krizhevsky2012imagenet} has also ben used in robotics for learning visuomotor policies for specific manipulation tasks~\cite{levine2015end} and recurrent control policies for cutting fruits vegetables from joint angles and end-effector forces~\cite{lenzdeepmpc}.
+Lenz et al~\cite{lenz2015deep} used deep learning to detect bounding boxes for parallel-jaw grasps in color and depth images based on a dataset of thousands of 1035 images annotated with parallel-jaw grasps by humans.
+Herzog et al.~\cite{herzog2012template, herzog2014learning} extracted heightmaps of local object curvature from human demonstrated grasps to construct a library of heightmap templates, and matched new sensor data to templates to select grasps similar to the demonstrations.
+Detry et al.~\cite{detry2012generalizing} created a low-dimensional representation of object parts and cluster object parts that are grasped similarly to form a library of prototypical graspable point clouds, and showed that the representation could be transferred to real sensor data~\cite{detry2013learning}.
+Kappler et al.~\cite{kappler2015leveraging} created a database of over 700 object instances each labelled with 500 Barrett hand grasps and their associated quality from human annotations and the results of simulations with the ODE physics engine.
+The authors trained a deep neural network to predict grasp quality from heightmaps of the local object surface rendered along the surface normal. 
+%Recently, several other works have proposed to form a huge database of grasps on synthetic objects from simulation outcomes~\cite{michalikg3db} or physical execution~\cite{oberlinacquiring}.
+%Deep learning~\cite{krizhevsky2012imagenet} has also ben used in robotics for learning visuomotor policies for specific manipulation tasks~\cite{levine2015end} and recurrent control policies for cutting fruits vegetables from joint angles and end-effector forces~\cite{lenzdeepmpc}.
 %Recently, several other works have proposed to form a huge database of grasps on synthetic objects from simulation outcomes~\cite{michalikg3db} or physical execution~\cite{tellex}.
-In comparison, we learn a model to predict a Bayesian distribution on the probability of force closure for a grasp on an object based on similarity to a set of prior grasps and objects in a database, and use our model to actively decide the next grasp to evaluate using Multi-Armed Bandits.
+In comparison, we learn a model to predict a belief distribution on the probability of force closure for a parallel-jaw grasp on a new object based on similarity to prior 3D objects and grasps, and we actively choose the next grasp to evaluate using Multi-Armed Bandits.
 
-Our work is also closely related to research on actively selecting grasps for building a statistical model of grasp quality from fewer examples.
-Several works have searched for successful grasps using belief space planning to minimze uncertainty~\cite{hsiao2007grasping, kahnactive, fischinger2015learning}, but without use of an explicit grasp quality metric to guide the search.
-Kehoe et al.~\cite{kehoe2012estimating} proposed iterative pruning, an algorithm for evaluating the probability of force closure for a set of candidate grasps while discrading grasps known to have poor quality.
+Our work is also closely related to research on actively selecting grasps for building a statistical model of grasp quality from fewer examples~\cite{boularias2015learning, salganicoff1996active}.
+%Several works have searched for successful grasps using belief space planning to minimze uncertainty~\cite{hsiao2007grasping, kahnactive, fischinger2015learning}, but without use of an explicit grasp quality metric to guide the search.
+Kehoe et al.~\cite{kehoe2012estimating} proposed iterative pruning, an algorithm for evaluating the probability of force closure for a set of candidate grasps while discarding grasps known to have poor quality.
 Detry et al.~\cite{detry2011learning} estimated a full continuous density function over grasp poses using kernel density estimation and adaptively acquired samples by pruning unsuccessful grasps.
 Kroemer et al.~\cite{kroemer2010combining} developed a reinforcement learning approach to grasp selection based on seeding hypotheses via imitation learning and Gaussian process upper-confidence bounds for active grasp acquisition.
-Boularias et al.~\cite{boularias2014efficient, boularias2015learning} used a Gaussian process Bayesian Optimization model for selecting grasps on cluttered piles of rocks.
-Salaganicoff et al.~\cite{salganicoff1996active} used active learning to decide the next grasp to execute on a physical robot while learning a predicitve model of empirical success from range sensors.
-Similarly, Montesano and Lopes~\cite{montesano2012active} used Continuous Correlated Beta Processes~\cite{goetschalckx2011continuous} to actively acquire grasp executions on a physical robot, measuring correlations from the responses to a bank of image filters designed to detect grasp affordances such as edges.
-Recently, Laskey et al.~\cite{laskey2015bandits} showed that Multi-Armed Bandit (MAB) algorithms can be used to accelerate the identification of grasps with high probability of force closure under uncertainty in shape, pose, and friction in 2D.
-MAB algorithms trade off gaining information about grasps that have been sampled fewer times with exploiting the grasp with the highest estimated quality given the past samples.
-In this work we extend the model of Laskey et al.~\cite{laskey2015bandits} to 3D and to utilize similarity between grasps across objects from Dex-Net with CCBPs to further reduce the number of samples needed to converge to a grasp with high quality.
+%Boularias et al.~\cite{boularias2014efficient, boularias2015learning} used a Gaussian process Bayesian Optimization model for selecting grasps on cluttered piles of rocks.
+%Salaganicoff et al.~\cite{salganicoff1996active} used active learning to decide the next grasp to execute on a physical robot while learning a predicitve model of empirical success from range sensors.
+Montesano and Lopes~\cite{montesano2012active} used Continuous Correlated Beta Processes~\cite{goetschalckx2011continuous} to actively acquire grasp executions on a physical robot, measuring correlations from the responses to a bank of image filters designed to detect grasp affordances such as edges.
+Recently, Laskey et al.~\cite{laskey2015bandits} used Multi-Armed Bandit (MAB) algorithms to reduce the number of samples needed to identify grasps with high probability of force closure under uncertainty in object shape, pose, and friction in 2D.
+%MAB algorithms trade off gaining information about grasps that have been sampled fewer times with exploiting the grasp with the highest estimated quality given the past samples.
+In this work we extend the model of Laskey et al.~\cite{laskey2015bandits} to 3D and to utilize similarity between grasps across objects from Dex-Net to further accelerate convergence to a grasp with high probability of force closure.
+
+% DEEP LEARNING
+Our work also builds on recent developments from the field of shape retrieval
+\TODO{Let Matthieu provide initial version}
+
 
 
 

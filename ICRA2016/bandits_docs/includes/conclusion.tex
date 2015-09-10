@@ -1,17 +1,18 @@
 \section{Discussion and Future Work}
 \seclabel{conclusion}
-We introduced the Dexterity Network (Dex-Net) 1.0, a dataset of approximately 20,000 3D object models and a network of similarity between object models and parallel-jaw grasps on each model.
-We extended the Multi-Armed Bandit model of Laskey et al.~\cite{laskey2015bandits} to leverage similiarty between grasps based on gripper pose, local surface geometry encoded as heightmaps, and global shape similarity encoded using a state-of-the-art method for shape retrieval based on multi-view Convolutional Neural Networks (CNNs)~\cite{su2015multi}.
-Our experiments suggest that increasing the amount of prior knowledge of objects and the quality of grasps on each object enables up to a $10\times$ speedup in the time to select a grasp with high probability of force closure for a new object, and also suggest that convergence is fastest when the object has a set of geometrically similar nearest neighbors in the database.
+We developed a Multi-Armed Bandit algorithm based on correlated rewards to reduce the number of samples required to plan robust parallel-jaw grasps by leveraging prior grasps and 3D object models.
+To study scaling effects, we introduced the Dexterity Network (Dex-Net) 1.0, a dataset of approximately 10,000 3D object models, each labelled with up to 250 grasps and the probability of force closure of each.
+For efficient indexing of similar objects in Dex-Net, we used multi-view Convolutional Neural Networks (MV-CNNs)~\cite{su2015multi}, a state-of-the-art deep learning method of object classification, trained on milliions of images and thousands of 3D object examples.
+Our experiments suggest that increasing the amount of prior knowledge of objects and the quality of grasps on each object enables up to a $10\times$ speedup in the time to compute a grasp with high probability of force closure for a new object, and also suggest that convergence is fastest when the object has a set of geometrically similar nearest neighbors in the database.
 
 One current shortcoming of our method is that it relies on a set of features manually designed to predict grasp quality for a grasp and object, such as heightmaps and CNNs that predict object category.
-Future work will leverage recent developments in feature optimization with deep neural networks~\cite{levine2015end} to optimize feature representations of both the local and global surface geometry based on the outcome of grasp evaluations in the bandit algorithms.
-We will also study extensions of the shape similarity neural network to predict object class from simulated depth images of objects on a table, which could be useful for transferring learned data from Dex-Net to objects in the physical world.
+Future work will leverage recent developments in feature learning with Deep Neural Networks~\cite{krizhevsky2012imagenet} to optimize grasp and object representations directly based on the outcome of grasp evaluations from bandit algorithms.
+We are also interested in a future pipelined approach that integrates research on deep learning to predict object identity and pose directly from depth images as input to Dex-Net~\cite{guptaCVPR15a} and deep learning for control policies to map planned grasps on objects to motor torques~\cite{levine2015end}. 
+We will use supervision from the data in Dex-Net to study extensions of our MV-CNNs to predict 3D object model and pose from simulated depth images of objects on a planar work surface to research deep learning approaches that map from 3D objects directly to grasp or manipulation policies using supervision, with the goal of a future system that maps directly from images to motor torques.
 
-Another shortcoming is our current use of wrench space metrics, which have been criticized recently for not correlating with human labels~\cite{kappler2015leveraging} or physical trials~\cite{balasubramanian2012physical}.
-However, both forms of labels may be difficult to acquire for the entire dataset because of the human and time cost involved.
-Future work will research using Multi-Armed Bandits (MABs) to actively acquire grasp evaluations uncertain objects.
-To do so, we will study using functional map networks to establish consistent maps between prototypical object parts that indicate grasp affordance, such as handles
-We will also build on recent developments in caging to label key the dataset with caging hand configurations either analytically, using simulation, or using a learned model to predict caging configurations.
-We will also work toward releasing Dex-Net as an open-access project with an open-source API for labelling objects in the Cloud with analytic quality metrics or simulation outcomes, integrating Dex-Net with physical robots, and learning statistical models of grasp success using deep learning and MAB.
+Future work will also add additional grasp and object data to Dex-Net, such as task constraints, the outcomes of physical trials, or human annotations.
+This presents a challenge because the number of labels per object and grasp may be smaller thatnwith probability of force closure due to the time cost involved.
+Thus we will study using functional map networks to establish consistent maps between objects to share sparse labels throughout Dex-Net~\cite{huang2013fine}.
+We will also add additional analytic grasp metrics to Dex-Net, such as cages~\cite{diankov2010automated} or the expected Ferrari-Canny quality~\cite{kim2012physically}.
+To achieve this we will work toward releasing Dex-Net as an open-access project with an open-source API for labelling objects in the Cloud with analytic quality metrics or simulation outcomes and integrating Dex-Net with physical robots.
 

@@ -1,32 +1,77 @@
 \section{Dexterity Network}
 \seclabel{dexnet}
-\TODO{Due to space, it might make sense to discuss in experiments as appears to be common practice when the dataset is not going to be released to the public}
-It remains to describe the details of creating the Dexterity Network (Dex-Net), our prior dataset of objects and grasps with similarity, for use in the Multi-Armed Bandit models of Algorithm~\ref{alg:full}.
-Dex-Net 1.0 consists of approximately 20,162 3D mesh models \TODO{Update with correct count} collected from the datasets described in \figref{datasets}.
-Laser-scanned models from the KIT object database~\cite{kasper2012kit}, the Amazon Picking Challenge objects, BigBIRD~\cite{singh2014bigbird}, and YCB ~\cite{calli2015benchmarking} constitute 355 of the total models.
-These models were chosen to reflect physical objects commonly used for benchmarking in grasping research for potential future physical experiments using Dex-Net.
-The majority of Dex-Net is synthetic 3D mesh models from 3DNet\cite{wohlkinger20123dnet}, a benchmark for object detection in robotics research,  ModelNet~\cite{wu20143d}, a relatively new benchmark for 3D model classification, and the SHREC 2014 large scale object retrieval challenge~\cite{li2015comparison}, a competition benchmark with many categories to test the state-of-the-art in shape retrieval annually.
-While the geometry of synthetic models does not necessarily reflect a physical object, using these models allows us to examine the effects of scale at tens of thousands of 3D models, which has not been previously attempted in grasp synthesis research.
 
-In order to use the models for grasp selection, we first preprocess each model.
-Each object in Dex-Net is originally specified as a 3D mesh $\mS = \{\mV, \mT\}$ where $\mV = \{\bv_1, ..., \bv_V\}$ is a set of $V$ vertices such that $\bv_i \in \bR^3$ for $i = 1, ..., V$ and $\mT = \{t_1, ..., t_F\}$  is a set of $F$ triangles such that $t_j \in \mathbb{Z}_{+}^3$ for $j = 1, ..., F$.
-First, we remove unreferenced vertices and illegal triangles (e.g. same vertex is referenced twice in one triangle).
-Next, we normalize the orientation of the model by performing Principal Component Analysis (PCA) on the raw vertices of the mesh and then rotating the object such that its first principal component aligns with the $z$-axis and its second aligns with the $y$-axis.
-We then set the object center of mass $\bz$ to be the center of the bounding box for the reoriented mesh.
-Since synthetic models may not be specified in meters, we also rescale each mesh such that the smallest dimension of the bounding box lies withing the maximum opening of the gripper.
-Finally, we convert each mesh to a signed distance field $f$ using SDFGen~\cite{}, an open-source C++ tool.
-
-Once each 3D model is preprocessed, we compute the shape feature vector described in \secref{cnn} for each object.
-Each feature vector is then put into a KD-Tree nearest neighbor query structure for accelerated lookups of shape nearest neighbors.
-This structure consistutes our shape similiarity network, in which each object $\mO$  is connected to its $n$ nearest neighbors $\mO_1, ..., \mO_n$ by an edge of weight $\| \psi(\mO) - \psi(\mO_i) \|_2^2$.
-We generate a set of grasps for each object in the network using the method of \secref{candidates} and evaluate the probability of force closure for each grasp using brute-force Monte Carlo integration as a benchmark~\cite{kehoe2012toward}.
-As the number of models is quite large, we distribute the grasp labelling for each object across virtual machines in Google Compute Engine and aggregate the results at the end.
-
+\TODO{Make this flow with above paragraph!}
+The Dexterity Network (Dex-Net) 1.0, is a dataset of prior 3D object models annotated with parallel-jaw grasps and a similarity metric to efficiently index objects.
+Dex-Net consists of over 10,000 3D mesh models, selected to represent objects that might be encountered in warehousing or the home such as tableware, tools, and toys.
+%Laser-scanned models from the KIT object database~\cite{kasper2012kit}, the Amazon Picking Challenge objects, BigBIRD~\cite{singh2014bigbird}, and YCB ~\cite{calli2015benchmarking} constitute 355 of the total models.
+%The majority of Dex-Net is synthetic 3D mesh models from 3DNet\cite{wohlkinger20123dnet}, a benchmark for object detection in robotics research,  ModelNet~\cite{wu20143d}, a benchmark for 3D model classification, and the SHREC 2014 large scale object retrieval challenge~\cite{li2015comparison}, a competition benchmark with many categories to test the state-of-the-art in shape retrieval annually.
+\figref{datasets} details the data sources and their sizes.
 
 \begin{figure}[t!]
 \centering
 \includegraphics[scale=0.1]{figures/dataset_table.jpg}
-\caption{The seven datasets used in Dex-Net 1.0 with information on whether or not the models were laser-scanned, the number of models in the dataset, and the number of labelled categories (if category labels are present). \TODO{Update ModelNet number - we actually only use select categories}}
+\caption{The seven datasets used in Dex-Net 1.0 with information on whether or not the models were laser-scanned, the number of models in the dataset, and the number of labelled categories (if category labels are present).}
 \figlabel{datasets}
+\vspace*{-15pt}
+\end{figure}
+
+
+\subsection{Data Cleaning}
+Each object in Dex-Net is originally specified as a 3D mesh $\mX = \{\mV, \mT\}$ where $\mV = \{\bv_1, ..., \bv_V\}$ is a set of $V$ vertices such that $\bv_i \in \bR^3$ for $i = 1, ..., V$ and $\mT = \{t_1, ..., t_F\}$  is a set of $F$ triangles such that $t_j \in \mathbb{Z}_{+}^3$ for $j = 1, ..., F$.
+We preprocess each model by first removing unreferenced vertices and degenerate triangles.
+Next, we compute the object reference frame by performing Principal Component Analysis (PCA) on the vertices of the mesh and aligning the $z$-axis with the first principal component and the $y$-axis with the second principal component
+We then set the object center of mass $\bz$ to be the center of the bounding box for the reoriented mesh.
+Since synthetic models may not be specified in meters, we also rescale each mesh such that the smallest dimension of the bounding box lies within $w = 0.1m$, which is approximately the maximal opening width of a PR2 gripper.
+Finally, we convert each mesh to a signed distance field $f$ using SDFGen~\cite{sdfgen}, an open-source C++ tool.
+
+\subsection{Grasp Sampling}
+\seclabel{grasp-sampling}
+Each 3D object $\mO_i$ in Dex-Net is labelled with up to 250 parallel-jaw grasps and the $P_F$ for each.
+We generate candidate grasps using a modified version of the 2D algorithm presented in Smith et al.~\cite{smith1999computing} to concentrate samples on grasps that are antipodal~\cite{mahler2015gp}.
+Let $w$ be the maximal opening of the gripper, $\hat{\gamma}$ be a sampled friction coefficient, and $\mS $ be the set of points on the object surface for an SDF $f$ as described in \secref{grasp-param}.
+To sample a single grasp, we first generate a contact point $\bc_1$ by sampling uniformly from $\mC$ using rejection sampling.
+Next we sample a direction $\bv \in \bS^2$ uniformly at random from the cone and compute:
+%\vspace{-2ex}
+\begin{align*}
+	\bc_2 = \bc_1 + (w / 2 - t_2^*) \bv  &&  \bx = 0.5 (\bc_1 + \bc_2)
+\end{align*}
+\noindent where $t_2^*$ is defined in \secref{contact}.
+This yields a grasp $\bg_{i,k} = (\bx, \bv)$.
+We add $\bg_{i,k}$ to our candidate set if both $\bv^T \bn_1 \leq \cos(\arctan(\hat{\gamma}))$ and $\bv^T \bn_2 \leq \cos(\arctan(\hat{\gamma}))$.
+
+We then evaluate $P_F(\bg)$ using Monte-Carlo integration~\cite{kehoe2012toward} by sampling the object pose, gripper pose, and friction random variables $N_s$ times and recording $S_{i,k}$, the number of samples for which grasp $\bg_{i,k}$ was in force closure.
+Formally, our full dataset of $N_o$ 3D objects and $N_g$ grasps per object is $\mD = \{ (S_{i, k}, \mY_{i, k}) \big| i = \{1, ..., N_o\}, k = \{1, ..., N_g\} \}$ where $\mY_{i,k} = (\bg_{i, k}, \mO_i) \in \mM$ is a grasp-object pair in our Grasp Moduli Space.
+
+
+%We generate a set of grasps for each object in the network using the method of \secref{candidates} and evaluate the probability of force closure for each grasp using brute-force Monte Carlo integration as a benchmark~\cite{kehoe2012toward}.
+%As the number of models is quite large, we distribute the grasp labelling for each object across virtual machines in Google Compute Engine and aggregate the results at the end.
+
+\subsection{Object Similarity Embedding}
+\seclabel{object-similarity}
+In order to efficiently index prior 3D object and grasp data from Dex-Net, we embed each object in a Euclidean feature space in which similar objects are close together.
+Our similarity embedding is based on multi-view Convolutional Neural Networks (MV-CNNs)~\cite{su2015multi}, a state-of-the-art method for 3D shape retrieval that uses the powerful features leared by CNNs on millions of images~\cite{krizhevsky2012imagenet}.
+ 
+\figref{global-feature-model} illustrates our method.
+Let $R$ be the maximum dimension of the object bounding box.
+We first render every object on a white background in a total of $N_c = 50$ virtual camera views oriented toward the object center and discretized on a viewing sphere along angle increments $\delta_{\theta} = \frac{4 \pi}{N_c}$ and $\delta_{\phi} = \frac{2 \pi}{N_c}$ and radii $r = R, 2R$.
+Then we train a CNN with the architecture of AlexNet~\cite{krizhevsky2012imagenet} to predict the 3D object class label for the rendered images on a training set of models. 
+We initialize the weights of our network with the weights learned on ImageNet by Krizhevsky et al.~\cite{krizhevsky2012imagenet} and optimize using Stochastic Gradient Descent (SGD). 
+Next, we pass each of the $N_c$ views of each object through the optimized CNN and max-pool the output of the fc7 layer, the highest layer of the network before the class label prediction. 
+Finally, we use Principal Component Analysis (PCA) to reduce the max-pooled output to from 4028 dimensions to 100 dimensions.
+This yields our representation $\psi(\mO) \in \mathbb{R}^{100}$ for each object.
+Our method differs from the MV-CNN of Su et al.~\cite{su2015multi} because we use PCA for the final output, while Su et al. use a second CNN on the output of the pooled views. 
+
+Given the MV-CNN object representation, we measure the dissimilarity between two objects $\mO_i$ and $\mO_j$ by the Euclidean distance $\| \psi(\mO_i) - \psi(\mO_j) \|_2$.
+For efficient lookups of similar objects, Dex-Net contains a KD-Tree nearest neighbor query structure with the feature vectors of all prior objects.
+
+%In our implementation, we trained our MV-CNN using the Caffe library~\cite{jia2014caffe} on rendered images from a training set of approximately $6,000$ 3D models from the SHREC 2014 dataset ~\cite{li2015comparison} for 500,000 iterations of SGD, and the final PCA step captured approximately 85\% of the variance of the vectors.
+%The image classification training step had a test accuracy of 76\%.
+
+\begin{figure}[t!]
+\centering
+\includegraphics[scale=0.3]{figures/illustrations/cnn_model.png}
+\caption{Illustration of our method for embedding 3D object models in a Euclidean vector space for computing global shape similiarty. We pass a set of 50 virtually rendered camera viewpoints discretized around a sphere through a deep Convolutional Neural Network (CNN) with the AlexNet~\cite{krizhevsky2012imagenet} architecture. Finally, we take the maximum fc7 response across each of the 50 views for each dimension and run PCA to reduce the dimensionality of the output.}
+\figlabel{global-feature-model}
 \vspace*{-15pt}
 \end{figure}

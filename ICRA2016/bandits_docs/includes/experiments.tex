@@ -1,30 +1,25 @@
 \section{Experiments}
 \seclabel{experiments}
 
-\TODO{All experiments here are preliminary. Add new results from non-symmetric objects and more data}
-\TODO{Include experiments on sensitivity to uncertainty} \\
-\TODO{Images of selected grasps} \\
+\TODO{All experiments here are preliminary. Add new results from more objects, especially non-symmetric ones.} \\
+\TODO{Include experiments on sensitivity to uncertainty.} \\
+\TODO{Images of selected grasps.} \\
 
-We evaluated the convergence rate of Algorithm~\ref{alg:full} for varying sizes of prior data used from Dex-Net and examined the sensitivity to parameters of the algorithm.
-To test the generalization of our feature maps, we reserved objects from YCB and ModelNet as a test set, and used nested subsets of the remaining data as training data for optimizing the hyperparameters and for tuning the MAB convergence rate.
-We assumed a PR2 gripper for our grasps, which has a maximum width of approximately $10cm$.
-We assumed isotropic covariance with object and gripper translation variance $\sigma_{t} = 0.005$, object and gripper rotation variance $\sigma_{r} = 0.1$, and friction variance $\sigma_{\gamma} = 0.1$.
-The weights of our similarity kernel were selected using a grid search over possible values on a held-out validation set.
+We evaluated the convergence rate of Algorithm~\ref{alg:full} for varying sizes of prior data used from Dex-Net and examined the sensitivity of the convergence rate to the kernel bandwidths, number of nearest neighbors, and uncertainty.
+We created three nested training sets of 100, 1000, and 10000 objects by uniformly sampling objects from Dex-Net.
+From the remaining objects we created a set of 20 validation objects for selecting algorithm hyperparameters and a set of 30 objects for test data.
+We used isotropic covariance with object and gripper translation variance $\sigma_{t} = 0.005$, object and gripper rotation variance $\sigma_{r} = 0.1$, and friction variance $\sigma_{\gamma} = 0.1$.
+The bandwidths of our similarity kernel were set to scaling transformations $C = \sigma I$ where $\sigma \in \bR$ for the grasp parameter and global object feature maps, and a gaussian mask $C_d$ centered on the gradient heightmaps with height $w_d \in \bR$ and variance $\sigma_d \in \bR$.
+The bandwidths were selected by maximizing convergence rate on the validation set using a grid search over hyperparameters.
 
-\subsection{System}
-To handle the scale of the experiments, we developed a Cloud-based software library on top of Google Cloud services.
-We used Google Cloud Storage (GCS) to store the mesh models and to sample and evaluate 250 grasps per object.
-We used Google Compute Engine to distribute trials of MAB algorithms across objects, reducing the runtime of our large-scale experiments.
-Our master analysis script can launch up to 600 GCE single core instances, each running Ubuntu 12.04.
-When an instance is launched, we mounted Dex-Net via a persistent disk containing a particular set of objects and grasps.
-Each instance pulls our latest code from Github, runs a single python experiment script configured in a YAML file, compresses the results in an output directory, and uploads the results to GCS.
-After all instances complete, the master script turns off all instances, unmounts all disks, downloads the results from each instance, and sends the user a notification email.
-The results can be optionally analyzed by the master script.
+To handle the scale of the experiments, we developed a Cloud-based software library on top of Google Cloud Platform.
+We used Google Compute Engine to distribute trials of MAB algorithms across objects and Google Cloud Storage (GCS) to store Dex-Net.
+Our experimental scripts launched up to 1500 GCE single core instances at one time for hyperparameter tuning and convergence analysis, reducing the runtime of our experiments by a factor of nearly $1500\times$.
 
 \subsection{Rate of Convergence}
 \TODO{Replace with final versions. The current results are preliminary}
 
-~\figref{local-mab} shows the normalized $P_F$ (the ratio of the $P_F$ for the sampled grasp to the $P_F$ in the candidate grasp set) versus iteration averaged over 20 trials for a cereal box and flower pot.
+~\figref{local-mab} shows the normalized $P_F$ (the ratio of the $P_F$ for the sampled grasp to the highest $P_F$ in the candidate grasp set) versus iteration averaged over 20 trials for a cereal box and flower pot.
 The plot compares Algorithm~\ref{alg:full} with no prior data to uncorrelated Thompson sampling and uniform allocation, two methods used by Laskey et al.~\cite{laskey2015bandits}.
 We see that the CCBP model outperforms the uncorrelated model by approximately 10$\times$ for the cereal box but has comparable performance to Thompson sampling on the flower pot.
 Iniitial reuslts suggest that performance on the flower pot is poorer because few grasps are similar according to our feature representation.

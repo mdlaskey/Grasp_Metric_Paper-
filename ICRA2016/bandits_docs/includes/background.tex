@@ -8,7 +8,7 @@ We use Continuous Correlated Beta Processes (CCBPs) to model force closure for a
 
 \begin{figure}[t!]
 \centering
-\includegraphics[scale=0.22]{figures/illustrations/correlated_bandits.png}
+\includegraphics[scale=0.23]{figures/illustrations/correlated_bandits.png}
 \caption{(Top Left) Consider a set of grasps with fixed center at an object center of mass and approach direction sampled along a one-dimensional circle. (Top Right) The true probability of force closure $P_F$ as a function of the angle of the grasp axis. (Middle Left) Uncorrelated MAB models maintain an estimate of $P_F$ independently for each grasp, indicated by bars and their height. On iteration $T$ of a MAB algorithm, the evaluated grasp (green bar) is force closure for samples . (Middle Right) Only the estimate of $P_F$ for the sampled grasp is updated on iteration $T+1$, and the grasp with highest estimated $P_F$ remains suboptimal. (Bottom Left) Correlated MAB models maintain a global predictive function (red) of $P_F$ for any possible grasp but may select grasps from a set of discrete candidates (indicated by dots). (Bottom Right) On iteration $T+1$, the evaluated grasp (green dot) is sampl returns force closure and the global model is updated, increasing the estimated $P_F$ for ``nearby" grasps. Although a suboptimal grasp was sampled, the global model now correctly predicts the optimal grasp in the set. }
 \figlabel{correlated-motivation}
 \vspace*{-15pt}
@@ -41,9 +41,9 @@ A CCBP estimates the shape parameters for a grasp and object $\mY_{i,k} = (\bg_{
 The kernel approaches 1 as the arguments become increasingly similar and approaches 0 as the arguments become dissimilar.
 In this work we use a unit-bandwidth squared exponential kernel 
 \begin{align*}
-	k(\mY_p, \mY_q) &= \exp\left( - \frac{1}{2} \sum \limits_{m=1}^{N_f} w_m^2 \|\phi_m(\mY_p) - \phi_m(\mY_q)\|_2^2 \right)
+	k(\mY_p, \mY_q) &= \exp\left( - \frac{1}{2} \sum \limits_{m=1}^{N_f} \|\phi_m(\mY_p) - \phi_m(\mY_q)\|_{W_m}^2 \right)
 \end{align*}
-\noindent where $\phi_m: \mM \rightarrow \mathbb{R}^{d_m}$ for $m = 1, ..., N_f$ are feature mappings for a grasp and object to a $d_m$-dimensional Euclidean space and $w_m \in \mathbb{R}$ are weights scaling the relative contribution of the feature maps to the similarity metric.
+\noindent where $\phi_m: \mM \rightarrow \mathbb{R}^{d_m}$ for $m = 1, ..., N_f$ are feature mappings for a grasp and object to a $d_m$-dimensional Euclidean space, $W_m \in \mathbb{R}^{d_m \times d_m}$ are linear transformations scaling the relative contribution of the feature maps to the similarity metric, and $\| \phi \|_{W} = \phi^T W^T W \phi$.
 
 Before the first iteration of the MAB algorithm, we update our belief for each candidate grasp to its similarity to all grasps and objects from the database $\mD$ as measured by the kernel~\cite{goetschalckx2011continuous}:
 %\vspace{-2ex}
@@ -54,12 +54,12 @@ Before the first iteration of the MAB algorithm, we update our belief for each c
 \end{align}
 \noindent where $\alpha_{0}$ and $\beta_{0}$ are prior parameters for the Beta distribution~\cite{laskey2015bandits}.
 % and $\mS$ and $\mN$ are the number of successes and total trials for grasps in the database, respectively.
-Upon observing $F_{i,k}$ for grasp $\bg_{i,k}$ on iteration $t$, we update our belief $\theta_{j,k}$ for all other grasps on object $\mO_i$ by~\cite{goetschalckx2011continuous}:
+Upon observing $F_{i,k}$ for grasp $\bg_{i,k}$ on iteration $t$, we update our belief $\theta_{i, \ell}$ for all other grasps on object $\mO_i$ by~\cite{goetschalckx2011continuous}:
 
 \vspace{-2ex}
 \begin{align}
-	\alpha_{j,k,t} &= \alpha_{j,k,t-1} + k(\mY_{j,k}, \mY_{i,k}) F_{i,k} \label{eq:alpha} \\
-	\beta_{j,k,t} &= \beta_{j,k,t-1} + k(\mY_{j,k}, \mY_{i,k}) (1 - F_{i,k})\label{eq:beta}
+	\alpha_{i,\ell,t} &= \alpha_{j,\ell,t-1} + k(\mY_{i, \ell}, \mY_{i,k}) F_{i,k} \label{eq:alpha} \\
+	\beta_{i,\ell,t} &= \beta_{j,\ell,t-1} + k(\mY_{i,\ell}, \mY_{i,k}) (1 - F_{i,k})\label{eq:beta}
 \end{align}
 
 \noindent Intuitively, this allows observations of one grasp to constitute fractional observations of similar grasps.
@@ -88,7 +88,7 @@ Then we assign the heightmap value
 \end{align*}
  where $s_1 = -1$, $s_2 = 1$, $\epsilon$ is the surface threshold used for finding contacts, and $f$ is the SDF of object $\mO$. 
 Finally, we make the heightmap rotationally invariant by rotating it to align the axes with the eigenvectors of the weighted covariance matrix of contact points generating the heightmap as described in~\cite{tombariunique}.
-Our full feature vector for the heightmaps is $\phi_{h}(\bg_i, \mO_i) = [\bh_1, \bh_2]^T$. \TODO{This is slightly more complicated but takes a bit to explain; basically the ordering of contacts doesn't matter here}
+Our full feature vector for the heightmaps is $\phi_{h}(\bg_i, \mO_i) = [\bh_1, \bh_2]^T$. \TODO{Describe symmetrization of heightmaps for contacts.}
 \figref{local-feature-model} illustrates local surface patches extracted by this procedure.
 
 \begin{figure}[t!]
@@ -118,23 +118,13 @@ In our implementation, we trained the multi-view CNN on rendered images of 171 c
 
 %\TODO{Expand above paragraph, include more details on method as well as the results of training}
 
-\begin{figure}[t!]
-\centering
-\includegraphics[scale=0.3]{figures/illustrations/cnn_model.png}
-\caption{Illustration of our method for embedding 3D object models in a Euclidean vector space for computing global shape similiarty. We pass a set of 50 virtually rendered camera viewpoints discretized around a sphere through a deep Convolutional Neural Network (CNN) with the AlexNet~\cite{krizhevsky2012imagenet} architecture. Finally, we take the maximum fc7 response across each of the 50 views for each dimension and run PCA to reduce the dimensionality of the output.}
-\figlabel{global-feature-model}
-\vspace*{-15pt}
-\end{figure}
-
 \subsection{Optimizing Feature Weights}
 One remaining issue is the selection of the relative feature weights $w_1, ..., w_{N_f}$.
-%Past work has optimized these weights using a squared error loss on the probability of success predicted by the CCBP and a true probability of success from brute force evaluation~\cite{montesano2012active}.
-%However, this criterion may be inappropriate for predicting probabilities, as the predictions must be bounded between 0 and 1.
-We select the weights that minimize the cross entropy loss~\cite{}:
+We select the weights that minimize the cross entropy loss~\cite{de2005tutorial}:
 
 \begin{align*}
 	w_1^*, ..., w_{N_f}^* = \myargmin{w_1, ..., w_{N_f} \geq 0} \frac{1}{M} \sum \limits_{i=1}^M &\mu_i \log \left( \frac{\alpha_i}{\alpha_i + \beta_i} \right) + \\  &(1 - \mu_i) \log \left( \frac{\beta_i}{\alpha_i + \beta_i} \right)
 \end{align*}
 \noindent where $\alpha_i$ and $\beta_i$ are the posterior shape parameters given by Equations~\ref{eq:alpha-prior} and~\ref{eq:beta-prior} and $\mu_i$ is the probability of force closure evaluated by exhaustive Monte-Carlo integration for a set of $M$ grasps.
 We optimize this objective using SGD with the weights initialized to $w_i = 100$ for all $i$.
-\TODO{For experiments so far we actually use a grid search and not SGD but we are interested in using this.}
+\TODO{For experiments so far we actually use a grid search and not SGD but we are interested in using this in final experiments.}

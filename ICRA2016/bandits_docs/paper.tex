@@ -41,6 +41,9 @@
 \usetikzlibrary{positioning,shapes,shadows,arrows, calc, fit, backgrounds, arrows, positioning}
 \tikzexternalize[prefix=tikz/]
 
+\usepackage[switch, columnwise]{lineno}
+\linenumbers
+
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
 \input{includes/preamble.tex}
@@ -48,20 +51,19 @@
 \begin{document}
 \title{\LARGE \bf Dex-Net 1.0: A Cloud-Based Network of 3D Objects and Parallel-Jaw Grasps and a Multi-Armed Bandit Algorithm with Correlated Rewards for Robust Grasp Planning at Scale
 %Correlated Multi-Armed Bandit Models for Large Scale 3D Grasp Planning Under Uncertainty
-		\versionline{6}}
+		\versionline{7}}
 \author{Jeffrey Mahler$^1$, Florian Pokorny$^1$, Brian Hou$^1$, Melrose Roderick$^1$, Michael Laskey$^1$, Mathieu Aubry$^{1,3}$, \\
-Kai Kohlhoff$^4$, Torsten Kroeger$^4$, James Kuffner$^4$, Ken Goldberg$^2$
+Kai Kohlhoff$^4$, Torsten Kroeger$^4$, James Kuffner$^4$, Ken Goldberg$^{1,2}$
 \thanks{$^1$Department of Electrical Engineering and Computer Sciences; {\tt\small \{jmahler, ftpokorny, brian.hou\}@berkeley.edu, melrose\_roderick@brown.edu}}%
 \thanks{$^2$Department of Industrial Engineering and Operations Research; {\tt\small goldberg@berkeley.edu}}%
 \thanks{$^{1-2}$ University of California, Berkeley, USA}%
-\thanks{$^3$ Universite Paris-Est, LIGM (UMR CNRS 8049), ENPC, France. {\tt\small mathieu.aubry@enpc.fc}}%
+\thanks{$^3$ Universit\'e Paris-Est, LIGM (UMR CNRS 8049), ENPC, France. {\tt\small mathieu.aubry@enpc.fc}}%
 \thanks{$^4$ Google Inc., Mountain View, USA; {\tt\small \{kohlhoff, tkr, kuffner\}@google.com}}
 }
 \maketitle
 
 %\TODO{Possibly will include Matthieu Aubry, Alyosha Efros, and Pieter Abbeel as coauthors} \\
 %\TODO{Update number of models in title: I want it to reflect exactly how many we use in experiments}
-\TODO{Convert figures to pdfs} \\
 \TODO{Trim paper to 8 pages} \\
 \input{includes/abstract}
 %
@@ -79,9 +81,9 @@ Kai Kohlhoff$^4$, Torsten Kroeger$^4$, James Kuffner$^4$, Ken Goldberg$^2$
 %\include{includes/proofs}
 
 \section{Acknowledgments}
-This research was performed with UC Berkeley's Automation Sciences Lab under the UC Berkeley Center for Information Technology in the Interest of Society (CITRIS) "People and Robots" Initiative: http://robotics.citris-uc.org.
+This research was performed in UC Berkeley's Automation Sciences Lab under the UC Berkeley Center for Information Technology in the Interest of Society (CITRIS) "People and Robots" Initiative: http://robotics.citris-uc.org.
 The authors were supported in part by the U.S. National Science Foundation under NRI Award IIS-1227536, and by grants from Google, Cisco, and UC Berkeley's Algorithms, Machines, and People Lab.
-We thank our colleagues who wrote code for the project, in particular Raul Puri, Sahanna Suri, Nikhil Sharma, and Josh Price, as well as our colleagues who gave feedback and suggestions, in particular Pieter Abbeel, Matthieu Aubry, Alyosha Efros, Animesh Garg, Kevin Jameison, Sanjay Krishnan, Zoe McCarthy, Stephen McKinley, Sachin Patil, Nan Tian, and Jur van den Berg.
+We thank our colleagues who wrote code for the project, in particular Raul Puri, Sahanna Suri, Nikhil Sharma, and Josh Price, as well as our colleagues who gave feedback and suggestions, in particular Pieter Abbeel, Matthieu Aubry, Alyosha Efros, Animesh Garg, Kevin Jameison, Sanjay Krishnan, Sergey Levine, Zoe McCarthy, Stephen McKinley, Sachin Patil, Nan Tian, and Jur van den Berg.
 
 %\balance
 \bibliographystyle{IEEEtranS}

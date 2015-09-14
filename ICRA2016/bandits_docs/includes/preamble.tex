@@ -7,6 +7,12 @@
 \usepackage{bigstrut}
 \usepackage{subcaption}
 
+
+\usepackage{tabularx}
+\usepackage{pbox}
+\usepackage{ragged2e}
+\usepackage{multirow}
+
 \setlength\bigstrutjot{3pt}
 %\usepackage{pgfplots}
 %\pgfplotsset{compat=newest}
@@ -191,9 +197,13 @@
 \captionsetup{font={footnotesize}}
 
 \newcommand{\specialcell}[2][c]{ \begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+\newcolumntype{L}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}
+\newcolumntype{R}[1]{>{\RaggedLeft\hspace{0pt}}p{#1}}
 
 \newcommand\independent{\protect\mathpalette{\protect\independenT}{\perp}}
 \def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+
+\newcommand{\nonl}{\renewcommand{\nl}{\let\nl\oldnl}}
 
 \newcommand{\limit}[1] {\underset{#1}{\text{lim }}}
 \newcommand{\infimum}[1] {\underset{#1}{\text{inf }}}

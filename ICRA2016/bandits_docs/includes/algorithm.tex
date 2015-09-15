@@ -1,10 +1,10 @@
 \section{Correlated Multi-Armed Bandit Algorithm}
 \seclabel{algorithm}
-Our algorithm (see Algorithm~\ref{alg:full}) optimizes $P_F$ over a set of candidate grasps on a new object $\mO$ using Multi-Armed Bandits (MABs) with correlated rewards~\cite{hoffman2013exploiting, pandey2007multi} and priors computed from Dex-Net 1.0.
+The Dex-Net 1.0 algorithm (see below) optimizes $P_F$ over a set of candidate grasps on a new object $\mO$ using Multi-Armed Bandits (MABs) with correlated rewards~\cite{hoffman2013exploiting, pandey2007multi} and priors computed from Dex-Net 1.0.
 We first generate a set of candidate grasps $\Gamma$ for object $\mO$ using the antipodal grasp sampling described in \secref{grasp-sampling} and predict a prior distribution for each grasp using the Dex-Net database $\mD$.
 Next, we run MAB by selecting a grasp using Thompson sampling~\cite{laskey2015bandits, oberlin2015autonomously}, sampling from our uncertainty random variables, determining force closure for the grasp on the sampled variables as described in \secref{quality}, and updating a belief distribution on the $P_F$ for each grasp.
 Finally, we return the grasp for which the belief distribution has the maximum lower confidence bound, a conservative estimate of the grasp with the highest estimated $P_F$.
-We acknowledge that many alternatives for grasp sampling exist~\cite{kroemer2010combining, montesano2012active, oberlin2015autonomously}, however in this work we are interested in studying the scaling effects for a fixed selection method.
+We acknowledge alternatives for grasp selection on each iteration~\cite{kroemer2010combining, laskey2015bandits, montesano2012active, oberlin2015autonomously}, but use Thompson sampling to study the scaling effects for a fixed selection method.
 
 \begin{algorithm}
 {\small
@@ -38,17 +38,17 @@ We acknowledge that many alternatives for grasp sampling exist~\cite{kroemer2010
 
 \subsection{Belief Distribution Model}
 \seclabel{belief}
-Let $\mO$ denote the input object to Algorithm~\ref{alg:full}, and let $\Gamma$ be the set of $N_g$ candidate grasps generated for $\mO$.
+Let $\mO$ denote the test object to label with the Dex-Net Algorithm, and let $\Gamma$ be the set of $N_g$ candidate grasps generated for $\mO$.
+Our Bayesian MAB algorithm works by maintaining a belief on the $P_F$ for each grasp that is updated with every new force closure evaluation, assigning increasingly high probability to the true $P_F$. 
 We define $F_{j} = F(\bg_{j}) \in \{0, 1\}$ as force closure on an evaluation of any grasp $\bg_{j} \in \Gamma$ from samples of object pose, gripper pose, and friction as described in \secref{quality}.
 Under our model, $F_j$ is a Bernoulli random variable with probability of success $\theta_{j}= P_F(\bg_{j})$.
-Since $\theta_j$ is unknown, our algorithm maintains a posterior belief distribution for each $\theta_j$ based on the outcome of past force closure evaluations.
-Our belief distribution on the Bernoulli parameter $\theta_{j}$ is a Beta distribution~\cite{hoffman2013exploiting, laskey2015bandits}, which is specified by shape parameters $\alpha > 0$ and $\beta > 0$:
+Since $\theta_j$ is unknown, our algorithm maintains a posterior belief distribution on the Bernoulli parameter $\theta_{j}$ using a Beta distribution~\cite{hoffman2013exploiting, laskey2015bandits}, which is specified by shape parameters $\alpha > 0$ and $\beta > 0$:
 
-\vspace{-2ex}
+\vspace{-4ex}
 \begin{align*}
-	\betadist(\alpha, \beta) = \frac{1}{B(\alpha, \beta)} \theta_j^{\alpha-1} (1 - \theta_j)^{\beta-1}
+	\betadist(\alpha, \beta) = \left( 1 / B(\alpha, \beta) \right) \theta_j^{\alpha-1} (1 - \theta_j)^{\beta-1}
 \end{align*}
-\noindent Our Bayesian MAB algorithms updates this belief for every new force closure evaluation, converging toward a delta distribution on the true $P_F$. 
+\noindent where $B$ is a normalization constant.
 
 \subsection{Predicting Grasp Quality Using Prior Data}
 \seclabel{ccbps}
@@ -68,7 +68,7 @@ Given the feature maps, we use the squared exponential kernel
 	k(\mY_p, \mY_q) &= \exp\left( - \frac{1}{2} \sum \limits_{m=1}^{3} \|\phi_m(\mY_p) - \phi_m(\mY_q)\|_{C_m}^2 \right).
 \end{align*}
 \noindent where $C_m \in \bR^{d_m \times d_m}$ is the bandwidth for $\phi_m$ and $\| \by \|_{C_m} = \by^T (C_m^T C_m)^{-1} \by$.
-The bandwidths are hyperparameters of the algorithm that are be set by maximizing the log-likelihood~\cite{goetschalckx2011continuous} of the true $P_F$ for grasps under the model on a set of training data~\cite{rasmussen2006}.
+The bandwidths are hyperparameters of the algorithm that are set by maximizing the log-likelihood~\cite{goetschalckx2011continuous} of the true $P_F$ under the CCBP on a set of training data.
 
 We form a prior belief distribution for each candidate grasp in $\Gamma$ based on its its similarity to all grasps and objects from the Dex-Net 1.0 database $\mD$ as measured by the kernel~\cite{goetschalckx2011continuous}:
 %\vspace{-2ex}

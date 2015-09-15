@@ -2,46 +2,40 @@
 \seclabel{related}
 
 Robust grasp planning considers the problem of finding a set of grasps for an object that may succeed over perturbations in object shape,  object pose, and environment configurations due to uncertainty resulting from imprecision in perception and control.
-Research on grasp planning for precisely known objects and environments has focused on finding grasps by maximizing an analytic grasp quality metric based on a wrench space (WS)~\cite{ferrari1992, liu2015fast}.
-The need to recompute WS metrics for every new 3D object and grasp motivated research on grasp planning by transferring grasps from similar 3D objects in a database of prior knowledge~\cite{li2005shape}.
-To study grasp planning at scale, Goldfeder et al.~\cite{goldfeder2009columbia} developed the Columbia grasp database, a dataset of 1,814 distinct models and over 200,000 force closure grasps generated in GraspIt!, and matched robot sensor data to synthetic depth maps of objects in the database using Iterated Closest Point to retrieve precomputed grasps for execution on a physical robot~\cite{goldfeder2011data}.
-This led to research on methods for transferring grasps from objects in databases, such as warping contacts betwen corresponding points on a shape surface and using local alignment and contact interpolation~\cite{stouraitis2015functional} or interpolating grasps and shapes over a vector space representation called a Grasp Moduli Space~\cite{pokorny2013grasp}.
+Research on grasp planning for precisely known objects and environments has largely focused on finding grasps by maximizing an analytic grasp quality metric based on a Wrench Space (WS)~\cite{pokorny2013c}.
+The need to recompute WS metrics for every new 3D object and grasp motivated research on grasp planning by transferring grasps from similar 3D objects in a database of prior knowledge~\cite{bohg2014data}.
+To study grasp planning at scale, Goldfeder et al.~\cite{goldfeder2009columbia, goldfeder2011data} developed the Columbia grasp database, a dataset of 1,814 distinct models and over 200,000 force closure grasps generated in GraspIt!.
+%, and matched robot sensor data to synthetic depth maps of objects in the database using Iterated Closest Point to retrieve precomputed grasps for execution on a physical robot~\cite{goldfeder2011data}.
+This led to research on methods for transferring grasps from objects in databases, such as warping contacts~\cite{stouraitis2015functional} or interpolating grasps and shapes over a Grasp Moduli Space~\cite{pokorny2013grasp}.
 
-Recent research has also studied labelling grasps in a database with metrics that are robust to imprecision in perception and control.
-%, due to the fragility of analytic WS grasp metrics~\cite{balasubramanian2012physical, diankov2010automated, weisz2012pose}.
-Weisz et al.~\cite{weisz2012pose} and Kim et al.~\cite{kim2012physically} found that grasps ranked by probability of force closure or Ferrari-Canny quality subject to perturbations of object pose in simulation were empirically more successful on a physical robot than grasps planned using deterministic WS metrics.
-Hsiao et al.~\cite{hsiao2011bayesian} developed a Bayesian framework for grasp success on physical robot under uncertainty in object shape, object pose, and robot control and used GraspIt! to estimate the probability of success on a database of 892 point clouds of 3D objects.
-%Similarly, Kim et al.~\cite{kim2012physically} planned grasps using the expected Ferrari-Canny quality~\cite{ferrari1992} under uncertainty in object pose using dynamic simulation to determine contacts, and found that the robust metric was more highly correlated with physical grasp success.
-Kehoe et al.~\cite{kehoe2013cloud} created a Cloud-based system to transfer grasps evaluated by probability of force closure on objects in a database to a physical robot by indexing the objects with the Google Goggles object recognition engine.
-The authors found that the full system of object recognition, pose estimation, and grasp execution successfully grasped objects on a table in 80\% of trials.
+Recent research has studied labelling grasps in a database with metrics that are robust to imprecision in perception and control using probability of force closure ($P_F$)~\cite{weisz2012pose} or expected Ferrari-Canny quality~\cite{kim2012physically}.
+Experiments by Weisz et al.~\cite{weisz2012pose} and Kim et al.~\cite{kim2012physically} suggest that the robust metrics are better correlated with success on a physical robot than deterministic WS metrics.
+Kehoe et al.~\cite{kehoe2013cloud} created a Cloud-based system to transfer grasps evaluated by $P_F$ on 100 objects in a database to a physical robot by indexing the objects with the Google Goggles object recognition engine, and achieved 80\% success in grasping objects on a table.
 
-Another line of research has focused on synthesizing grasps using statistical models learned from a databse of images~\cite{lenz2015deep} or point clouds~\cite{detry2013learning, herzog2014learning} of objects annotated with grasps decided by humans or physical execution~\cite{bohg2014data}.
-%Saxena et al.~\cite{jiang2011efficient, saxena2008robotic} used a logistic regression classified to predict grasp affordances in images from human annotated training data.
-%Much research in this area has been concerned with learning a set of grasp affordance features from images~\cite{lenz2015deep, saxena2008robotic} or point clouds~\cite{detry2013learning, herzog2014learning}.
-Herzog et al.~\cite{herzog2014learning} extracted heightmaps of local object curvature from human demonstrated grasps to construct a library of heightmap templates, and matched new sensor data to templates to select grasps similar to demonstrations.
+Another line of research has focused on synthesizing grasps using statistical models~\cite{bohg2014data} learned from a database of images~\cite{lenz2015deep} or point clouds~\cite{detry2013learning, herzog2014learning, zhang2011graspable} of objects annotated with grasps decided by humans~\cite{herzog2014learning, lenz2015deep} or physical execution~\cite{herzog2014learning}.
 Kappler et al.~\cite{kappler2015leveraging} created a database of over 700 object instances each labelled with 500 Barrett hand grasps and their associated quality from human annotations and the results of simulations with the ODE physics engine.
 The authors trained a deep neural network to predict grasp quality from heightmaps of the local object surface.
-In comparison, we learn a model that predicts a belief distribution on the probability of force closure for parallel-jaw grasps on a new object based on similarity to prior 3D objects and grasps, and we demonstrate that the predicted belief can be used to reduce the number samples needed to plan a robust grasp with Multi-Armed Bandits.
+In comparison, we learn a model predictive model of $P_F$ for parallel-jaw grasps on a new object based on similarity to prior 3D objects and grasps, and use our model for robust grasp planning with Multi-Armed Bandits (MAB).
 
-Our work is also closely related to research on actively sampling grasps to build a predictive model of grasp quality from fewer examples~\cite{detry2011learning, kehoe2012estimating, kroemer2010combining, salganicoff1996active}.
+Our work is also closely related to research on actively sampling grasps to build a statistical model of grasp quality from fewer examples~\cite{detry2011learning, kroemer2010combining, salganicoff1996active}.
 %Kehoe et al.~\cite{kehoe2012estimating} proposed iterative pruning, an algorithm for evaluating the probability of force closure for a set of candidate grasps while discarding grasps known to have poor quality.
 %Detry et al.~\cite{detry2011learning} estimated a full continuous density function over grasp poses using kernel density estimation and adaptively acquired samples by pruning unsuccessful grasps.
 %Kroemer et al.~\cite{kroemer2010combining} developed a reinforcement learning approach to grasp selection based on seeding hypotheses via imitation learning and Gaussian process upper-confidence bounds for active grasp acquisition.
 %Boularias et al.~\cite{boularias2014efficient, boularias2015learning} used a Gaussian process Bayesian Optimization model for selecting grasps on cluttered piles of rocks.
 %Salaganicoff et al.~\cite{salganicoff1996active} used active learning to decide the next grasp to execute on a physical robot while learning a predicitve model of empirical success from range sensors.
-Montesano and Lopes~\cite{montesano2012active} used Continuous Correlated Beta Processes~\cite{goetschalckx2011continuous} to actively acquire grasp executions on a physical robot, measuring correlations from the responses to a bank of image filters designed to detect grasp affordances such as edges.
-However, their approach does not incorporate prior knowledge.
-Oberlin and Tellex~\cite{oberlin2015autonomously} developed a confidence-bound based Multi-Armed Bandit (MAB) algorithm for planning parallel-jaw grasps using prior information on short time horizons, but do not study the effects of orders of magnitude of prior data on convergence.
-Recently, Laskey et al.~\cite{laskey2015bandits} used Multi-Armed Bandit (MAB) algorithms to reduce the number of samples needed to identify grasps with high probability of force closure under uncertainty in object shape, pose, and friction in 2D.
+Montesano and Lopes~\cite{montesano2012active} used Continuous Correlated Beta Processes~\cite{goetschalckx2011continuous} to actively acquire grasp executions on a physical robot, and measured correlations from the responses to a bank of image filters designed to detect grasp affordances such as edges.
+Oberlin and Tellex~\cite{oberlin2015autonomously} developed a confidence-bound based MAB algorithm for planning parallel-jaw grasps using prior information on short time horizons, but do not study the effects of orders of magnitude of prior data on convergence.
+Recently, Laskey et al.~\cite{laskey2015bandits} used MAB algorithms to reduce the number of samples needed to identify grasps with high $P_F$ under uncertainty in object shape, pose, and friction in 2D.
 %MAB algorithms trade off gaining information about grasps that have been sampled fewer times with exploiting the grasp with the highest estimated quality given the past samples.
-In this work we extend the model of Laskey et al.~\cite{laskey2015bandits} to 3D and study the scaling effects of using prior data from Dex-Net on planning grasps with high probability of force closure.
+In this work we extend the model of~\cite{laskey2015bandits} to 3D and study the scaling effects of using prior data from Dex-Net on planning grasps with high $P_F$.
 
 % DEEP LEARNING
-To use the prior information contained in our database on a new model, we also draw on past research on 3D model similarity.
-One line of past research has focused on encoding geometric characteristics of a shape, such as its curvature, characteristics of the harmonic functions on the shape~\cite{bronstein2011shape, horn1984extended, kazhdan2003rotation}, or using CNNs trained on a voxel representation of shapes~\cite{maturana2015voxnet, wu20153d}.
-On the other hand, view-based descriptors rely on the description of rendered views of a 3D model~\cite{chen2003visual, goldfeder2011data}.
-One of the key difficulty of these methods is to aggregate or compare views from different objects, which may be oriented consistently.
-The recent work of Su et al.~\cite{su2015multi} addresses this issue by using CNN trained for ImageNet classification as descriptors for the different views, aggregating the views with a second CNN that learns the invariance to orientation.
+To use the prior information contained in Dex-Net, we also draw on research on 3D model similarity.
+One line of research has focused on shape geometry, such as characteristics of harmonic functions on the shape~\cite{bronstein2011shape}, or CNNs trained on a voxel representation of shape~\cite{maturana2015voxnet, wu20153d}.
+Onother line of research relies on the description of rendered views of a 3D model~\cite{chen2003visual, goldfeder2011data}.
+One of the key difficulty of these methods is to aggregate or compare views from different objects, which may be oriented inconsistently.
+The recent work of Su et al.~\cite{su2015multi} addresses this issue by using CNN trained for ImageNet classification as descriptors for the different views and aggregating them with a second CNN that learns the invariance to orientation.
 Using this method, the authors improve state-of-the-art classification accuracy on ModelNet40 by 10\%.
-We use a max-pooling to aggregate views, inspired by recent results using axerage pooling~\cite{aubry2015understanding} proposed a simpler average pooling of the features from different views.
+We use a max-pooling to aggregate views, similar to the average pooling proposed in~\cite{aubry2015understanding}.
+% proposed a simpler average pooling of the features from different views.
 

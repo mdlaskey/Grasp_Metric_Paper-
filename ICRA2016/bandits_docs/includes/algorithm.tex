@@ -2,9 +2,9 @@
 \seclabel{algorithm}
 The Dex-Net 1.0 algorithm (see below) optimizes $P_F$ over a set of candidate grasps on a new object $\mO$ using Multi-Armed Bandits (MABs) with correlated rewards~\cite{hoffman2013exploiting, pandey2007multi} and priors computed from Dex-Net 1.0.
 We first generate a set of candidate grasps $\Gamma$ for object $\mO$ using the antipodal grasp sampling described in \secref{grasp-sampling} and predict a prior distribution for each grasp using the Dex-Net database $\mD$.
-Next, we run MAB by selecting a grasp using Thompson sampling~\cite{laskey2015bandits, oberlin2015autonomously}, sampling from our uncertainty random variables, determining force closure for the grasp on the sampled variables as described in \secref{quality}, and updating a belief distribution on the $P_F$ for each grasp.
-Finally, we return the grasp for which the belief distribution has the maximum lower confidence bound, a conservative estimate of the grasp with the highest estimated $P_F$.
-We acknowledge alternatives for grasp selection on each iteration~\cite{kroemer2010combining, laskey2015bandits, montesano2012active, oberlin2015autonomously}, but use Thompson sampling to study the scaling effects for a fixed selection method.
+Next, we run MAB by selecting a grasp using Thompson sampling~\cite{laskey2015bandits, oberlin2015autonomously}, sampling from the uncertainty random variables, determining force closure for the grasp on the sampled variables as described in \secref{quality}, and updating a belief distribution on the $P_F$ for each grasp.
+Finally, we rank the grasps in $\Gamma$ by the maximum $p$-lower confidence bound, a conservative estimate of the $P_F$ of each grasp, and store the ranking in the database.
+We use Thompson sampling to study the scaling effects for a fixed grasp selection method and plan to study other methods based on confidence bounds~\cite{kroemer2010combining, oberlin2015autonomously} or Gittins indices~\cite{laskey2015bandits} in future work.
 
 \begin{algorithm}
 {\small
@@ -39,10 +39,10 @@ We acknowledge alternatives for grasp selection on each iteration~\cite{kroemer2
 \subsection{Belief Distribution Model}
 \seclabel{belief}
 Let $\mO$ denote the test object to label with the Dex-Net Algorithm, and let $\Gamma$ be the set of $N_g$ candidate grasps generated for $\mO$.
-Our Bayesian MAB algorithm works by maintaining a belief on the $P_F$ for each grasp that is updated with every new force closure evaluation, assigning increasingly high probability to the true $P_F$. 
 We define $F_{j} = F(\bg_{j}) \in \{0, 1\}$ as force closure on an evaluation of any grasp $\bg_{j} \in \Gamma$ from samples of object pose, gripper pose, and friction as described in \secref{quality}.
-Under our model, $F_j$ is a Bernoulli random variable with probability of success $\theta_{j}= P_F(\bg_{j})$.
-Since $\theta_j$ is unknown, our algorithm maintains a posterior belief distribution on the Bernoulli parameter $\theta_{j}$ using a Beta distribution~\cite{hoffman2013exploiting, laskey2015bandits}, which is specified by shape parameters $\alpha > 0$ and $\beta > 0$:
+Under the model, $F_j$ is a Bernoulli random variable with probability of success $\theta_{j}= P_F(\bg_{j})$.
+Since $\theta_j$ is unknown, the algorithm maintains a posterior Beta belief distribution on the Bernoulli parameter $\theta_{j}$ that is updated with every new observation of $F$, assigning increasingly high probability to the true $P_F$. 
+The Beta distribution~\cite{hoffman2013exploiting, laskey2015bandits} is specified by shape parameters $\alpha > 0$ and $\beta > 0$:
 
 \vspace{-4ex}
 \begin{align*}
@@ -52,23 +52,23 @@ Since $\theta_j$ is unknown, our algorithm maintains a posterior belief distribu
 
 \subsection{Predicting Grasp Quality Using Prior Data}
 \seclabel{ccbps}
-We use Continuous Correlated Beta Processes (CCBPs)~\cite{goetschalckx2011continuous, montesano2012active} to model correlations between the $P_F$ of grasps on different objects, which allows us to utilize prior grasp and object data from Dex-Net 1.0.
+We use Continuous Correlated Beta Processes (CCBPs)~\cite{goetschalckx2011continuous, montesano2012active} to model correlations between the $P_F$ of grasps on different objects, which allows us to utilize prior grasp and object data from Dex-Net.
 CCBPs model correlations between Bernoulli random variables in a Beta-Bernoulli process, which exist when the variables depend on common latent factors.
-In our context, two grasps on an object may have similar $P_F$ when they contact the object at similar locations, as evidenced by Lipschitz bounds on grasp WS metrics~\cite{pokorny2013c}.
+Two grasps on an object may have similar $P_F$ when they contact the object at similar locations, as evidenced by Lipschitz bounds on grasp WS metrics~\cite{pokorny2013c}.
 
 A CCBP estimates the shape parameters for a grasp-object pair $\mY_{j} = (\bg_{j}, \mO_{i}) \in \mM$ using a normalized kernel function $k(\mY_p, \mY_q) : \mM \times \mM \rightarrow [0,1]$ that measures similarity between a pair of grasps and objects from the Grasp Moduli Space $\mM$.
 The kernel approaches 1 as the arguments become increasingly similar and approaches 0 as the arguments become dissimilar.
 
 We measure similarity using a set of feature maps $\phi_m: \mM \rightarrow \mathbb{R}^{d_m}$ for $m = 1, ..., 3$, where $d_m$ is the dimension of the feature space for each.
-Our first feature map $\phi_{1}(\mY) = (\bx, \bv, \| \rho_1 \|_2, \| \rho_2 \|_2)$ captures similiarity in the grasp parameters, where $\bx \in \bR^3$ is the grasp center, $\bv \in \bS^2$ is the grasp approach, and $\rho_i \in \bR^3$ is the $i$-th moment arm.
-To capture local surface geometry, our second feature map $\phi_{2} = \eta$, where $\eta$ is the differential heightmap described in \secref{grasp-similarity}.
+The first feature map $\phi_{1}(\mY) = (\bx, \bv, \| \rho_1 \|_2, \| \rho_2 \|_2)$ captures similiarity in the grasp parameters, where $\bx \in \bR^3$ is the grasp center, $\bv \in \bS^2$ is the grasp approach, and $\rho_i \in \bR^3$ is the $i$-th moment arm.
+To capture local surface geometry, the second feature map $\phi_{2}(\mY) = \eta(\bg, \mO)$, where $\eta$ is the differential heightmap described in \secref{grasp-similarity}.
 To capture global shape information, our third feature map $\phi_{3}(\mY) = \psi(\mO)$, where $\psi$ is our object similiary map described in \secref{object-similarity}.
 Given the feature maps, we use the squared exponential kernel 
 \begin{align*}
 	k(\mY_p, \mY_q) &= \exp\left( - \frac{1}{2} \sum \limits_{m=1}^{3} \|\phi_m(\mY_p) - \phi_m(\mY_q)\|_{C_m}^2 \right).
 \end{align*}
-\noindent where $C_m \in \bR^{d_m \times d_m}$ is the bandwidth for $\phi_m$ and $\| \by \|_{C_m} = \by^T (C_m^T C_m)^{-1} \by$.
-The bandwidths are hyperparameters of the algorithm that are set by maximizing the log-likelihood~\cite{goetschalckx2011continuous} of the true $P_F$ under the CCBP on a set of training data.
+\noindent where $C_m \in \bR^{d_m \times d_m}$ is the inverse bandwidth for $\phi_m$ and $\| \by \|_{C_m} = \by^T C_m^T C_m \by$.
+The bandwidths are set by maximizing the log-likelihood~\cite{goetschalckx2011continuous} of the true $P_F$ under the CCBP on a set of training data.
 
 We form a prior belief distribution for each candidate grasp in $\Gamma$ based on its its similarity to all grasps and objects from the Dex-Net 1.0 database $\mD$ as measured by the kernel~\cite{goetschalckx2011continuous}:
 %\vspace{-2ex}

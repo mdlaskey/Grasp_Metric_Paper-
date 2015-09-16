@@ -5,17 +5,17 @@ Grasp planning considers the problem of finding grasps for a given object that a
 Usually it is assumed that the object is known exactly and that contacts are placed exactly, and mechanical wrench space analysis is applied.
 Robust grasp planning considers the same problem in the presence of bounded perturbations in properties such as object shape, pose, or mechanical properties such as friction, which are inevitable due to imprecision in perception and control.
 One way to treat perturbations is statistical sampling.
-Since sampling in high dimensions can be computationally demanding, recent work has explored how a robust grasps computed from one object can guide the search for robust grasps on similar objects~\cite{bohg2014data}, for example by warping contacts~\cite{stouraitis2015functional} or interpolating grasps and shapes over a Grasp Moduli Space~\cite{pokorny2013grasp}.
+Since sampling in high dimensions can be computationally demanding, recent work has explored how a robust grasp computed from one object can guide the search for robust grasps on similar objects~\cite{bohg2014data}, for example by warping contacts~\cite{stouraitis2015functional} or interpolating grasps and shapes over a Grasp Moduli Space~\cite{pokorny2013grasp}.
 To study grasp planning at scale, Goldfeder et al.~\cite{goldfeder2009columbia, goldfeder2011data} developed the Columbia grasp database, a dataset of 1,814 distinct models and over 200,000 force closure grasps generated using the GraspIt! stochastic sampling-based grasp planner.
 %This led to research on methods for transferring grasps from objects in databases, such as warping contacts~\cite{stouraitis2015functional} or interpolating grasps and shapes over a Grasp Moduli Space~\cite{pokorny2013grasp}.
 
 Recent research has studied labelling grasps in a database with metrics that are robust to imprecision in perception and control using probability of force closure ($P_F$)~\cite{weisz2012pose} or expected Ferrari-Canny quality~\cite{kim2012physically}.
-Experiments by Weisz et al.~\cite{weisz2012pose} and Kim et al.~\cite{kim2012physically} suggest that the robust metrics are better correlated with success on a physical robot than deterministic WS metrics.
+Experiments by Weisz et al.~\cite{weisz2012pose} and Kim et al.~\cite{kim2012physically} suggest that the robust metrics are better correlated with success on a physical robot than deterministic wrench space metrics.
 Brook et al.~\cite{brook2011collaborative} planned robust grasps for a database of 892 point clouds and developed a model to predict grasp success on a physical robot based on correlations with grasps in the database.   
 Kehoe et al.~\cite{kehoe2013cloud} created a Cloud-based system to transfer grasps evaluated by $P_F$ on 100 objects in a database to a physical robot by indexing the objects with the Google Goggles object recognition engine, and achieved 80\% success in grasping objects on a table.
 
 Another line of research has focused on synthesizing grasps using statistical models~\cite{bohg2014data} learned from a database of images~\cite{lenz2015deep} or point clouds~\cite{detry2013learning, herzog2014learning, zhang2011graspable} of objects annotated with grasps from human demonstrators~\cite{herzog2014learning, lenz2015deep} or physical execution~\cite{herzog2014learning}.
-Kappler et al.~\cite{kappler2015leveraging} created a database of over 700 object instances each labelled with 500 Barrett hand grasps and their associated quality from human annotations and the results of simulations with the ODE physics engine.
+Kappler et al.~\cite{kappler2015leveraging} created a database of over 700 object instances, each labelled with 500 Barrett hand grasps and their associated quality from human annotations and the results of simulations with the ODE physics engine.
 The authors trained a deep neural network to predict grasp quality from heightmaps of the local object surface.
 We estimate $P_F$ using similar objects and grasps using a variant of the Multi-Armed Bandit (MAB) model for sequential decision-making.
 
@@ -26,7 +26,7 @@ Our work is also closely related to research on actively sampling grasps to buil
 %Boularias et al.~\cite{boularias2014efficient, boularias2015learning} used a Gaussian process Bayesian Optimization model for selecting grasps on cluttered piles of rocks.
 %Salaganicoff et al.~\cite{salganicoff1996active} used active learning to decide the next grasp to execute on a physical robot while learning a predicitve model of empirical success from range sensors.
 Montesano and Lopes~\cite{montesano2012active} used Continuous Correlated Beta Processes~\cite{goetschalckx2011continuous} to actively acquire grasp executions on a physical robot, and measured correlations from the responses to a bank of image filters designed to detect grasp affordances such as edges.
-Oberlin and Tellex~\cite{oberlin2015autonomously} developed a budgeted MAB algorithm for planning 3 DOF crane grasps a using priors from the responses of hand-designed depth image filters, but did not study the effects of orders of magnitude of prior data on convergence.
+Oberlin and Tellex~\cite{oberlin2015autonomously} developed a budgeted MAB algorithm for planning 3 DOF crane grasps using priors from the responses of hand-designed depth image filters, but did not study the effects of orders of magnitude of prior data on convergence.
 Recently, Laskey et al.~\cite{laskey2015bandits} used MAB algorithms to reduce the number of samples needed to identify grasps with high $P_F$ under uncertainty in object shape, pose, and friction in 2D.
 %MAB algorithms trade off gaining information about grasps that have been sampled fewer times with exploiting the grasp with the highest estimated quality given the past samples.
 In this work we extend the model of~\cite{laskey2015bandits} to 3D and study the scaling effects of using prior data from Dex-Net on planning grasps with high $P_F$.
@@ -34,8 +34,8 @@ In this work we extend the model of~\cite{laskey2015bandits} to 3D and study the
 % DEEP LEARNING
 To use the prior information contained in Dex-Net, we also draw on research on 3D model similarity.
 One line of research has focused on shape geometry, such as characteristics of harmonic functions on the shape~\cite{bronstein2011shape}, or CNNs trained on a voxel representation of shape~\cite{maturana2015voxnet, wu20153d}.
-Onother line of research relies on the description of rendered views of a 3D model~\cite{chen2003visual, goldfeder2011data}.
-One of the key difficulty of these methods is to aggregate or compare views from different objects, which may be oriented inconsistently.
+Another line of research relies on the description of rendered views of a 3D model~\cite{chen2003visual, goldfeder2011data}.
+One of the key difficulty of these methods is comparing views from different objects, which may be oriented inconsistently.
 The recent work of Su et al.~\cite{su2015multi} addresses this issue by using CNN trained for ImageNet classification as descriptors for the different views and aggregating them with a second CNN that learns the invariance to orientation.
 Using this method, the authors improve state-of-the-art classification accuracy on ModelNet40 by 10\%.
 We use a max-pooling to aggregate views, similar to the average pooling proposed in~\cite{aubry2015understanding}.

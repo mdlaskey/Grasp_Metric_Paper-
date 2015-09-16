@@ -25,7 +25,7 @@ We use Thompson sampling to study the scaling effects for a fixed grasp selectio
 	\For{$t = 1, .., T$}{
 		$j = $ ThompsonSample($\mA_{t-1}, \mB_{t-1}$)\;
 		$\hat{\nu}, \hat{\xi}, \hat{\gamma} =$ SampleRandomVariables($\nu, \xi, \gamma)$\;
-		$F_{j} = $ EvaluateForceClosure($\bg_j, \hat{\nu}, \hat{\xi}, \hat{\gamma}$)\;
+		$F_{j} = $ EvaluateForceClosure($\bg_j, \mO, \hat{\nu}, \hat{\xi}, \hat{\gamma}$)\;
 		\tcp{Equations~\ref{eq:alpha} and ~\ref{eq:beta}}
 		$\mA_{t}, \mB_{t} = $ UpdateBeta($j, F_j, \Gamma$)\; 
 		$\bg_{t}^* = $MaxLowerConfidence($\mA_{t}, \mB_{t}, p$)\;

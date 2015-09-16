@@ -1,7 +1,7 @@
 \section{Definitions and Problem Statement}
 \seclabel{problem}
 
-We consider the robust grasp planning problem for a single 3D object model and parallel-jaw grippers using probability force closure ($P_F$)  under uncertainty in object pose, gripper pose, and friction coefficient as a grasp quality metric.
+We consider the robust grasp planning problem for a given 3D object model and parallel-jaw grippers using probability force closure ($P_F$)  under uncertainty in object pose, gripper pose, and friction coefficient as a grasp quality metric.
 We assume the object shape is provided as a signed distance function (SDF) $f: \mathbb{R}^3 \rightarrow \mathbb{R}$~\cite{mahler2015gp}, which is zero on the object surface, positive outside the object, and negative within. 
 The object is specified in units of meters with given center of mass $\bz \in \mathbb{R}^3$.
 We assume soft-finger contacts with a Coulomb friction model~\cite{zheng2005} and that the gripper jaws are opened to their maximal width $w \in\bR$ before closing on the object.
@@ -28,7 +28,8 @@ We denote by $\mM = \mG \times \mH$ the Grasp Moduli Space of all parallel-jaw g
 
 \subsection{Sources of Uncertainty}
 \seclabel{uncertainty}
-We assume Gaussian distributions on object pose, gripper pose, and friction coefficient to model errors in registration, robot calibration, or classification material properties, respectively.  
+We assume Gaussian distributions on object pose, gripper pose, and friction coefficient to model errors in registration, robot calibration, or classification material properties, respectively. 
+We denote by $\mN(\mu,\Sigma)$ a Gaussian distribution with mean $\mu$ and variance $\Sigma$.
 Let $\upsilon \sim \mN\left(\mathbf{0}, \Sigma_{\upsilon}\right)$ denote a zero-mean Gaussian on $\bR^6$ and $\mu_{\xi} \in SE(3)$ be a mean object pose.
 We define the object pose random variable $\xi = \exp\left( \upsilon^{\wedge} \right) \mu_{\xi}$, where the $\wedge$ operator maps from $\bR^6$ to the Lie algebra $\mathfrak{se}(3)$.
 Let $\nu \sim \mN\left(\mu_{\nu}, \Sigma_{\nu}\right)$ denote a Gaussian distribution on gripper pose with mean $\mu_{\nu} \in \mG$.
@@ -41,7 +42,7 @@ Given a grasp $\bg$ on an object $\mO$ and samples $\hat{\xi}, \hat{\nu},$ and $
 Each contact $\bc_i = \bx + (-1)^{i} (w / 2 - t_i^*) \bv$ where~\cite{mahler2015gp}:
 %\vspace{-1ex}
 \begin{align*}
-	t_i^* &= \minimum{t \geq 0} t \text{ such that } f\left(\bx +  (-1)^{i} (w / 2 - t) \bv\right) = 0.
+	t_i^* &= \myargmin{t \geq 0} t \text{ such that } f\left(\bx +  (-1)^{i} (w / 2 - t) \bv\right) = 0.
 \end{align*}
 \noindent Let $\bn_i = \nabla f(\bc_i) / \| \nabla f(\bc_i) \|_2$ denote the surface normal at contact $\bc_i$ with tangent vectors $\bt_{i,1}, \bt_{i,2} \in \bS^2$.
 To compute the forces that each contact can apply to the object for friction coefficient $\hat{\gamma}$, we discretize the friction cone at $\bc_i$~\cite{pokorny2013c} into a set of $l$ facets with vertices $\mF_{i} = \left\{ \bn_i + \hat{\gamma} \cos \left( \frac{2 \pi j}{l} \right) \bt_{i,1} + \hat{\gamma} \sin \left( \frac{2 \pi j}{l} \right) \bt_{i,2} \big| j = 1, ..., l \right\}$.
@@ -60,7 +61,7 @@ To compute force closure for a grasp $\bg \in \mG$ on object $\mO \in \mH$ given
 Then $F = 1$ if $\mathbf{0} \in Conv(\mW)$, where $Conv(\cdot)$ denotes the convex hull~\cite{weisz2012pose}.
 
 \subsection{Objective}
-We are interested in finding $\bg^*$, a grasp that maximizes $P_F(\bg)$~\cite{kim2012physically, laskey2015bandits, mahler2015gp, weisz2012pose} over a budgeted maximum number of samples $T$.
+We are interested in finding a grasp $\bg^*$ that maximizes $P_F(\bg)$~\cite{kim2012physically, laskey2015bandits, mahler2015gp, weisz2012pose} over a budgeted maximum number of samples $T$.
 To perform this as quickly as possible we maximize over the sum of the $P_F$ for all sampled grasps~\cite{laskey2015bandits, srinivas10gaussian}.
 As the maximization over the continuous space $\mG$ is computationally expensive, past work has solved this objective by evaluating a discrete set of $K$ candidate grasps $\Gamma = \left\{ \bg_1, ..., \bg_K \right\}$ with Monte-Carlo integration~\cite{kehoe2012toward, weisz2012pose} or Multi-Armed Bandits (MAB) ~\cite{laskey2015bandits}.
-In this work, we extend the MAB model of~\cite{laskey2015bandits} to 3D and to leverage similarities between grasps and prior objects in Dex-Net to reduce the number of samples~\cite{hoffman2013exploiting, pandey2007multi}.
+In this work, we extend the 2D MAB model of~\cite{laskey2015bandits} to leverage similarities between grasps and prior 3D objects in Dex-Net to reduce the number of samples~\cite{hoffman2013exploiting, pandey2007multi}.

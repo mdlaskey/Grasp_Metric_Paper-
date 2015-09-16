@@ -2,11 +2,11 @@
 \seclabel{dexnet}
 
 The Dexterity Network (Dex-Net) 1.0 dataset is a growing set that currently includes over 10,000 prior 3D object models annotated with 2.5 million parallel-jaw grasps.
-Dex-Net 1.0 contains 13,252 models from the following sources: 8,987 from the SHREC 2014 challenge dataset~\cite{li2015comparison}, 2,539 from ModelNet40~\cite{wu20153d}, 1,371 from 3DNet~\cite{wohlkinger20123dnet}, 129 from the KIT object database~\cite{kasper2012kit}, 120 from BigBIRD~\cite{singh2014bigbird}, 80 from the Yale-CMU-Berkeley dataset~\cite{calli2015benchmarking}, and 26 from the Amazon Picking Challenge scans.
 
-\subsection{Data Cleaning}
-Each object in Dex-Net is specified as a 3D mesh.
+\subsection{Data}
+Dex-Net 1.0 contains 13,252 3D mesh models: 8,987 from the SHREC 2014 challenge dataset~\cite{li2015comparison}, 2,539 from ModelNet40~\cite{wu20153d}, 1,371 from 3DNet~\cite{wohlkinger20123dnet}, 129 from the KIT object database$^*$~\cite{kasper2012kit}, 120 from BigBIRD$^*$~\cite{singh2014bigbird}, 80 from the Yale-CMU-Berkeley dataset$^*$~\cite{calli2015benchmarking}, and 26 from the Amazon Picking Challenge$^*$ scans ($^*$ indicates laser-scanner data).
 We preprocess each mesh by removing unreferenced vertices, computing a reference frame with Principal Component Analysis (PCA) on the mesh vertices, setting the mesh center of mass $\bz$ to the center of the mesh bounding box, and rescaling the synthetic meshes to fit the smallest dimension of the bounding box within $w = 0.1m$, which is approximately the maximal opening width of a PR2 gripper.
+To resolve orientation ambiguity in the reference frame, we orient the positive axes of the $z$-axis toward the side of the $xy$ plane with more vertices. 
 We also convert each mesh to an SDF $f$ using SDFGen~\cite{sdfgen}.
 
 \subsection{Grasp Sampling}
@@ -29,10 +29,10 @@ The full dataset of $N_o$ 3D objects and $N_g$ grasps per object is $\mD = \{ (S
 \subsection{Grasp Differential Heightmap Features}
 \seclabel{grasp-similarity}
 To measure grasp similarity, we embed each grasp $\bg$ on object $\mO$ in Dex-Net in a feature space based on 2D projections of the local surface orientation at the contacts, inspired by grasp heightmaps~\cite{herzog2014learning, kappler2015leveraging}.
-Let $d_h \in \mathbb{Z}$ be a number of pixels for the projection, let $\mP = \{-d_h, ..., d_h\}$ be row / column pixel indices, let $\delta \in \mathbb{R}$ be the pixel resolution in meters, and let $r \in \mathbb{R}$ be a minimum projection distance.
+Let $\delta \in \mathbb{R}$ be the pixel resolution in meters, and let $r \in \mathbb{R}$ be a minimum projection distance.
 %Furthermore, let $\bc_i, i = 1, 2$ be a contact point for grasp $\bg$ and let $\bt_1, \bt_2$ be two orthogonal unit vectors to the grasp approach direction $\bv$.
-The heightmap at contact $\bc_i$, $\bh_{i}: \mP \times \mP \rightarrow \bR$, maps discrete locations along the tangent plane to the grasp axis $\bv$ specified by $\bt_1, \bt_2$ to the distance to the surface along $\bv$.
-To compute the value at pixel $u,v \in \mP$, we compute the location of the pixel on the plane $\bp_i(u,v) = \bc_i + \delta u \bt_1 + \delta v \bt_2$ and assign
+The heightmap $\bh_{i}$ at contact $\bc_i$ maps locations along the tangent plane to the grasp axis $\bv$ specified by $\bt_1, \bt_2$ to the distance to the surface along $\bv$.
+To compute the value at pixel $u,v$, we compute the location of the pixel on the plane $\bp_i(u,v) = \bc_i + \delta u \bt_1 + \delta v \bt_2$ and assign
 \begin{align*}
 	\bh_i(u,v) = \minimum{t \geq -r} t \text{ such that } f\left( \bp_i(u,v) + (-1)^{i} t \bv \right) = 0
 \end{align*}
@@ -52,7 +52,7 @@ The full feature vector for each grasp-object pair  in Dex-Net is $\eta(\bg, \mO
 
 \section{Deep Learning for Object Similarity}
 \seclabel{object-similarity}
-We use Multi-View Convolutional Neural Networks (MV-CNNs)~\cite{aubry2015understanding, su2015multi} to efficiently index prior 3D object and grasp data from Dex-Net by embedding each object in a vector space where distance represents object similarity, as shown in \figref{global-feature-model}.
+We use Multi-View Convolutional Neural Networks (MV-CNNs)~\cite{su2015multi} to efficiently index prior 3D object and grasp data from Dex-Net by embedding each object in a vector space where distance represents object similarity, as shown in \figref{global-feature-model}.
 We first render every object on a white background in a total of $N_c = 50$ virtual camera views oriented toward the object center and discretized on a viewing sphere along angle increments $\delta_{\theta} = \frac{4 \pi}{N_c}$ and $\delta_{\phi} = \frac{2 \pi}{N_c}$ and radii $r = R, 2R$, where $R$ is the maximum dimension of the object bounding box.
 Then we train a CNN with the architecture of AlexNet~\cite{krizhevsky2012imagenet} to predict the 3D object class label for the rendered images on a training set of models. 
 We initialize the weights of the network with the weights learned on ImageNet by Krizhevsky et al.~\cite{krizhevsky2012imagenet} and optimize using Stochastic Gradient Descent (SGD). 

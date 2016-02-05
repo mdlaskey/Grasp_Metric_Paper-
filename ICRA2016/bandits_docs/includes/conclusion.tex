@@ -1,12 +1,12 @@
 \section{Discussion and Future Work}
 \seclabel{conclusion}
-We presented Dexterity Network 1.0 (Dex-Net), a new dataset and associated algorithm to study the scaling effects of Big Data and Cloud Computation on robust grasp planning.
-The algorithm uses a Multi-Armed Bandit model with correlated rewards to leverage prior grasps and 3D object models and Multi-View Convolutional Neural Networks (MV-CNNs), a new deep learning method for 3D object classification, as a similarity metric between objects.
-In experiments, the Google Cloud Platform allowed Dex-Net 1.0 to simultaneously run up to 1,500 virtual machines, reducing experiment runtime by three orders of magnitude.
+We presented Dexterity Network 1.0 (Dex-Net), a new dataset and associated algorithm to study the scaling effects of Big Data and Cloud Computation on robust grasp planning with binary grasp quality metrics.
+The algorithm uses a Multi-Armed Bandit model with correlated rewards to leverage prior grasps and 3D object models and Multi-View Convolutional Neural Networks (MV-CNNs), a new deep learning method for 3D object classification, as a similarity metric between objects. 
+In experiments, the Google Cloud Platform allowed Dex-Net 1.0 to simultaneously run up to 1,500 virtual machines, reducing experiment runtime by approximately three orders of magnitude.
 Experiments suggest that prior data can speed robust grasp planning by a factor of 2 and that average grasp quality increases with the number of similar objects in the dataset.
-We reported on sensitivity to varying similarity metrics and pose and friction uncertainty levels.
 
-In future work, we will develop metrics to pre-compute grasps that adequately ``cover" each object from a variety of accessibility conditions (depending on pose and occlusions).
-We will also explore how Deep Learning~\cite{krizhevsky2012imagenet} can be used in other parts of a grasp planning pipeline, for example to recognize object pose and shape from images~\cite{aubry2015understanding}, to learn grasp and object features robust to shape variation using prior evaluations from bandit algorithms, and perhaps even to determine motor torques based on images and precomputed grasps~\cite{levine2015end}.
+In future work, we will develop metrics and algorithms for pre-computing a set of grasps that adequately ``cover" each object from a variety of accessibility conditions (depending on pose and occlusions).
+We also plan to evaluate the Dex-Net 1.0 algorithm in physical experiments and study convergence rates when using various analytic (e.g. force closure) and simulation-based grasp quality labels from Dex-Net 1.0 to pre-predict physical grasp successes.
+We will also explore Deep Learning~\cite{krizhevsky2012imagenet} to estimate grasp quality from surface depthmaps and rendered object images for further accelerating convergence.
 We also hope to release subsets of Dex-Net 1.0 with an open-source API to explore robust grasping as a service (RGaaS).
 

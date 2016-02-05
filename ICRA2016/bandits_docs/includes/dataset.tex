@@ -12,40 +12,29 @@ We also convert each mesh to an SDF using SDFGen~\cite{sdfgen}.
 \subsection{Grasp Sampling}
 \seclabel{grasp-sampling}
 Each 3D object $\mO_i$ in Dex-Net is labelled with up to 250 parallel-jaw grasps and their $P_F$.
-We generate $N_g$ grasps for each object using a modification of the 2D algorithm presented in Smith et al.~\cite{smith1999computing} to concentrate samples on grasps that are antipodal~\cite{mahler2015gp}.
-Let $w$ be the maximal opening of the gripper, $\hat{\gamma}$ be a sampled friction coefficient, and $\mS$ be the set of points on the object surface for an SDF $f$ as described in \secref{grasp-param}.
-To sample a single grasp, we first generate a contact point $\bc_1$ by sampling uniformly from $\mS$.
-Next we sample a direction $\bv \in \bS^2$ uniformly at random from the friction cone and compute $\bc_2 = \bc_1 + (w - t_2^*) \bv$ and $\bx = 0.5 (\bc_1 + \bc_2)$, where $t_2^*$ is defined as in \secref{contact}.
-This yields a grasp $\bg_{i,k} = (\bx, \bv)$.
-We add $\bg_{i,k}$ to the candidate set if the contacts are antipodal~\cite{mahler2015gp}, or $\bv^T \bn_1 \leq \cos(\arctan(\hat{\gamma}))$ and $\bv^T \bn_2 \leq \cos(\arctan(\hat{\gamma}))$.
-
-We evaluate $P_F(\bg)$ using Monte-Carlo integration~\cite{kehoe2012toward} by sampling the object pose, gripper pose, and friction random variables $N_s$ times and recording $S_{i,k}$, the number of samples for which grasp $\bg_{i,k}$ was in force closure.
-The dataset of $N_o$ objects and $N_g$ candidate grasps per object is $\mD = \{ (S_{i, k}, \mY_{i, k}) \big| i = \{1, ..., N_o\}, k = \{1, ..., N_g\} \}$ where $\mY_{i,k} = (\bg_{i, k}, \mO_i) \in \mM$ is a grasp-object pair in Dex-Net.
+We generate $K$ grasps for each object using a modification of the 2D algorithm presented in Smith et al.~\cite{smith1999computing} to concentrate samples on grasps that are antipodal~\cite{mahler2015gp}.
+To sample a single grasp, we generate a contact point $\bc_1$ by sampling uniformly from the object surface $\mS$, sample a direction $\bv \in \bS^2$ uniformly at random from the friction cone, and find an antipodal contact $\bc_2$ on the line $\bc_1 + t\bv$ where $t \geq 0$.
+We add the grasp $\bg_{i,k} = (0.5(\bc_1 + \bc_2), \bv)$ to the candidate set if the contacts are antipodal~\cite{mahler2015gp}.
+We evaluated $P_F(\bg_{i,k})$ using Monte-Carlo integration~\cite{kehoe2012toward, weisz2012pose} by sampling the object pose, gripper pose, and friction random variables $N=500$ times and recording $Z_{i,k}$, the number of samples for which $\bg_{i,k}$ achieved force closure ($F=1$).
 
 
 %We generate a set of grasps for each object in the network using the method of \secref{candidates} and evaluate the probability of force closure for each grasp using brute-force Monte Carlo integration as a benchmark~\cite{kehoe2012toward}.
 %As the number of models is quite large, we distribute the grasp labelling for each object across virtual machines in Google Compute Engine and aggregate the results at the end.
 
-\subsection{Grasp Differential Heightmap Features}
+\subsection{Grasp Differential Depthmap Features}
 \seclabel{grasp-similarity}
-To measure grasp similarity, we embed each grasp $\bg = (\bx ,\bv)$ on object $\mO$ in Dex-Net in a feature space based on 2D projections of the local surface orientation at the contacts, inspired by grasp heightmaps~\cite{herzog2014learning, kappler2015leveraging}.
-Let $\delta \in \mathbb{R}$ be the pixel resolution in meters, and let $r \in \mathbb{R}$ be a minimum projection distance.
-%Furthermore, let $\bc_i, i = 1, 2$ be a contact point for grasp $\bg$ and let $\bt_1, \bt_2$ be two orthogonal unit vectors to the grasp approach direction $\bv$.
-The heightmap $\bh_{i}$ at contact $\bc_i$ maps points $\bp \in \bR^3$ on the tangent plane $\bv^T(\bp - \bc_1) = 0$ to the distance to the surface along $\bv$.
-To compute the value at pixel $u,v$, we compute the location of the pixel on the plane $\bp_i(u,v) = \bc_i + \delta u \bt_1 + \delta v \bt_2$ and assign
-\begin{align*}
-	\bh_i(u,v) = \minimum{t \geq -r} t \text{ such that } f\left( \bp_i(u,v) + (-1)^{i} t \bv \right) = 0
-\end{align*}
-\noindent where $f$ is the SDF of object $\mO$. 
-We make $\bh_i$ rotation-invariant by orienting its axes to align with the eigenvectors of the weighted covariance matrix of the 3D surface points that generate the heightmap as described in~\cite{salti2014shot}.
+To measure grasp similarity, we embed each grasp $\bg = (\bx ,\bv)$ on object $\mO$ in Dex-Net in a feature space based on a 2D map of the  local surface orientation at the contacts, inspired by grasp heightmaps~\cite{herzog2014learning, kappler2015leveraging}.
+We generate a depthmap $\bd_{i}$ for contact $\bc_i$ by orthogonally projecting the local object surface onto an $m \times m$ grid centered at $\bc_i$ and oriented along the line to the object center of mass, $\ba_i = \bz - \bc_i$.
+Since $F$ only depends on $\bc_i$ and its surface normal, rotations of $\bd_i$ about $\ba_i$ correspond to grasps of the equivalent quality.
+We therefore make each $\bd_i$ rotation-invariant by orienting its axes along the eigenvectors of a weighted covariance matrix of the 3D surface points that generate $\bd_i$ as described in~\cite{salti2014shot}.
 \figref{local-feature-model} illustrates local surface patches extracted by this procedure.
-Since force closure depends on object surface normals at contacts~\cite{pokorny2013c}, we finally take the $x$- and $y$-image gradients of $\bh_i$ to form differential heightmaps $\bd_{i,x}$ and $\bd_{i,y}$.
-The feature vector for each grasp-object pair  in Dex-Net is $\eta(\bg, \mO) = (\bd_{1,x}, \bd_{1,y}, \bd_{2,x}, \bd_{2,y})$.
+We finally take the $x$- and $y$-image gradients of $\bd_i$ to form differential depthmaps $\nabla_x \bd_{i}$ and $\nabla_y \bd_{i}$, motivated by the dependence of $F$ on surface normals~\cite{pokorny2013c}, 
+The feature vector for each grasp-object pair  in Dex-Net is $\eta(\bg, \mO) = (\nabla_x \bd_{1}, \nabla_y \bd_{1}, \nabla_x \bd_{2}, \nabla_x \bd_{2})$.
 
 \begin{figure}[t!]
 \centering
 \includegraphics[scale=0.30]{figures/illustrations/local_feature_model.eps}
-\caption{Illustration of three local surface heightmaps extracted on a teapot. Each heightmap is ``rendered" along the grasp axis $\bv_i$ at contact $\bc_i$ and oriented by the directions of maximum variation in the heightmap.  We use gradients of the heightmaps for similiarity between grasps in Dex-Net.}
+\caption{Illustration of three local surface depthmaps extracted on a teapot. Each depthmap is ``rendered" along the grasp axis $\bv_i$ at contact $\bc_i$ and oriented by the directions of maximum variation in the depthmap.  We use gradients of the depthmaps for similiarity between grasps in Dex-Net.}
 \figlabel{local-feature-model}
 \vspace*{-15pt}
 \end{figure}
@@ -57,12 +46,11 @@ We first render every object on a white background in a total of $N_c = 50$ virt
 Then we train a CNN with the architecture of AlexNet~\cite{krizhevsky2012imagenet} to predict the 3D object class label for the rendered images on a training set of models. 
 We initialize the weights of the network with the weights learned on ImageNet by Krizhevsky et al.~\cite{krizhevsky2012imagenet} and optimize using Stochastic Gradient Descent (SGD). 
 Next, we pass each of the $N_c$ views of each object through the optimized CNN and max-pool the output of the fc7 layer, the highest layer of the network before the class label prediction. 
-Finally, we use Principal Component Analysis (PCA) to reduce the max-pooled output from 4,096 dimensions to 100 dimensions.
-This yields the representation $\psi(\mO) \in \mathbb{R}^{100}$ for each object.
+Finally, we use Principal Component Analysis (PCA) to reduce the max-pooled output from 4,096 dimensions to a 100 dimensional feature vector $\psi(\mO)$.
 
 Given the MV-CNN object representation, we measure the dissimilarity between two objects $\mO_i$ and $\mO_j$ by the Euclidean distance $\| \psi(\mO_i) - \psi(\mO_j) \|_2$.
 For efficient lookups of similar objects, Dex-Net contains a KD-Tree nearest neighbor query structure with the feature vectors of all prior objects.
-In our implementation, we trained the MV-CNN using the Caffe library~\cite{jia2014caffe} on rendered images from a training set of approximately $6,000$ 3D models from the SHREC 2014 dataset ~\cite{li2015comparison}, which has 171 unique categories, for 500,000 iterations of SGD.
+In our implementation, we trained the MV-CNN using the Caffe library~\cite{jia2014caffe} on rendered images from a training set of approximately $6,000$ 3D models sampled from the SHREC 2014~\cite{li2015comparison} portion of Dex-Net, which has 171 unique categories, for 500,000 iterations of SGD.
 %The final PCA step captured approximately 85\% of the variance of the vectors.
 %The image classification training step had a test accuracy of 76\%.
 To validate the implementation, we tested on the SHREC 2014 challenge dataset and achieved a 1-NN accuracy of 86.7\%, compared to 86.8\% achieved by the winner of SHREC 2014~\cite{li2015comparison}.

@@ -1,0 +1,14 @@
+\section{Related work}
+\seclabel{related-work}
+
+In practice a robot may only need to resist a set of task-specific wrenches on an object, such as gravity for lifting, rather than attempting to resist all possible wrenches, as has been observed for human grasps~\cite{cutkosky1985grasping, feix2016grasp}.
+Li and Sastry~\cite{li1988task} modeled task-specific wrenches with an ellipsoid and proposed a grasp metric based on the largest radius of the task ellipsoid such that the grasp can resist any wrench in the task ellipsoid with unit-magnitude finger forces.
+However, not all tasks will have wrench distributions well-modeled by an ellipsoid, and furthermore the ratios of expected forces and torques needed to compute a task ellipsoid may be unknown.
+Thus much past research has modeled the task ellipsoid as a unit ball~\cite{ferrari1992, pokorny2013classical}.
+Han et al.~\cite{han2000grasp} showed that the question of whether or not a multifinger hand can exert a given force on an object can be reduced to a linear matrix inequality problem. 
+Haschke et al.~\cite{haschke2005task} defined a task-specific grasp metric that can be computed by convex optimization when the task wrenches can be described as a cone or a polytope.
+Kruger and van der Stappen~\cite{kruger2011partial} described two grasp metrics that measure the sum and maximum of finger forces required to exert a given wrench on an object, and later extended the notion to local force closure grasps~\cite{kruger2012local}, which can resist wrenches in a neighborhood if a desired target wrench.
+....
+Recent research has focused on data-driven prediction the probability of grasp success for a specific task from features describing the grasp and object, for example using Bayesian Networks~\cite{bekiroglu2013probabilistic}...
+
+
